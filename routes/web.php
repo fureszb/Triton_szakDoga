@@ -35,21 +35,25 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
 
-    // Új megrendelés létrehozása
+    Route::get('/megrendeles', [MegrendelesController::class, 'index'])->name('megrendeles.index');
+
+    Route::get('/megrendeles/{id}', 'MegrendelesController@show')->name('megrendeles.show');
+
     Route::post('/megrendeles', [MegrendelesController::class, 'store'])->name('megrendeles.store');
     
-    // Meglévő megrendelés adatainak frissítése
+   
     Route::put('/megrendeles/{megrendeles}', [MegrendelesController::class, 'update'])->name('megrendeles.update');
     
-    // Új megrendelés létrehozásához űrlap megjelenítése
+   
     Route::get('/megrendeles/create', [MegrendelesController::class, 'create'])->name('megrendeles.create');
     
-    // Meglévő megrendelés törlése
+ 
     Route::delete('/megrendeles/{megrendeles}', [MegrendelesController::class, 'destroy'])->name('megrendeles.destroy');
     
-    // Meglévő megrendelés szerkesztéséhez űrlap megjelenítése
+
     Route::get('/megrendeles/{megrendeles}/edit', [MegrendelesController::class, 'edit'])->name('megrendeles.edit');
     
+     
 
     Route::get('/send-mail', [TestController::class, 'sendMailWithPdf']);
 

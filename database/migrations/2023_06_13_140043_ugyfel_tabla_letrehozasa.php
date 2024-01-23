@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -18,6 +19,19 @@ return new class extends Migration
             $table->string('Adoszam')->nullable();
             $table->timestamps();
         });
+
+        DB::table('ugyfel')->insert([
+            [
+                'Ugyfel_ID' => '1',
+                'Nev' => 'Gipsz Jakab', 
+                'Email' =>"valami@gmail.com",
+                'Telefonszam' => '06301234567',
+                'Szamlazasi_Nev' => 'Gipsz Jakab', 
+                'Szamlazasi_Cim' =>"2310 Szigetszentmiklós, Kossuth utca, 12",
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
+        ]);
     }
 
     public function down(): void

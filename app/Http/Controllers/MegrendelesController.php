@@ -18,6 +18,18 @@ class MegrendelesController extends Controller
         return view('megrendeles.create');
     }
 
+    public function show($id)
+{
+    $megrendeles = Megrendeles::find($id);
+
+    if (!$megrendeles) {
+        return redirect()->route('megrendeles.index')->with('error', 'A megrendelés nem található');
+    }
+
+    return view('megrendeles.show', compact('megrendeles'));
+}
+
+
     public function edit($id)
     {
         $megrendeles = Megrendeles::find($id);
