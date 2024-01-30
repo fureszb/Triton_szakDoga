@@ -18,7 +18,7 @@ return new class extends Migration
             $table->dateTime('Munkabefejezes_Idopontja');
             $table->timestamps();
 
-            $table->foreign('Megrendeles_ID')->references('id')->on('megrendeles');
+            $table->foreign('Megrendeles_ID')->references('Megrendeles_ID')->on('megrendeles');
             $table->foreign('Szerelo_ID')->references('Szerelo_ID')->on('szerelok');
             $table->foreign('Szolgaltatas_ID')->references('Szolgaltatas_ID')->on('szolgaltatasok');
         });

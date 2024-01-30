@@ -21,7 +21,7 @@ use App\Http\Controllers\MegrendelesController;
 */
 
 Route::get('/', function () {
-    return view('ugyfel');
+    return view('welcome');
 });
 
 Route::get('/dashboard', function () {
@@ -35,30 +35,31 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
 
+
+    Route::view('/ugyfel/create_modal', 'ugyfel.create_modal')->name('ugyfel.create_modal');
+
+
+
     Route::get('/megrendeles', [MegrendelesController::class, 'index'])->name('megrendeles.index');
-
-    Route::get('/megrendeles/{id}', 'MegrendelesController@show')->name('megrendeles.show');
-
-    Route::post('/megrendeles', [MegrendelesController::class, 'store'])->name('megrendeles.store');
     
-   
-    Route::put('/megrendeles/{megrendeles}', [MegrendelesController::class, 'update'])->name('megrendeles.update');
-    
-   
     Route::get('/megrendeles/create', [MegrendelesController::class, 'create'])->name('megrendeles.create');
     
- 
+    Route::get('/megrendeles/{id}', [MegrendelesController::class, 'show'])->name('megrendeles.show');
+
+    Route::post('/megrendeles', [MegrendelesController::class, 'store'])->name('megrendeles.store');
+
+    Route::put('/megrendeles/{megrendeles}', [MegrendelesController::class, 'update'])->name('megrendeles.update');
+
     Route::delete('/megrendeles/{megrendeles}', [MegrendelesController::class, 'destroy'])->name('megrendeles.destroy');
-    
 
     Route::get('/megrendeles/{megrendeles}/edit', [MegrendelesController::class, 'edit'])->name('megrendeles.edit');
-    
-     
+
+
 
     Route::get('/send-mail', [TestController::class, 'sendMailWithPdf']);
 
     // routes/web.php
-   
+
     Route::post('/save-image', [SignaturePadController::class, 'saveImage']);
 
 
@@ -72,7 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::post('/ugyfel', [UgyfelController::class, 'store'])->name('ugyfel.store');
+   
     Route::put('/ugyfel/{ugyfel}', [UgyfelController::class, 'update'])->name('ugyfel.update');
     Route::get('/ugyfel/create', [UgyfelController::class, 'create'])->name('ugyfel.create');
     Route::delete('/ugyfel/{ugyfel}', [UgyfelController::class, 'destroy'])->name('ugyfel.destroy');
@@ -81,8 +82,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/ugyfel', [UgyfelController::class, 'index'])->name('ugyfel.index');
     Route::get('/ugyfel/{id}', [UgyfelController::class, 'show'])->name('ugyfel.show');
 
+
     Route::get('/ugyfel/search', 'UgyfelController@search')->name('ugyfel.search');
 });
+Route::post('/ugyfel', [UgyfelController::class, 'store'])->name('ugyfel.store');
 Route::get('/elso-kep', 'App\Http\Controllers\HomeController@elsoKep');
 
 require __DIR__ . '/auth.php';
@@ -90,4 +93,3 @@ require __DIR__ . '/auth.php';
 
 
 // Útvonalak a MegrendelesController számára
-

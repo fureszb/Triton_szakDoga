@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Anyag extends Model
 {
-    protected $table = 'anyagok'; // Táblanév többes számú formában
+    protected $table = 'anyagok'; 
     protected $primaryKey = 'Anyag_ID';
+    protected $fillable = ['Leiras '];
     use HasFactory;
 
     public function felhasznalt_anyagok()

@@ -334,6 +334,23 @@ nav button {
     text-decoration: underline;
 }
 
+.hozzaad{
+    color: white;
+    background-color: #45c24a;
+    border-radius: 51px;
+    padding: 3px 8px 11px 7px;
+}
+
+.grid{
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 500px 40px;
+    text-align: center;
+    gap: 10px;
+}
+
+
+
 @media screen and (max-width: 650px) {
     .title > div:nth-child(3),
     .title > div:nth-child(4) {

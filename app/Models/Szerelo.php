@@ -9,6 +9,8 @@ class Szerelo extends Model
 {
     protected $table = 'szerelek'; // Táblanév többes számú formában
     protected $primaryKey = 'Szerelo_ID';
+    protected $fillable = ['Nev', 'Telefonszam'];
+
     use HasFactory;
 
     public function ugyfelek()

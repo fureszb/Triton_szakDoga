@@ -11,6 +11,8 @@ class FelhasznaltAnyag extends Pivot
     protected $table = 'felhasznalt_anyagok';
     public $incrementing = true;
     protected $primaryKey = ['Munka_ID', 'Anyag_ID'];
+    protected $fillable = ['Munka_ID', 'Anyag_ID'];
+   
     use HasFactory;
 
     public function munkanaplo()

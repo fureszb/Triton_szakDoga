@@ -54,13 +54,13 @@
 <div class="alert alert-warning">{{ $message }}</div>
 @enderror
 
-<form action="{{ route('ugyfel.update', $ugyfel->UgyfelID) }}" method="POST">
+<form action="{{ route('ugyfel.update', $ugyfel->Ugyfel_ID) }}" method="POST">
     @csrf
     @method('PUT')
 
     <fieldset>
-        <label for="id">ID</label>
-         <input type="text" name="id" id="id" value="{{ old('id', $ugyfel->UgyfelID) }}">
+        <label for="id">Ugyfel_ID</label>
+         <input type="text" name="id" id="id" value="{{ old('id', $ugyfel->Ugyfel_ID) }}">
      </fieldset>
 
 
@@ -75,77 +75,23 @@
     </fieldset>
 
     <fieldset>
-        <label for="objcim">Objektum címe</label>
-        <input type="text" name="objcim" id="objcim" value="{{ old('objcim') ?? $ugyfel->ObjCim }}">
-    </fieldset>
-
-    <fieldset>
         <label for="telefon">Telefonszám</label>
-        <input type="text" name="telefon" id="telefon" value="{{ old('telefon') ?? $ugyfel->Telefon }}">
+        <input type="text" name="telefon" id="telefon" value="{{ old('telefon') ?? $ugyfel->Telefonszam }}">
     </fieldset>
 
     <fieldset>
         <label for="szamnev">Számlázási név</label>
-        <input type="text" name="szamnev" id="szamnev" value="{{ old('szamnev') ?? $ugyfel->SzamNev }}">
+        <input type="text" name="szamnev" id="szamnev" value="{{ old('szamnev') ?? $ugyfel->Szamlazasi_Nev }}">
     </fieldset>
 
     <fieldset>
         <label for="szamcim">Számlázási cím</label>
-        <input type="text" name="szamcim" id="szamcim" value="{{ old('szamcim') ?? $ugyfel->SzamCim }}">
-    </fieldset>
-
-    <fieldset>
-        <label for="kezd_datum">Kezdő Dátum</label>
-        <input type="datetime-local" name="kezd_datum" id="kezd_datum" value="{{ old('kezd_datum') ?? $ugyfel->KezdDatum }}">
-    </fieldset>
-
-    <fieldset>
-        <label for="bef_datum">Befejező Dátum</label>
-        <input type="datetime-local" name="bef_datum" id="bef_datum" value="{{ old('bef_datum') ?? $ugyfel->BefDatum }}">
+        <input type="text" name="szamcim" id="szamcim" value="{{ old('szamcim') ?? $ugyfel->Szamlazasi_Cim }}">
     </fieldset>
 
     <fieldset>
         <label for="adoszam">Adószám</label>
-        <input type="text" name="adoszam" id="adoszam" value="{{ old('adoszam') ?? $ugyfel->AdoSzam }}">
-    </fieldset>
-
-    <fieldset>
-        <label for="szerelo">Szerelő</label>
-        <select name="szerelo" id="szerelo">
-            @foreach ($szerelok as $szereloOption)
-                <option value="{{ $szereloOption->id }}" {{ (old('szerelo') ?? $ugyfel->szerelo) == $szereloOption->id ? 'selected' : '' }}>{{ $szereloOption->Nev }}</option>
-            @endforeach
-        </select>
-    </fieldset>
-
-
-
-
-    <fieldset>
-        <label for="szolgaltatas">Szolgáltatás</label>
-        <select name="szolgaltatas" id="szolgaltatas">
-            @foreach ($szolgaltatasok as $szolgaltatasOption)
-                <option value="{{ $szolgaltatasOption->id }}" {{ (old('szolgaltatas') ?? $ugyfel->szolgaltatas) == $szolgaltatasOption->id ? 'selected' : '' }}>{{ $szolgaltatasOption->jelleg }}</option>
-            @endforeach
-        </select>
-    </fieldset>
-
-
-
-
-    <fieldset>
-        <label for="munka">Munka</label>
-        <select name="munka" id="munka">
-            @foreach ($munkak as $munkaOption)
-                <option value="{{ $munkaOption->id }}" {{ (old('munka') ?? $ugyfel->munka) == $munkaOption->id ? 'selected' : '' }}>{{ $munkaOption->Jelleg }}</option>
-            @endforeach
-        </select>
-    </fieldset>
-
-
-    <fieldset>
-        <label for="felhasznalt_anyagok">Felhasznált Anyagok</label>
-        <input type="text" name="felhasznalt_anyagok" id="felhasznalt_anyagok" value="{{ old('felhasznalt_anyagok') ?? $ugyfel->FelhasznaltAnyagok }}">
+        <input type="text" name="adoszam" id="adoszam" value="{{ old('adoszam') ?? $ugyfel->Adoszam }}">
     </fieldset>
 
     <button type="submit">Mentés</button>

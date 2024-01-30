@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Szolgaltatas extends Model
 {
-    protected $table = 'szolgaltatasok'; // Táblanév többes számú formában
+    protected $table = 'szolgaltatasok';
     protected $primaryKey = 'Szolgaltatas_ID';
+
+    protected $fillable = ['Tipus'];
+
     use HasFactory;
 
     public function ugyfelek()

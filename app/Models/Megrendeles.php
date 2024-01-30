@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Ugyfel;
 
 class Megrendeles extends Model
 {
@@ -11,6 +12,9 @@ class Megrendeles extends Model
 
     protected $table = 'megrendeles';
     protected $primaryKey = 'Megrendeles_ID';
+    protected $fillable = ['Megrendeles_Nev', 'Objektum_Cim', 'Alairt_e', 'Pdf_EleresiUt'];
+   
+
 
     // ... (Egyéb modell definíciók)
 
@@ -25,7 +29,13 @@ class Megrendeles extends Model
     {
         return $query->where(function ($query) use ($keyword) {
             $query->where('Megrendeles_Nev', 'LIKE', '%' . $keyword . '%')
-                  ->orWhere('Objektum_Cim', 'LIKE', '%' . $keyword . '%');
+                ->orWhere('Objektum_Cim', 'LIKE', '%' . $keyword . '%');
         });
+    }
+
+    public function create()
+    {
+        $ugyfelek = Ugyfel::all(); // Az összes ügyfél betöltése
+        return view('megrendeles.create', compact('ugyfelek'));
     }
 }
