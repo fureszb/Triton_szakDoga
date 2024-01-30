@@ -16,7 +16,7 @@ class Ugyfel extends Model
 
     public function szerelo()
     {
-        return $this->belongsTo(Szerelo::class, 'SzereloID');
+        return $this->belongsTo(Szerelo::class, 'Ugyfel_ID');
     }
 
     public function szolgaltatas()

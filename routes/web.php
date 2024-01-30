@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-   
+    Route::post('/ugyfel', [UgyfelController::class, 'store'])->name('ugyfel.store');
     Route::put('/ugyfel/{ugyfel}', [UgyfelController::class, 'update'])->name('ugyfel.update');
     Route::get('/ugyfel/create', [UgyfelController::class, 'create'])->name('ugyfel.create');
     Route::delete('/ugyfel/{ugyfel}', [UgyfelController::class, 'destroy'])->name('ugyfel.destroy');
@@ -85,7 +85,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/ugyfel/search', 'UgyfelController@search')->name('ugyfel.search');
 });
-Route::post('/ugyfel', [UgyfelController::class, 'store'])->name('ugyfel.store');
 Route::get('/elso-kep', 'App\Http\Controllers\HomeController@elsoKep');
 
 require __DIR__ . '/auth.php';

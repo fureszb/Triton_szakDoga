@@ -10,10 +10,6 @@
 <div class="alert alert-warning">{{ $message }}</div>
 @enderror
 
-@error('objcim')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
 @error('telefon')
 <div class="alert alert-warning">{{ $message }}</div>
 @enderror
@@ -26,41 +22,23 @@
 <div class="alert alert-warning">{{ $message }}</div>
 @enderror
 
-@error('kezd_datum')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('bef_datum')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
 @error('adoszam')
 <div class="alert alert-warning">{{ $message }}</div>
 @enderror
 
-@error('szerelo')
+@error('Ugyfel_ID')
 <div class="alert alert-warning">{{ $message }}</div>
 @enderror
 
-@error('szolgaltatas')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
 
-@error('munka')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('felhasznalt_anyagok')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
 
 <form action="{{ route('ugyfel.update', $ugyfel->Ugyfel_ID) }}" method="POST">
     @csrf
     @method('PUT')
 
     <fieldset>
-        <label for="id">Ugyfel_ID</label>
-         <input type="text" name="id" id="id" value="{{ old('id', $ugyfel->Ugyfel_ID) }}">
+        <label for="Ugyfel_ID">Ugyfel_ID</label>
+         <input type="text" name="Ugyfel_ID" id="Ugyfel_ID" value="{{ old('id', $ugyfel->Ugyfel_ID) }}">
      </fieldset>
 
 
