@@ -1,5 +1,7 @@
 @extends('layout')
-
+@error('error')
+<div class="alert alert-warning">{{ $message }}</div>
+@enderror
 @section('content')
 <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
 <h1 class="title">Megrendelések
@@ -15,7 +17,7 @@
     </a>
 
     <a href="{{ route('megrendeles.create') }}" title="Új megrendelés hozzáadása">
-        
+
         <div class="hozzaad">+</div>
     </a>
 

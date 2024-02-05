@@ -14,10 +14,6 @@ class Szolgaltatas extends Model
 
     use HasFactory;
 
-    public function ugyfelek()
-    {
-        return $this->hasMany(Ugyfel::class, 'SzolgID');
-    }
 
     public function munkanaplok()
     {

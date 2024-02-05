@@ -15,6 +15,7 @@ return new class extends Migration
 
             $table->foreign('Munka_ID')->references('Munka_ID')->on('munkanaplo');
             $table->foreign('Anyag_ID')->references('Anyag_ID')->on('anyagok');
+            $table->integer('Mennyiseg');
             $table->timestamps();
         });
     }

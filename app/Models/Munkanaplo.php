@@ -9,7 +9,7 @@ class Munkanaplo extends Model
 {
     protected $table = 'munkanaplo'; // Táblanév többes számú formában
     protected $primaryKey = 'Munka_ID';
-    protected $fillable = ['Leiras', 'Munkakezdes_Idopontja', 'Munkabefejezes_Idopontja'];
+    protected $fillable = ['Megrendeles_ID', 'Szerelo_ID','Szolgaltatas_ID','Leiras', 'Munkakezdes_Idopontja', 'Munkabefejezes_Idopontja'];
     use HasFactory;
 
     public function szerelo()

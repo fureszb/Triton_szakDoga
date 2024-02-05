@@ -11,8 +11,8 @@ class FelhasznaltAnyag extends Pivot
     protected $table = 'felhasznalt_anyagok';
     public $incrementing = true;
     protected $primaryKey = ['Munka_ID', 'Anyag_ID'];
-    protected $fillable = ['Munka_ID', 'Anyag_ID'];
-   
+    protected $fillable = ['Munka_ID', 'Anyag_ID', 'Mennyiseg'];
+
     use HasFactory;
 
     public function munkanaplo()
@@ -22,6 +22,6 @@ class FelhasznaltAnyag extends Pivot
 
     public function anyag()
     {
-        return $this->belongsTo(Anyag::class, 'Anyag_ID');
+        return $this->belongsTo(FelhasznaltAnyag::class, 'Anyag_ID');
     }
 }

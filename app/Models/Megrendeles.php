@@ -12,8 +12,8 @@ class Megrendeles extends Model
 
     protected $table = 'megrendeles';
     protected $primaryKey = 'Megrendeles_ID';
-    protected $fillable = ['Megrendeles_Nev', 'Objektum_Cim', 'Alairt_e', 'Pdf_EleresiUt'];
-   
+    protected $fillable = ['Ugyfel_ID','Megrendeles_Nev', 'Objektum_Cim', 'Alairt_e', 'Pdf_EleresiUt'];
+
 
 
     // ... (Egyéb modell definíciók)

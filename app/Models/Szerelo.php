@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Szerelo extends Model
 {
-    protected $table = 'szerelek'; // Táblanév többes számú formában
+    protected $table = 'szerelok'; // Táblanév többes számú formában
     protected $primaryKey = 'Szerelo_ID';
     protected $fillable = ['Nev', 'Telefonszam'];
 
@@ -15,7 +15,7 @@ class Szerelo extends Model
 
     public function ugyfelek()
     {
-        return $this->hasMany(Ugyfel::class, 'SzereloID');
+        return $this->hasMany(Ugyfel::class, 'Szerelo_ID');
     }
 
     public function munkanaplok()
