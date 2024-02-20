@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('anyagok', function (Blueprint $table){
+        Schema::create('anyag', function (Blueprint $table){
             $table->id('Anyag_ID');
             $table->text('Leiras');
             $table->timestamps();
@@ -17,7 +17,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('anyagok');
+        Schema::dropIfExists('anyag');
     }
 };
 

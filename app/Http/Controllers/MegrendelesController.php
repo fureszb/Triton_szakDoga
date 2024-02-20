@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FelhasznaltAnyag;
 use App\Models\Megrendeles;
 use App\Models\Munkanaplo;
+use App\Models\Objektum;
 use App\Models\Szerelo;
 use App\Models\Szolgaltatas;
 use App\Models\Ugyfel;
@@ -24,17 +25,14 @@ class MegrendelesController extends Controller
         $szolgaltatasok = Szolgaltatas::all();
         $szerelok = Szerelo::all();
         $anyagok = FelhasznaltAnyag::all();
-        return view('megrendeles.create', compact('ugyfelek', 'szolgaltatasok', 'szerelok', 'anyagok'));
+        $objektumok = Objektum::all();
+        return view('megrendeles.create', compact('ugyfelek', 'objektumok', 'szolgaltatasok', 'szerelok', 'anyagok'));
     }
-
-
-
-
 
 
     public function show($id)
     {
-        $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'anyagok'])->find($id);
+        $megrendeles = Megrendeles::with(['ugyfelek', 'objektumok', 'szolgaltatasok', 'szerelok', 'anyagok'])->find($id);
 
         if (!$megrendeles) {
             return redirect()->route('megrendeles.index')->with('error', 'A megrendelés nem található.');
@@ -42,7 +40,6 @@ class MegrendelesController extends Controller
 
         return view('megrendeles.show', compact('megrendeles'));
     }
-
 
 
 
@@ -63,10 +60,11 @@ class MegrendelesController extends Controller
     {
         $request->validate([
             'Megrendeles_Nev' => 'required',
-            'Objektum_Cim' => 'required',
+            'Objektum_ID' => 'required|exists:objektum,Objektum_ID',
+            'Utca_Hazszam' => 'required',
             'Ugyfel_ID' => 'required|exists:ugyfel,Ugyfel_ID',
-            'Szolgaltatas_ID' => 'required|exists:szolgaltatasok,Szolgaltatas_ID',
-            'Szerelo_ID' => 'required|exists:szerelok,Szerelo_ID',
+            'Szolgaltatas_ID' => 'required|exists:szolgaltatas,Szolgaltatas_ID',
+            'Szerelo_ID' => 'required|exists:szerelo,Szerelo_ID',
             'Leiras' => 'nullable',
             'Munkakezdes_Idopontja' => 'required|date',
             'Munkabefejezes_Idopontja' => 'required|date|after:Munkakezdes_Idopontja',
@@ -77,7 +75,7 @@ class MegrendelesController extends Controller
         // Megrendeles létrehozása
         $megrendeles = new Megrendeles();
         $megrendeles->fill($request->only([
-            'Megrendeles_Nev', 'Objektum_Cim', 'Ugyfel_ID', 'Szolgaltatas_ID'
+            'Megrendeles_Nev', 'Utca_Hazszam', 'Ugyfel_ID', 'Szolgaltatas_ID', 'Objektum_ID'
         ]));
         $megrendeles->save();
 
@@ -92,8 +90,7 @@ class MegrendelesController extends Controller
         ]);
         $munka->save();
 
-
-        $anyagok = $request->input('Anyag_ID');
+        /*$anyagok = $request->input('Anyag_ID');
         $mennyisegek = $request->input('Mennyiseg');
 
         $felhasznaltAnyag = new FelhasznaltAnyag([
@@ -102,35 +99,39 @@ class MegrendelesController extends Controller
             'Mennyiseg' => $mennyisegek
         ]);
 
-        $felhasznaltAnyag->save();
-
-
-
+        $felhasznaltAnyag->save();*/
 
 
         return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen létrehozva.');
     }
 
 
-
-
     public function update(Request $request, $id)
     {
         $request->validate([
             'Megrendeles_Nev' => 'required',
-            'Objektum_Cim' => 'required',
+            'Utca_Hazszam' => 'required',
             'Alairt_e' => 'required',
             'Pdf_EleresiUt' => 'nullable',
         ]);
 
         $megrendeles = Megrendeles::find($id);
         $megrendeles->Megrendeles_Nev = $request->input('Megrendeles_Nev');
-        $megrendeles->Objektum_Cim = $request->input('Objektum_Cim');
+        $megrendeles->Utca_Hazszam = $request->input('Utca_Hazszam');
         $megrendeles->Alairt_e = $request->input('Alairt_e');
         $megrendeles->Pdf_EleresiUt = $request->input('Pdf_EleresiUt');
 
         $megrendeles->save();
 
         return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen frissítve.');
+    }
+
+    public function getSzerelokBySzolgaltatas($szolgaltatasId)
+    {
+        $szerelo = Szerelo::whereHas('szolgaltatasok', function ($query) use ($szolgaltatasId) {
+            $query->where('szolgaltatas.Szolgaltatas_ID', $szolgaltatasId);
+        })->get(['Szerelo_ID', 'Nev']);
+
+        return response()->json($szerelo);
     }
 }

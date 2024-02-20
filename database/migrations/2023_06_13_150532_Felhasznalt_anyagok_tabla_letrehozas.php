@@ -8,13 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('felhasznalt_anyagok', function (Blueprint $table){
+        Schema::create('felhasznalt_anyag', function (Blueprint $table){
             $table->unsignedBigInteger('Munka_ID');
             $table->unsignedBigInteger('Anyag_ID');
             $table->primary(['Munka_ID', 'Anyag_ID']);
 
             $table->foreign('Munka_ID')->references('Munka_ID')->on('munkanaplo');
-            $table->foreign('Anyag_ID')->references('Anyag_ID')->on('anyagok');
+            $table->foreign('Anyag_ID')->references('Anyag_ID')->on('anyag');
             $table->integer('Mennyiseg');
             $table->timestamps();
         });
@@ -22,7 +22,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('felhasznalt_anyagok');
+        Schema::dropIfExists('felhasznalt_anyag');
     }
 };
 

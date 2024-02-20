@@ -13,6 +13,10 @@
             <img src="{{ asset('sort.png') }}" alt="">
         </div>
     </a>
+    <a href="{{ route('ugyfel.create') }}" title="Új ügyfél hozzáadása">
+
+        <div class="hozzaad">+</div>
+    </a>
     <form class="kereses" action="{{ route('ugyfel.index') }}" method="GET">
         <input type="text" name="search" placeholder="Keresés név vagy azonosító alapján">
         <button type="submit">Keresés</button>

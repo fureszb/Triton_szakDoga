@@ -26,12 +26,11 @@ class UgyfelController extends Controller
                 ->orWhere('Ugyfel_ID', 'like', "%$keyword%");
         }
         
-       $ugyfelek = Ugyfel::with('megrendelesek')->get(); 
+       $ugyfelek = Ugyfel::with('megrendeles')->get(); 
         $ugyfel = $query->paginate(9);
 
-        return view('ugyfel.index', compact('ugyfelek'));
+        return view('ugyfel.index', compact('ugyfel'));
 
-        //return view('ugyfel.index', compact('ugyfelek'));
     }
 
 
@@ -91,9 +90,7 @@ class UgyfelController extends Controller
         return redirect()->route('ugyfel.index')->with('success', 'Ügyfél sikeresen létrehozva!');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    
     public function show($id)
     {
         $ugyfel = Ugyfel::find($id);
@@ -101,7 +98,7 @@ class UgyfelController extends Controller
     }
     
 
-    // Edit metódus egy adott ügyfél szerkesztésére
+    
     public function edit($id)
     {
         $ugyfel = Ugyfel::find($id);
@@ -110,9 +107,7 @@ class UgyfelController extends Controller
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(Request $request, string $id)
     {
 
@@ -189,6 +184,6 @@ class UgyfelController extends Controller
             ->orWhere('Ugyfel_ID', $keyword)
             ->paginate(9);
 
-        return view('ugyfel.index', compact('ugyfelek'));
+        return view('ugyfel.index', compact('ugyfel'));
     }
 }

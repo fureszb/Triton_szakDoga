@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  <link rel="stylesheet" href="css/signature-pad.css">
+  <link rel="stylesheet" href="../css/signature-pad.css">
 </head>
 <body onselectstart="return false">
 
@@ -31,8 +31,7 @@
       </div>
     </div>
   </div>
-
-  <script src="js/signature_pad.umd.js"></script>
-  <script src="js/app.js"></script>
+  <script src="../js/signature_pad.umd.js"></script>
+  <script src="../js/app.js"></script>
 </body>
 </html>

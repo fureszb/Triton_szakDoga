@@ -12,7 +12,7 @@ class Megrendeles extends Model
 
     protected $table = 'megrendeles';
     protected $primaryKey = 'Megrendeles_ID';
-    protected $fillable = ['Ugyfel_ID','Megrendeles_Nev', 'Objektum_Cim', 'Alairt_e', 'Pdf_EleresiUt'];
+    protected $fillable = ['Ugyfel_ID', 'Objektum_ID', 'Megrendeles_Nev', 'Utca_Hazszam', 'Alairt_e', 'Pdf_EleresiUt'];
 
 
 
@@ -35,7 +35,27 @@ class Megrendeles extends Model
 
     public function create()
     {
-        $ugyfelek = Ugyfel::all(); // Az összes ügyfél betöltése
+        $ugyfelek = Ugyfel::all();
         return view('megrendeles.create', compact('ugyfelek'));
+    }
+
+    public function szerelo()
+    {
+        return $this->belongsTo(Szerelo::class, 'Szerelo_ID');
+    }
+
+    public function szolgaltatas()
+    {
+        return $this->belongsTo(Szolgaltatas::class, 'Szolgaltatas_ID');
+    }
+
+    public function ugyfel()
+    {
+        return $this->belongsTo(Ugyfel::class, 'Ugyfel_ID');
+    }
+
+    public function felhasznalt_anyagok()
+    {
+        return $this->hasMany(FelhasznaltAnyag::class, 'Munka_ID');
     }
 }
