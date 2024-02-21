@@ -19,8 +19,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('Megrendeles_ID')->references('Megrendeles_ID')->on('megrendeles');
-            $table->foreign('Szerelo_ID')->references('Szerelo_ID')->on('szerelok');
-            $table->foreign('Szolgaltatas_ID')->references('Szolgaltatas_ID')->on('szolgaltatasok');
+            $table->foreign('Szerelo_ID')->references('Szerelo_ID')->on('szerelo');
+            $table->foreign('Szolgaltatas_ID')->references('Szolgaltatas_ID')->on('szolgaltatas');
         });
     }
 

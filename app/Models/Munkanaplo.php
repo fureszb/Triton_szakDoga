@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Munkanaplo extends Model
 {
-    protected $table = 'munkanaplo'; // Táblanév többes számú formában
+    protected $table = 'munkanaplo';
     protected $primaryKey = 'Munka_ID';
     protected $fillable = ['Megrendeles_ID', 'Szerelo_ID','Szolgaltatas_ID','Leiras', 'Munkakezdes_Idopontja', 'Munkabefejezes_Idopontja'];
     use HasFactory;

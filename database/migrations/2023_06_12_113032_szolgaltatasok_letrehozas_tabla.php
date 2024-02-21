@@ -9,13 +9,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('szolgaltatasok', function (Blueprint $table){
+        Schema::create('szolgaltatas', function (Blueprint $table){
             $table->id('Szolgaltatas_ID');
             $table->string('Tipus');
             $table->timestamps();
         });
         
-        DB::table('szolgaltatasok')->insert([
+        DB::table('szolgaltatas')->insert([
             [
                 'Tipus' => 'Kamera telepítés', 
                 'created_at' => now(),
@@ -32,7 +32,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('szolgaltatasok');
+        Schema::dropIfExists('szolgaltatas');
     }
 };
 

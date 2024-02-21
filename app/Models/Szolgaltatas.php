@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Szolgaltatas extends Model
 {
-    protected $table = 'szolgaltatasok';
+    protected $table = 'szolgaltatas';
     protected $primaryKey = 'Szolgaltatas_ID';
 
     protected $fillable = ['Tipus'];
@@ -15,7 +15,7 @@ class Szolgaltatas extends Model
     use HasFactory;
 
 
-    public function munkanaplok()
+    public function munkanaplo()
     {
         return $this->hasMany(Munkanaplo::class, 'Szolgaltatas_ID');
     }

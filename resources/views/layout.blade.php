@@ -8,9 +8,7 @@
     <title>Triton Security</title>
     <link rel="shortcut icon" href="{{ asset('logo.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+   
 </head>
 
 <body>
@@ -28,7 +26,7 @@
             <ul>
                 <li><a href="{{ route('ugyfel.index') }}">Ügyfelek</a></li>
                 <li><a href="{{ route('megrendeles.index') }}">Megrendelők</a></li>
-                <li><a href="{{ route('ugyfel.create') }}">Új ügyfél</a></li>
+                <li><a href="{{ route('ugyfel.create') }}">Új anyag</a></li>
                 @if (auth()->check())
                     <li>
                         <form action="{{ route('logout') }}" method="post">

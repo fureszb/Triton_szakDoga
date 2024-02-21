@@ -10,8 +10,8 @@
             <ul class="list-group">
                 <li class="list-group-item"><strong>Megrendeles ID:</strong> {{ $megrendeles->Megrendeles_ID }}</li>
                 <li class="list-group-item"><strong>Megrendeles Nev:</strong> {{ $megrendeles->Megrendeles_Nev }}</li>
-                <li class="list-group-item"><strong>Objektum Cim:</strong> {{ $megrendeles->Objektum_Cim }}</li>
-                <li class="list-group-item"><strong>Alairt-e:</strong> {{ $megrendeles->Alairt_e ? 'Igen' : 'Nem' }}</li>
+                <li class="list-group-item"><strong>Utca, házszám:</strong> {{ $megrendeles->Utca_Hazszam }}</li>
+                <li class="list-group-item"><strong>Alairt-e:</strong> {{ $megrendeles->Alairt_e ? 'Befejezve' : 'Folyamatban' }}</li>
                 <li class="list-group-item"><strong>Pdf Elérési Út:</strong> {{ $megrendeles->Pdf_EleresiUt ?? '-' }}</li>
                 {{-- Itt jönnek a további mezők --}}
                 <li class="list-group-item"><strong>Ugyfel:</strong> {{ $megrendeles->ugyfel->Nev ?? '-' }}</li>

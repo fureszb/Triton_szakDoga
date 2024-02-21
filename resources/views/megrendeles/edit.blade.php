@@ -27,8 +27,8 @@
     </fieldset>
 
     <fieldset>
-        <label for="Objektum_Cim">Objektum Cim</label>
-        <input type="text" name="Objektum_Cim" id="Objektum_Cim" value="{{ old('Objektum_Cim', $megrendeles->Objektum_Cim) }}">
+        <label for="Utca_Hazszam">Utca, házszám</label>
+        <input type="text" name="Utca_Hazszam" id="Utca_Hazszam" value="{{ old('Utca_Hazszam', $megrendeles->Utca_Hazszam) }}">
     </fieldset>
 
     <fieldset>
