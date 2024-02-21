@@ -7,7 +7,7 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\SignaturePadController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\MegrendelesController;
-
+use App\Http\Controllers\AnyagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,14 +36,27 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
 
 
+    // routes/web.php
+
+
+
+    // routes/web.php
+
+
+
+    Route::get('/anyagok/create', [AnyagController::class, 'create'])->name('anyagok.create');
+    Route::post('/anyagok', [AnyagController::class, 'store'])->name('anyagok.store');
+
+
+
     Route::view('/ugyfel/create_modal', 'ugyfel.create_modal')->name('ugyfel.create_modal');
 
 
 
     Route::get('/megrendeles', [MegrendelesController::class, 'index'])->name('megrendeles.index');
-    
+
     Route::get('/megrendeles/create', [MegrendelesController::class, 'create'])->name('megrendeles.create');
-    
+
     Route::get('/megrendeles/{id}', [MegrendelesController::class, 'show'])->name('megrendeles.show');
 
     Route::post('/megrendeles', [MegrendelesController::class, 'store'])->name('megrendeles.store');

@@ -99,9 +99,20 @@
         <input type="datetime-local" name="Munkabefejezes_Idopontja" id="Munkabefejezes_Idopontja" value="{{ old('Munkabefejezes_Idopontja') }}">
     </fieldset>
 
+    <fieldset>
+        <label for="Anyag_ID">Felhasznált Anyag</label>
+        <select name="Anyag_ID" id="Anyag_ID">
+            <option value="">Válassz anyagot</option>
+            @foreach ($anyagok as $anyag)
+                <option value="{{ $anyag->Anyag_ID }}">{{ $anyag->Leiras }}</option>
+            @endforeach
+        </select>
+        <input type="number" name="Mennyiseg" id="Mennyiseg" placeholder="Mennyiség" min="1">
+        <a href="{{ route('anyagok.create') }}" class="btn btn-primary" title="Új anyag hozzáadása">
+            Új anyag létrehozása
+        </a>
+    </fieldset>
 
-
-   
     @include('signaturePad')
 
     <div class="grid">

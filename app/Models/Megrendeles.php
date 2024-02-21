@@ -16,7 +16,45 @@ class Megrendeles extends Model
 
 
 
-    // ... (Egyéb modell definíciók)
+
+    public function ugyfel()
+    {
+        return $this->belongsTo(Ugyfel::class, 'Ugyfel_ID');
+    }
+
+    public function szolgaltatas()
+    {
+        return $this->belongsTo(Szolgaltatas::class, 'Szolgaltatas_ID');
+    }
+
+    public function szerelo()
+    {
+        return $this->belongsTo(Szerelo::class, 'Szerelo_ID');
+    }
+
+    public function anyagok()
+    {
+
+        return $this->hasMany(Anyag::class); // vagy hasManyThrough, attól függően, hogy van-e köztes tábla
+    }
+
+    public function munkak()
+    {
+        return $this->hasMany(Munkanaplo::class, 'Megrendeles_ID', 'Megrendeles_ID');
+    }
+
+    public function felhasznaltAnyagok()
+    {
+        return $this->hasManyThrough(
+            FelhasznaltAnyag::class,
+            Munkanaplo::class,
+            'Megrendeles_ID',
+            'Munka_ID',
+            'Megrendeles_ID',
+            'Munka_ID'
+        );
+    }
+
 
     /**
      * Scope a query to only include orders where the name or address matches the keyword.

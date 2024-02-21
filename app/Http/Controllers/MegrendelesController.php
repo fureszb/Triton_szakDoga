@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Anyag;
 use App\Models\FelhasznaltAnyag;
 use App\Models\Megrendeles;
 use App\Models\Munkanaplo;
@@ -23,7 +24,8 @@ class MegrendelesController extends Controller
         $ugyfelek = Ugyfel::all();
         $szolgaltatasok = Szolgaltatas::all();
         $szerelok = Szerelo::all();
-        $anyagok = FelhasznaltAnyag::all();
+        //$anyagok = FelhasznaltAnyag::all();
+        $anyagok = Anyag::all();
         return view('megrendeles.create', compact('ugyfelek', 'szolgaltatasok', 'szerelok', 'anyagok'));
     }
 
@@ -34,14 +36,26 @@ class MegrendelesController extends Controller
 
     public function show($id)
     {
-        $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'anyagok'])->find($id);
+        $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo'])
+                        ->find($id);
 
         if (!$megrendeles) {
             return redirect()->route('megrendeles.index')->with('error', 'A megrendelés nem található.');
         }
 
-        return view('megrendeles.show', compact('megrendeles'));
+        // A kapcsolódó munkák és felhasznált anyagok betöltése
+        $munkak = Munkanaplo::where('Megrendeles_ID', $megrendeles->Megrendeles_ID)->get();
+        $felhasznaltAnyagok = [];
+        foreach ($munkak as $munka) {
+            $felhasznaltAnyagokMunkankent = FelhasznaltAnyag::where('Munka_ID', $munka->Munka_ID)->get();
+            foreach ($felhasznaltAnyagokMunkankent as $anyag) {
+                array_push($felhasznaltAnyagok, $anyag);
+            }
+        }
+
+        return view('megrendeles.show', compact('megrendeles', 'munkak', 'felhasznaltAnyagok'));
     }
+
 
 
 
@@ -96,17 +110,19 @@ class MegrendelesController extends Controller
         $anyagok = $request->input('Anyag_ID');
         $mennyisegek = $request->input('Mennyiseg');
 
-        $felhasznaltAnyag = new FelhasznaltAnyag([
-            'Munka_ID' => $munka->Munka_ID,
-            'Anyag_ID' => $anyagok->Anyag_ID,
-            'Mennyiseg' => $mennyisegek
-        ]);
+        if (is_array($anyagok) && is_array($mennyisegek)) {
+            foreach ($anyagok as $index => $anyagId) {
+                if (isset($mennyisegek[$index])) {
+                    $felhasznaltAnyag = new FelhasznaltAnyag([
+                        'Munka_ID' => $munka->Munka_ID,
+                        'Anyag_ID' => $anyagId,
+                        'Mennyiseg' => $mennyisegek[$index]
+                    ]);
 
-        $felhasznaltAnyag->save();
-
-
-
-
+                    $felhasznaltAnyag->save();
+                }
+            }
+        }
 
         return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen létrehozva.');
     }
