@@ -11,6 +11,7 @@ use App\Models\Szerelo;
 use App\Models\Szolgaltatas;
 use App\Models\Ugyfel;
 use Illuminate\Http\Request;
+use Psy\Readline\Hoa\Console;
 
 class MegrendelesController extends Controller
 {
@@ -25,32 +26,24 @@ class MegrendelesController extends Controller
         $ugyfelek = Ugyfel::all();
         $szolgaltatasok = Szolgaltatas::all();
         $szerelok = Szerelo::all();
-<<<<<<< HEAD
-        //$anyagok = FelhasznaltAnyag::all();
         $anyagok = Anyag::all();
-        return view('megrendeles.create', compact('ugyfelek', 'szolgaltatasok', 'szerelok', 'anyagok'));
-=======
-        $anyagok = FelhasznaltAnyag::all();
         $objektumok = Objektum::all();
+        $felhasznaltAnyag = FelhasznaltAnyag::all();
+
         return view('megrendeles.create', compact('ugyfelek', 'objektumok', 'szolgaltatasok', 'szerelok', 'anyagok'));
->>>>>>> c0ac88a7e73531f4bab2493394774490e0595e08
     }
 
 
     public function show($id)
     {
-<<<<<<< HEAD
-        $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo'])
-                        ->find($id);
-=======
-        $megrendeles = Megrendeles::with(['ugyfelek', 'objektumok', 'szolgaltatasok', 'szerelok', 'anyagok'])->find($id);
->>>>>>> c0ac88a7e73531f4bab2493394774490e0595e08
+
+        $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag'])->find($id);
+
 
         if (!$megrendeles) {
             return redirect()->route('megrendeles.index')->with('error', 'A megrendelés nem található.');
         }
 
-        // A kapcsolódó munkák és felhasznált anyagok betöltése
         $munkak = Munkanaplo::where('Megrendeles_ID', $megrendeles->Megrendeles_ID)->get();
         $felhasznaltAnyagok = [];
         foreach ($munkak as $munka) {
@@ -63,13 +56,6 @@ class MegrendelesController extends Controller
         return view('megrendeles.show', compact('megrendeles', 'munkak', 'felhasznaltAnyagok'));
     }
 
-
-
-<<<<<<< HEAD
-
-
-=======
->>>>>>> c0ac88a7e73531f4bab2493394774490e0595e08
     public function edit($id)
     {
         $megrendeles = Megrendeles::find($id);
@@ -95,8 +81,8 @@ class MegrendelesController extends Controller
             'Leiras' => 'nullable',
             'Munkakezdes_Idopontja' => 'required|date',
             'Munkabefejezes_Idopontja' => 'required|date|after:Munkakezdes_Idopontja',
-            'Anyag_ID.*' => 'required|exists:anyagok,Anyag_ID',
-            'Mennyiseg.*' => 'required|numeric|min:1'
+            'Anyag_ID' => 'required|exists:anyag,Anyag_ID',
+            'Mennyiseg' => 'required|min:1'
         ]);
 
         // Megrendeles létrehozása
@@ -111,38 +97,55 @@ class MegrendelesController extends Controller
             'Megrendeles_ID' => $megrendeles->Megrendeles_ID,
             'Szerelo_ID' => $request->Szerelo_ID,
             'Szolgaltatas_ID' => $request->Szolgaltatas_ID,
-            'Leiras' => $request->Leiras,
-            'Munkakezdes_Idopontja' => $request->Munkakezdes_Idopontja,
-            'Munkabefejezes_Idopontja' => $request->Munkabefejezes_Idopontja
+                'Leiras' => $request->Leiras,
+                'Munkakezdes_Idopontja' => $request->Munkakezdes_Idopontja,
+                'Munkabefejezes_Idopontja' => $request->Munkabefejezes_Idopontja
         ]);
         $munka->save();
 
-        /*$anyagok = $request->input('Anyag_ID');
+
+        // A megrendelés és az első munka létrehozása után
+        /*$szereloIDs = $request->input('Szerelo_ID');
+        $szolgaltatasIDs = $request->input('Szolgaltatas_ID');
+        $eredetiLeiras = $request->input('Leiras');
+        $eredetiMunkakezdes = $request->input('Munkakezdes_Idopontja');
+        $eredetiMunkabefejezes = $request->input('Munkabefejezes_Idopontja');
+
+        foreach ($szereloIDs as $index => $szereloID) {
+            if (!empty($szereloID) && !empty($szolgaltatasIDs[$index])) {
+                $munka = new Munkanaplo([
+                    'Megrendeles_ID' => $megrendeles->id,
+                    'Szerelo_ID' => $szereloID,
+                    'Szolgaltatas_ID' => $szolgaltatasIDs[$index],
+                    'Leiras' => $eredetiLeiras, // Az eredeti leírás használata minden munkánál
+                    'Munkakezdes_Idopontja' => $eredetiMunkakezdes, // Az eredeti munkakezdés használata
+                    'Munkabefejezes_Idopontja' => $eredetiMunkabefejezes, // Az eredeti munkabefejezés használata
+                ]);
+                $munka->save();
+            }
+        }*/
+
+
+
+
+        $anyagok = $request->input('Anyag_ID');
         $mennyisegek = $request->input('Mennyiseg');
 
-<<<<<<< HEAD
+
         if (is_array($anyagok) && is_array($mennyisegek)) {
-            foreach ($anyagok as $index => $anyagId) {
+            //dd($anyagok, $mennyisegek);
+            foreach ($anyagok as $index => $Anyag_ID) {
                 if (isset($mennyisegek[$index])) {
                     $felhasznaltAnyag = new FelhasznaltAnyag([
                         'Munka_ID' => $munka->Munka_ID,
-                        'Anyag_ID' => $anyagId,
+                        'Anyag_ID' => $Anyag_ID,
                         'Mennyiseg' => $mennyisegek[$index]
                     ]);
-=======
-        $felhasznaltAnyag = new FelhasznaltAnyag([
-            'Munka_ID' => $munka->Munka_ID,
-            'Anyag_ID' => $anyagok->Anyag_ID,
-            'Mennyiseg' => $mennyisegek
-        ]);
-
-        $felhasznaltAnyag->save();*/
->>>>>>> c0ac88a7e73531f4bab2493394774490e0595e08
-
                     $felhasznaltAnyag->save();
                 }
             }
         }
+
 
         return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen létrehozva.');
     }

@@ -341,6 +341,11 @@ nav button {
     padding: 3px 8px 11px 7px;
 }
 
+.munkaSzereloPár{
+    display: grid;
+    grid-template-columns: 15% 45%;
+}
+
 .grid{
     margin-top: 20px;
     display: grid;

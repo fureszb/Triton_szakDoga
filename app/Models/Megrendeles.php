@@ -22,6 +22,11 @@ class Megrendeles extends Model
         return $this->belongsTo(Ugyfel::class, 'Ugyfel_ID');
     }
 
+    public function objektum()
+    {
+        return $this->belongsTo(Objektum::class, 'Objektum_ID');
+    }
+
     public function szolgaltatas()
     {
         return $this->belongsTo(Szolgaltatas::class, 'Szolgaltatas_ID');
@@ -32,10 +37,14 @@ class Megrendeles extends Model
         return $this->belongsTo(Szerelo::class, 'Szerelo_ID');
     }
 
-    public function anyagok()
+    public function anyag()
     {
-
-        return $this->hasMany(Anyag::class); // vagy hasManyThrough, attól függően, hogy van-e köztes tábla
+        return $this->hasManyThrough(
+            Anyag::class,
+            FelhasznaltAnyag::class,
+            'Anyag_ID',
+            'Anyag_ID',
+        );
     }
 
     public function munkak()
@@ -55,6 +64,13 @@ class Megrendeles extends Model
         );
     }
 
+    public function create()
+    {
+        $ugyfelek = Ugyfel::all();
+        return view('megrendeles.create', compact('ugyfelek'));
+    }
+
+
 
     /**
      * Scope a query to only include orders where the name or address matches the keyword.
@@ -69,31 +85,5 @@ class Megrendeles extends Model
             $query->where('Megrendeles_Nev', 'LIKE', '%' . $keyword . '%')
                 ->orWhere('Objektum_Cim', 'LIKE', '%' . $keyword . '%');
         });
-    }
-
-    public function create()
-    {
-        $ugyfelek = Ugyfel::all();
-        return view('megrendeles.create', compact('ugyfelek'));
-    }
-
-    public function szerelo()
-    {
-        return $this->belongsTo(Szerelo::class, 'Szerelo_ID');
-    }
-
-    public function szolgaltatas()
-    {
-        return $this->belongsTo(Szolgaltatas::class, 'Szolgaltatas_ID');
-    }
-
-    public function ugyfel()
-    {
-        return $this->belongsTo(Ugyfel::class, 'Ugyfel_ID');
-    }
-
-    public function felhasznalt_anyagok()
-    {
-        return $this->hasMany(FelhasznaltAnyag::class, 'Munka_ID');
     }
 }

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('anyag', function (Blueprint $table){
             $table->id('Anyag_ID');
-            $table->text('Leiras');
+            $table->text('Nev');
             $table->timestamps();
         });
     }

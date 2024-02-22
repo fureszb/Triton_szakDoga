@@ -7,13 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Anyag extends Model
 {
-    protected $table = 'anyagok';
+    protected $table = 'anyag';
     protected $primaryKey = 'Anyag_ID';
-    protected $fillable = ['Leiras'];
+    protected $fillable = ['Nev'];
     use HasFactory;
-
-    public function felhasznalt_anyagok()
-    {
-        return $this->hasMany(FelhasznaltAnyag::class, 'Anyag_ID');
-    }
 }
