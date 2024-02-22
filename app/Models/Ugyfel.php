@@ -9,7 +9,7 @@ class Ugyfel extends Model
 {
     protected $table = 'ugyfel';
     protected $primaryKey = 'Ugyfel_ID';
-    protected $fillable = ['Ugyfel_ID',  'Nev', 'Email', 'Telefonszam', 'Szamlazasi_Nev', 'Szamlazasi_Cim', 'Adoszam'];
+    protected $fillable = ['Varos_ID','Ugyfel_ID',  'Nev', 'Email', 'Telefonszam', 'Szamlazasi_Nev', 'Szamlazasi_Cim', 'Adoszam'];
 
 
     use HasFactory;

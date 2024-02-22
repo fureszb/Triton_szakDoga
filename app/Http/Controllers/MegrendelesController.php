@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Anyag;
 use App\Models\FelhasznaltAnyag;
 use App\Models\Megrendeles;
-use App\Models\Munkanaplo;
+use App\Models\Munka;
 use App\Models\Objektum;
 use App\Models\Szerelo;
 use App\Models\Szolgaltatas;
 use App\Models\Ugyfel;
+use App\Models\Varos;
 use Illuminate\Http\Request;
 use Psy\Readline\Hoa\Console;
 
@@ -27,10 +28,10 @@ class MegrendelesController extends Controller
         $szolgaltatasok = Szolgaltatas::all();
         $szerelok = Szerelo::all();
         $anyagok = Anyag::all();
-        $objektumok = Objektum::all();
+        $varosok = Varos::all();
         $felhasznaltAnyag = FelhasznaltAnyag::all();
 
-        return view('megrendeles.create', compact('ugyfelek', 'objektumok', 'szolgaltatasok', 'szerelok', 'anyagok'));
+        return view('megrendeles.create', compact('ugyfelek', 'varosok', 'szolgaltatasok', 'szerelok', 'anyagok'));
     }
 
 
@@ -44,7 +45,7 @@ class MegrendelesController extends Controller
             return redirect()->route('megrendeles.index')->with('error', 'A megrendelés nem található.');
         }
 
-        $munkak = Munkanaplo::where('Megrendeles_ID', $megrendeles->Megrendeles_ID)->get();
+        $munkak = Munka::where('Megrendeles_ID', $megrendeles->Megrendeles_ID)->get();
         $felhasznaltAnyagok = [];
         foreach ($munkak as $munka) {
             $felhasznaltAnyagokMunkankent = FelhasznaltAnyag::where('Munka_ID', $munka->Munka_ID)->get();
@@ -63,10 +64,10 @@ class MegrendelesController extends Controller
         $szolgaltatasok = Szolgaltatas::all();
         $szerelok = Szerelo::all();
         $anyagok = Anyag::all();
-        $objektumok = Objektum::all();
+        $varosok = Varos::all();
         $felhasznaltAnyag = FelhasznaltAnyag::all();
 
-        return view('megrendeles.edit', compact('megrendeles','ugyfelek', 'objektumok', 'szolgaltatasok', 'szerelok', 'anyagok'));
+        return view('megrendeles.edit', compact('megrendeles','ugyfelek', 'varosok', 'szolgaltatasok', 'szerelok', 'anyagok'));
     }
 
     public function destroy($id)
@@ -80,7 +81,7 @@ class MegrendelesController extends Controller
     {
         $request->validate([
             'Megrendeles_Nev' => 'required',
-            'Objektum_ID' => 'required|exists:objektum,Objektum_ID',
+            'Varos_ID' => 'required|exists:varos,Varos_ID',
             'Utca_Hazszam' => 'required',
             'Ugyfel_ID' => 'required|exists:ugyfel,Ugyfel_ID',
             'Szolgaltatas_ID' => 'required|exists:szolgaltatas,Szolgaltatas_ID',
@@ -95,12 +96,12 @@ class MegrendelesController extends Controller
         // Megrendeles létrehozása
         $megrendeles = new Megrendeles();
         $megrendeles->fill($request->only([
-            'Megrendeles_Nev', 'Utca_Hazszam', 'Ugyfel_ID', 'Szolgaltatas_ID', 'Objektum_ID'
+            'Megrendeles_Nev', 'Utca_Hazszam', 'Ugyfel_ID', 'Szolgaltatas_ID', 'Varos_ID'
         ]));
         $megrendeles->save();
 
         // Munka létrehozása
-        $munka = new Munkanaplo([
+        $munka = new Munka([
             'Megrendeles_ID' => $megrendeles->Megrendeles_ID,
             'Szerelo_ID' => $request->Szerelo_ID,
             'Szolgaltatas_ID' => $request->Szolgaltatas_ID,
@@ -163,7 +164,7 @@ class MegrendelesController extends Controller
     $request->validate([
         'Megrendeles_Nev' => 'required',
         'Utca_Hazszam' => 'required',
-        'Objektum_ID' => 'required|exists:objektum,Objektum_ID',
+        'Varos_ID' => 'required|exists:varos,Varos_ID',
         'Ugyfel_ID' => 'required|exists:ugyfel,Ugyfel_ID',
         'Szolgaltatas_ID' => 'required|exists:szolgaltatas,Szolgaltatas_ID',
         'Szerelo_ID' => 'required|exists:szerelo,Szerelo_ID',
@@ -173,8 +174,8 @@ class MegrendelesController extends Controller
         'Alairt_e' => 'required|boolean',
         'Pdf_EleresiUt' => 'nullable',
         // Feltételezve, hogy van egy "Anyagok" mező a formban, ami tömbként jön
-        'Anyagok.*.Anyag_ID' => 'required|exists:anyag,Anyag_ID',
-        'Anyagok.*.Mennyiseg' => 'required|numeric|min:0.01',
+        'Anyag_ID' => 'required|exists:anyag,Anyag_ID',
+        'Mennyiseg' => 'required|min:1',
     ]);
 
     $megrendeles = Megrendeles::find($id);
@@ -186,7 +187,7 @@ class MegrendelesController extends Controller
     $megrendeles->update($request->only([
         'Megrendeles_Nev',
         'Utca_Hazszam',
-        'Objektum_ID',
+        'Varos_ID',
         'Ugyfel_ID',
         'Szolgaltatas_ID',
         'Szerelo_ID',

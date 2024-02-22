@@ -12,7 +12,7 @@ class Megrendeles extends Model
 
     protected $table = 'megrendeles';
     protected $primaryKey = 'Megrendeles_ID';
-    protected $fillable = ['Ugyfel_ID', 'Objektum_ID', 'Megrendeles_Nev', 'Utca_Hazszam', 'Alairt_e', 'Pdf_EleresiUt'];
+    protected $fillable = ['Ugyfel_ID', 'Varos_ID', 'Megrendeles_Nev', 'Utca_Hazszam', 'Alairt_e', 'Pdf_EleresiUt'];
 
 
 
@@ -22,9 +22,9 @@ class Megrendeles extends Model
         return $this->belongsTo(Ugyfel::class, 'Ugyfel_ID');
     }
 
-    public function objektum()
+    public function varos()
     {
-        return $this->belongsTo(Objektum::class, 'Objektum_ID');
+        return $this->belongsTo(Varos::class, 'Varos_ID');
     }
 
     public function szolgaltatas()
@@ -49,14 +49,14 @@ class Megrendeles extends Model
 
     public function munkak()
     {
-        return $this->hasMany(Munkanaplo::class, 'Megrendeles_ID', 'Megrendeles_ID');
+        return $this->hasMany(Munka::class, 'Megrendeles_ID', 'Megrendeles_ID');
     }
 
     public function felhasznaltAnyagok()
     {
         return $this->hasManyThrough(
             FelhasznaltAnyag::class,
-            Munkanaplo::class,
+            Munka::class,
             'Megrendeles_ID',
             'Munka_ID',
             'Megrendeles_ID',

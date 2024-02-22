@@ -33,14 +33,13 @@
                 value="{{ old('Megrendeles_Nev', $megrendeles->Megrendeles_Nev) }}">
         </fieldset>
 
-        <!-- Város ID használata helyett, de a logikát alkalmazni kell az Objektum_ID -> Varos_ID módosításra -->
         <fieldset>
-            <label for="Objektum_ID">Város</label>
-            <select name="Objektum_ID" id="Objektum_ID">
+            <label for="Varos_ID">Város</label>
+            <select name="Varos_ID" id="Varos_ID">
                 <option value="">Válassz várost</option>
-                @foreach ($objektumok as $objektum)
-                    <option value="{{ $objektum->Objektum_ID }}"
-                        {{ $objektum->Objektum_ID == $megrendeles->Objektum_ID ? 'selected' : '' }}>{{ $objektum->Nev }}
+                @foreach ($varosok as $varos)
+                    <option value="{{ $varos->Varos_ID }}"
+                        {{ $varos->Varos_ID == $megrendeles->Varos_ID ? 'selected' : '' }}>{{ $varos->Nev }}
                     </option>
                 @endforeach
             </select>

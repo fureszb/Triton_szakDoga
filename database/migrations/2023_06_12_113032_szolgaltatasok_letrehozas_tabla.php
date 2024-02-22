@@ -14,20 +14,30 @@ return new class extends Migration
             $table->string('Tipus');
             $table->timestamps();
         });
-        
+
         DB::table('szolgaltatas')->insert([
             [
-                'Tipus' => 'Kamera telepítés', 
+                'Tipus' => 'Telepítés',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'Tipus' => 'Objektum őrzés', 
+                'Tipus' => 'Karbantartás',
                 'created_at' => now(),
                 'updated_at' => now()
-            ]
+            ],
+            [
+                'Tipus' => 'Bővítés',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'Tipus' => 'Egyéb',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
         ]);
-        
+
     }
 
     public function down(): void

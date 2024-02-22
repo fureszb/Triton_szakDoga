@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('megrendeles', function (Blueprint $table){
             $table->bigIncrements('Megrendeles_ID');
             $table->unsignedBigInteger('Ugyfel_ID');
-            $table->unsignedBigInteger('Objektum_ID');
+            $table->unsignedBigInteger('Varos_ID');
             $table->string('Megrendeles_Nev');
             $table->string('Utca_Hazszam');
             $table->boolean('Alairt_e')->default(false);
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('Ugyfel_ID')->references('Ugyfel_ID')->on('ugyfel');
-            $table->foreign('Objektum_ID')->references('Objektum_ID')->on('objektum');
+            $table->foreign('Varos_ID')->references('Varos_ID')->on('varos');
         });
     }
 

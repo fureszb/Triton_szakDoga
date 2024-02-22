@@ -13,7 +13,7 @@ return new class extends Migration
             $table->unsignedBigInteger('Anyag_ID');
             $table->primary(['Munka_ID', 'Anyag_ID']);
 
-            $table->foreign('Munka_ID')->references('Munka_ID')->on('munkanaplo');
+            $table->foreign('Munka_ID')->references('Munka_ID')->on('munka');
             $table->foreign('Anyag_ID')->references('Anyag_ID')->on('anyag');
             $table->integer('Mennyiseg');
             $table->timestamps();

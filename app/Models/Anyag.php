@@ -9,6 +9,6 @@ class Anyag extends Model
 {
     protected $table = 'anyag';
     protected $primaryKey = 'Anyag_ID';
-    protected $fillable = ['Nev'];
+    protected $fillable = ['Nev', 'Mertekegyseg'];
     use HasFactory;
 }

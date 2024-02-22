@@ -11,6 +11,7 @@ return new class extends Migration
     {
         Schema::create('ugyfel', function (Blueprint $table){
             $table->unsignedBigInteger('Ugyfel_ID')->primary();
+            $table->unsignedBigInteger('Varos_ID');
             $table->string('Nev');
             $table->string('Email');
             $table->string('Telefonszam');
@@ -19,17 +20,20 @@ return new class extends Migration
             $table->string('Adoszam')->nullable();
             $table->timestamps();
 
+            $table->foreign('Varos_ID')->references('Varos_ID')->on('varos');
+
             //$table->index('Ugyfel_ID');
         });
 
         DB::table('ugyfel')->insert([
             [
                 'Ugyfel_ID' => '1',
-                'Nev' => 'Gipsz Jakab', 
+                'Varos_ID' => '1',
+                'Nev' => 'Gipsz Jakab',
                 'Email' =>"valami@gmail.com",
                 'Telefonszam' => '06301234567',
-                'Szamlazasi_Nev' => 'Gipsz Jakab', 
-                'Szamlazasi_Cim' =>"2310 Szigetszentmiklós, Kossuth utca, 12",
+                'Szamlazasi_Nev' => 'Gipsz Jakab',
+                'Szamlazasi_Cim' =>"Kossuth utca, 12",
                 'created_at' => now(),
                 'updated_at' => now()
             ]

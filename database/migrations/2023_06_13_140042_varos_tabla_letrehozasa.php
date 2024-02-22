@@ -9,30 +9,33 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('objektum', function (Blueprint $table) {
-            $table->id('Objektum_ID');
-            $table->string('Varos');
+        Schema::create('varos', function (Blueprint $table) {
+            $table->id('Varos_ID');
+            $table->integer('Irny_szam');
+            $table->string('Nev');
             $table->timestamps();
         });
 
-        DB::table('objektum')->insert([
-            [
-                'Varos' => 'Szigeszentmiklós',
+        DB::table('varos')->insert([
+            [   'Irny_szam' => 2310,
+                'Nev' => 'Szigeszentmiklós',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            ['Irny_szam' => 2314,
+                'Nev' => 'Halásztelek',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'Varos' => 'Halásztelek',
+                'Irny_szam' => 2335,
+                'Nev' => 'Taksony',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'Varos' => 'Taksony',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'Varos' => 'Budapest',
+                'Irny_szam' => 2330,
+                'Nev' => 'Dunaharaszti',
                 'created_at' => now(),
                 'updated_at' => now()
             ]
@@ -41,6 +44,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('objektum');
+        Schema::dropIfExists('varos');
     }
 };
