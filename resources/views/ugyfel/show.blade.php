@@ -13,7 +13,7 @@
                 <li class="list-group-item"><strong>Email:</strong> {{ $ugyfel->Email }}</li>
                 <li class="list-group-item"><strong>Telefonszám:</strong> {{ $ugyfel->Telefonszam }}</li>
                 <li class="list-group-item"><strong>Számlázási név:</strong> {{ $ugyfel->Szamlazasi_Nev }}</li>
-                <li class="list-group-item"><strong>Számlázási cím:</strong> {{ $ugyfel->Szamlazasi_Cim }}</li>
+                <li class="list-group-item"><strong>Számlázási cím:</strong> {{ $varos->Irny_szam }} {{ $varos->Nev }}, {{ $ugyfel->Szamlazasi_Cim }}</li>
                 @if (is_null($ugyfel->Adoszam))
                 <li class="list-group-item"><strong>Adószám:</strong> -</li>
                 @else
@@ -22,8 +22,8 @@
 
             </ul>
         </div>
-       
-       
+
+
     </div>
 </div>
 

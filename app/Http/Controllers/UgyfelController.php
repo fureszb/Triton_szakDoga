@@ -8,6 +8,7 @@ use App\Models\Munkanaplo;
 use App\Models\Szerelo;
 use App\Models\Szolgaltatas;
 use App\Models\Ugyfel;
+use App\Models\Varos;
 use Illuminate\Http\Request;
 
 class UgyfelController extends Controller
@@ -90,11 +91,11 @@ class UgyfelController extends Controller
         return redirect()->route('ugyfel.index')->with('success', 'Ügyfél sikeresen létrehozva!');
     }
 
-
     public function show($id)
     {
         $ugyfel = Ugyfel::find($id);
-        return view('ugyfel.show', compact('ugyfel'));
+        $varos = Varos::where('Varos_ID', $ugyfel->Varos_ID)->first();
+        return view('ugyfel.show', compact('ugyfel', 'varos'));
     }
 
 
