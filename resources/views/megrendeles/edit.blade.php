@@ -1,49 +1,107 @@
 @extends('layout')
 
 @section('content')
-@error('Megrendeles_Nev')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
+    <h1>Új Megrendelés Szerkesztése</h1>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-@error('Objektum_Cim')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
+    <form id="editForm" action="{{ route('megrendeles.update', $megrendeles->Megrendeles_ID) }}" method="POST">
+        @csrf
+        @method('PUT')
 
-@error('Alairt_e')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
+        <fieldset>
+            <label for="Ugyfel_ID">Ügyfél neve</label>
+            <select name="Ugyfel_ID" id="Ugyfel_ID">
+                <option value="">Válassz Ügyfelet</option>
+                @foreach ($ugyfelek as $ugyfel)
+                    <option value="{{ $ugyfel->Ugyfel_ID }}"
+                        {{ $ugyfel->Ugyfel_ID == $megrendeles->Ugyfel_ID ? 'selected' : '' }}>{{ $ugyfel->Nev }}</option>
+                @endforeach
+            </select>
+        </fieldset>
 
-@error('Pdf_EleresiUt')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
+        <fieldset>
+            <label for="Megrendeles_Nev">Megrendelő neve</label>
+            <input type="text" name="Megrendeles_Nev" id="Megrendeles_Nev"
+                value="{{ old('Megrendeles_Nev', $megrendeles->Megrendeles_Nev) }}">
+        </fieldset>
 
-<form action="{{ route('megrendeles.update', $megrendeles->Megrendeles_ID) }}" method="POST">
-    @csrf
-    @method('PUT')
+        <!-- Város ID használata helyett, de a logikát alkalmazni kell az Objektum_ID -> Varos_ID módosításra -->
+        <fieldset>
+            <label for="Objektum_ID">Város</label>
+            <select name="Objektum_ID" id="Objektum_ID">
+                <option value="">Válassz várost</option>
+                @foreach ($objektumok as $objektum)
+                    <option value="{{ $objektum->Objektum_ID }}"
+                        {{ $objektum->Objektum_ID == $megrendeles->Objektum_ID ? 'selected' : '' }}>{{ $objektum->Nev }}
+                    </option>
+                @endforeach
+            </select>
+        </fieldset>
 
-    <fieldset>
-        <label for="Megrendeles_Nev">Megrendeles Nev</label>
-        <input type="text" name="Megrendeles_Nev" id="Megrendeles_Nev" value="{{ old('Megrendeles_Nev', $megrendeles->Megrendeles_Nev) }}">
-    </fieldset>
+        <fieldset>
+            <label for="Utca_Hazszam">Utca, házszám</label>
+            <input type="text" name="Utca_Hazszam" id="Utca_Hazszam"
+                value="{{ old('Utca_Hazszam', $megrendeles->Utca_Hazszam) }}">
+        </fieldset>
 
-    <fieldset>
-        <label for="Utca_Hazszam">Utca, házszám</label>
-        <input type="text" name="Utca_Hazszam" id="Utca_Hazszam" value="{{ old('Utca_Hazszam', $megrendeles->Utca_Hazszam) }}">
-    </fieldset>
+        <fieldset>
+            <label for="Pdf_EleresiUt">PDF Elérési Út</label>
+            <input type="text" name="Pdf_EleresiUt" id="Pdf_EleresiUt"
+                value="{{ old('Pdf_EleresiUt', $megrendeles->Pdf_EleresiUt) }}">
+        </fieldset>
 
-    <fieldset>
-        <label for="Alairt_e">Alairt-e</label>
-        <select name="Alairt_e" id="Alairt_e">
-            <option value="0" {{ old('Alairt_e', $megrendeles->Alairt_e) === 0 ? 'selected' : '' }}>Nem</option>
-            <option value="1" {{ old('Alairt_e', $megrendeles->Alairt_e) === 1 ? 'selected' : '' }}>Igen</option>
-        </select>
-    </fieldset>
+        <!-- A szolgáltatások és szerelők dinamikus kezelése kihívást jelenthet, ezért a példában egyszerűsített logikát alkalmazunk -->
+        <fieldset>
+            <label for="Szolgaltatas_ID">Szolgáltatás</label>
+            <select name="Szolgaltatas_ID" id="Szolgaltatas_ID">
+                <option value="">Válassz szolgáltatást</option>
+                @foreach ($szolgaltatasok as $szolgaltatas)
+                    <option value="{{ $szolgaltatas->Szolgaltatas_ID }}"
+                        {{ $szolgaltatas->Szolgaltatas_ID == $megrendeles->Szolgaltatas_ID ? 'selected' : '' }}>
+                        {{ $szolgaltatas->Nev }}</option>
+                @endforeach
+            </select>
+        </fieldset>
 
-    <fieldset>
-        <label for="Pdf_EleresiUt">Pdf Elérési Út</label>
-        <input type="text" name="Pdf_EleresiUt" id="Pdf_EleresiUt" value="{{ old('Pdf_EleresiUt', $megrendeles->Pdf_EleresiUt) }}">
-    </fieldset>
+        <fieldset>
+            <label for="Szerelo_ID">Szerelő</label>
+            <select name="Szerelo_ID" id="Szerelo_ID">
+                <option value="">Válassz szerelőt</option>
+                @foreach ($szerelok as $szerelo)
+                    <option value="{{ $szerelo->Szerelo_ID }}"
+                        {{ $szerelo->Szerelo_ID == $megrendeles->Szerelo_ID ? 'selected' : '' }}>{{ $szerelo->Nev }}
+                    </option>
+                @endforeach
+            </select>
+        </fieldset>
 
-    <button type="submit">Módosít</button>
-</form>
+        <fieldset>
+            <label for="Leiras">Leírás</label>
+            <textarea name="Leiras" id="Leiras">{{ old('Leiras', $megrendeles->Leiras) }}</textarea>
+        </fieldset>
+
+        <fieldset>
+            <label for="Munkakezdes">Munkakezdés időpontja</label>
+            <input type="datetime-local" name="Munkakezdes" id="Munkakezdes"
+                value="{{ old('Munkakezdes', date('Y-m-d\TH:i', strtotime($megrendeles->Munkakezdes))) }}">
+        </fieldset>
+
+        <fieldset>
+            <label for="Munkabefejezes">Munkabefejezés időpontja</label>
+            <input type="datetime-local" name="Munkabefejezes" id="Munkabefejezes"
+                value="{{ old('Munkabefejezes', date('Y-m-d\TH:i', strtotime($megrendeles->Munkabefejezes))) }}">
+        </fieldset>
+
+        <!-- Anyagok kezelésére egy külön szekció lehet szükséges, amely dinamikusan kezeli az anyagok listáját -->
+
+        <button type="submit" class="btn btn-primary">Mentés</button>
+    </form>
 @endsection

@@ -59,7 +59,14 @@ class MegrendelesController extends Controller
     public function edit($id)
     {
         $megrendeles = Megrendeles::find($id);
-        return view('megrendeles.edit', compact('megrendeles'));
+        $ugyfelek = Ugyfel::all();
+        $szolgaltatasok = Szolgaltatas::all();
+        $szerelok = Szerelo::all();
+        $anyagok = Anyag::all();
+        $objektumok = Objektum::all();
+        $felhasznaltAnyag = FelhasznaltAnyag::all();
+
+        return view('megrendeles.edit', compact('megrendeles','ugyfelek', 'objektumok', 'szolgaltatasok', 'szerelok', 'anyagok'));
     }
 
     public function destroy($id)
@@ -152,24 +159,62 @@ class MegrendelesController extends Controller
 
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'Megrendeles_Nev' => 'required',
-            'Utca_Hazszam' => 'required',
-            'Alairt_e' => 'required',
-            'Pdf_EleresiUt' => 'nullable',
-        ]);
+{
+    $request->validate([
+        'Megrendeles_Nev' => 'required',
+        'Utca_Hazszam' => 'required',
+        'Objektum_ID' => 'required|exists:objektum,Objektum_ID',
+        'Ugyfel_ID' => 'required|exists:ugyfel,Ugyfel_ID',
+        'Szolgaltatas_ID' => 'required|exists:szolgaltatas,Szolgaltatas_ID',
+        'Szerelo_ID' => 'required|exists:szerelo,Szerelo_ID',
+        'Leiras' => 'nullable',
+        'Munkakezdes_Idopontja' => 'required|date',
+        'Munkabefejezes_Idopontja' => 'required|date|after_or_equal:Munkakezdes_Idopontja',
+        'Alairt_e' => 'required|boolean',
+        'Pdf_EleresiUt' => 'nullable',
+        // Feltételezve, hogy van egy "Anyagok" mező a formban, ami tömbként jön
+        'Anyagok.*.Anyag_ID' => 'required|exists:anyag,Anyag_ID',
+        'Anyagok.*.Mennyiseg' => 'required|numeric|min:0.01',
+    ]);
 
-        $megrendeles = Megrendeles::find($id);
-        $megrendeles->Megrendeles_Nev = $request->input('Megrendeles_Nev');
-        $megrendeles->Utca_Hazszam = $request->input('Utca_Hazszam');
-        $megrendeles->Alairt_e = $request->input('Alairt_e');
-        $megrendeles->Pdf_EleresiUt = $request->input('Pdf_EleresiUt');
-
-        $megrendeles->save();
-
-        return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen frissítve.');
+    $megrendeles = Megrendeles::find($id);
+    if (!$megrendeles) {
+        return redirect()->route('megrendeles.index')->with('error', 'A megrendelés nem található.');
     }
+
+    // Megrendeles adatok frissítése
+    $megrendeles->update($request->only([
+        'Megrendeles_Nev',
+        'Utca_Hazszam',
+        'Objektum_ID',
+        'Ugyfel_ID',
+        'Szolgaltatas_ID',
+        'Szerelo_ID',
+        'Leiras',
+        'Munkakezdes_Idopontja',
+        'Munkabefejezes_Idopontja',
+        'Alairt_e',
+        'Pdf_EleresiUt',
+    ]));
+
+    // Kapcsolódó FelhasznaltAnyagok kezelése
+    // Először töröljük a meglévő kapcsolódó rekordokat, hogy frissíthessük az újakkal
+    foreach ($megrendeles->felhasznaltAnyagok as $anyag) {
+        $anyag->delete();
+    }
+
+    // Új kapcsolódó anyagok hozzáadása
+    foreach ($request->Anyagok as $anyagData) {
+        $megrendeles->felhasznaltAnyagok()->create([
+            'Anyag_ID' => $anyagData['Anyag_ID'],
+            'Mennyiseg' => $anyagData['Mennyiseg'],
+            // További mezők, ha szükséges
+        ]);
+    }
+
+    return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen frissítve.');
+}
+
 
     public function getSzerelokBySzolgaltatas($szolgaltatasId)
     {

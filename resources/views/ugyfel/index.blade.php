@@ -27,7 +27,7 @@
 @endif
 
 <ul>
-    @foreach ($ugyfelek as $u)
+    @foreach ($ugyfel as $u)
     <li>
         {{ $u->Ugyfel_ID }} - {{ $u->Nev }}
     </li>

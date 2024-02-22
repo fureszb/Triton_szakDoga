@@ -25,8 +25,8 @@ class UgyfelController extends Controller
             $query->where('Nev', 'like', "%$keyword%")
                 ->orWhere('Ugyfel_ID', 'like', "%$keyword%");
         }
-        
-       $ugyfelek = Ugyfel::with('megrendeles')->get(); 
+
+       $ugyfelek = Ugyfel::with('megrendelesek')->get();
         $ugyfel = $query->paginate(9);
 
         return view('ugyfel.index', compact('ugyfel'));
@@ -90,15 +90,15 @@ class UgyfelController extends Controller
         return redirect()->route('ugyfel.index')->with('success', 'Ügyfél sikeresen létrehozva!');
     }
 
-    
+
     public function show($id)
     {
         $ugyfel = Ugyfel::find($id);
         return view('ugyfel.show', compact('ugyfel'));
     }
-    
 
-    
+
+
     public function edit($id)
     {
         $ugyfel = Ugyfel::find($id);
@@ -107,7 +107,7 @@ class UgyfelController extends Controller
     }
 
 
-    
+
     public function update(Request $request, string $id)
     {
 

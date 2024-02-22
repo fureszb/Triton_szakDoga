@@ -142,7 +142,7 @@
                 <select name="Anyag_ID[]" class="anyagSelect">
                     <option value="">Válassz anyagot</option>
                     @foreach ($anyagok as $anyag)
-                        <option value="{{ $anyag->Anyag_ID }}">{{ $anyag->Nev }}</option>
+                        <option value="{{ $anyag->Anyag_ID }}">{{ $anyag->Leiras }}</option>
                     @endforeach
                 </select>
                 <input type="number" name="Mennyiseg[]" placeholder="Mennyiség" min="1">
