@@ -74,10 +74,21 @@ class MegrendelesController extends Controller
 
     public function destroy($id)
     {
-        $megrendeles = Megrendeles::find($id);
+        $megrendeles = Megrendeles::findOrFail($id);
+
+        $munkaIDs = Munka::where('Megrendeles_ID', $megrendeles->Megrendeles_ID)->pluck('Munka_ID');
+
+        foreach ($munkaIDs as $munkaID) {
+            FelhasznaltAnyag::where('Munka_ID', $munkaID)->delete();
+        }
+
+        Munka::where('Megrendeles_ID', $megrendeles->Megrendeles_ID)->delete();
+
         $megrendeles->delete();
+
         return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen törölve');
     }
+
 
     public function store(Request $request)
     {

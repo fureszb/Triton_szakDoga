@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anyag;
+use App\Models\FelhasznaltAnyag;
 use App\Models\Megrendeles;
+use App\Models\Munka;
 use App\Models\Munkanaplo;
 use App\Models\Szerelo;
 use App\Models\Szolgaltatas;
@@ -164,11 +166,28 @@ class UgyfelController extends Controller
 
     public function destroy($id)
     {
-        $ugyfel = Ugyfel::find($id);
+        $ugyfel = Ugyfel::findOrFail($id);
+
+        $megrendelesIDs = $ugyfel->megrendelesek()->pluck('Megrendeles_ID');
+
+        foreach ($megrendelesIDs as $megrendelesID) {
+            $munkaIDs = Munka::where('Megrendeles_ID', $megrendelesID)->pluck('Munka_ID');
+
+
+            foreach ($munkaIDs as $munkaID) {
+                FelhasznaltAnyag::where('Munka_ID', $munkaID)->delete();
+            }
+
+            Munka::where('Megrendeles_ID', $megrendelesID)->delete();
+
+            Megrendeles::where('Megrendeles_ID', $megrendelesID)->delete();
+        }
+
         $ugyfel->delete();
 
         return redirect()->route('ugyfel.index')->with('success', 'Ügyfél sikeresen törölve');
     }
+
     public function search(Request $request)
     {
         $keyword = $request->input('keyword');
