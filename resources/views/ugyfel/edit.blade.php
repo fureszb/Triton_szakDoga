@@ -63,6 +63,18 @@
     </fieldset>
 
     <fieldset>
+        <label for="Varos_ID">Város</label>
+        <select name="Varos_ID" id="Varos_ID">
+            <option value="">Válassz várost</option>
+            @foreach ($varosok as $varos)
+                <option value="{{ $varos->Varos_ID }}"
+                    {{ $varos->Varos_ID == $ugyfel->Varos_ID ? 'selected' : '' }}>{{ $varos->Irny_szam }} {{ $varos->Nev }}
+                </option>
+            @endforeach
+        </select>
+    </fieldset>
+
+    <fieldset>
         <label for="szamcim">Számlázási cím</label>
         <input type="text" name="szamcim" id="szamcim" value="{{ old('szamcim') ?? $ugyfel->Szamlazasi_Cim }}">
     </fieldset>

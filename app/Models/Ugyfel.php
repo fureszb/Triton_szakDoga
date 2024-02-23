@@ -9,7 +9,7 @@ class Ugyfel extends Model
 {
     protected $table = 'ugyfel';
     protected $primaryKey = 'Ugyfel_ID';
-    protected $fillable = ['Varos_ID','Ugyfel_ID',  'Nev', 'Email', 'Telefonszam', 'Szamlazasi_Nev', 'Szamlazasi_Cim', 'Adoszam'];
+    protected $fillable = ['Varos_ID', 'Ugyfel_ID',  'Nev', 'Email', 'Telefonszam', 'Szamlazasi_Nev', 'Szamlazasi_Cim', 'Adoszam'];
 
 
     use HasFactory;
@@ -29,5 +29,9 @@ class Ugyfel extends Model
     public function megrendelesek()
     {
         return $this->hasMany(Megrendeles::class, 'Ugyfel_ID', 'Ugyfel_ID');
+    }
+    public function varos()
+    {
+        return $this->belongsTo(Varos::class, 'Varos_ID');
     }
 }

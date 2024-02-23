@@ -57,7 +57,7 @@
             <select name="Varos_ID" id="Varos_ID">
                 <option value="">Válassz várost</option>
                 @foreach ($varosok as $varos)
-                    <option value="{{ $varos->Varos_ID }}">{{ $varos->Varos }}</option>
+                    <option value="{{ $varos->Varos_ID }}">{{ $varos->Irny_szam }} {{ $varos->Nev }}</option>
                 @endforeach
             </select>
         </fieldset>
@@ -142,7 +142,7 @@
                 <select name="Anyag_ID[]" class="anyagSelect">
                     <option value="">Válassz anyagot</option>
                     @foreach ($anyagok as $anyag)
-                        <option value="{{ $anyag->Anyag_ID }}">{{ $anyag->Leiras }}</option>
+                        <option value="{{ $anyag->Anyag_ID }}">{{ $anyag->Nev }}({{ $anyag->Mertekegyseg }})</option>
                     @endforeach
                 </select>
                 <input type="number" name="Mennyiseg[]" placeholder="Mennyiség" min="1">

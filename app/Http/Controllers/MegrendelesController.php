@@ -28,8 +28,9 @@ class MegrendelesController extends Controller
         $szolgaltatasok = Szolgaltatas::all();
         $szerelok = Szerelo::all();
         $anyagok = Anyag::all();
-        $varosok = Varos::all();
         $felhasznaltAnyag = FelhasznaltAnyag::all();
+        $varosok = Varos::all();
+
 
         return view('megrendeles.create', compact('ugyfelek', 'varosok', 'szolgaltatasok', 'szerelok', 'anyagok'));
     }
@@ -59,15 +60,16 @@ class MegrendelesController extends Controller
 
     public function edit($id)
     {
-        $megrendeles = Megrendeles::find($id);
+        $megrendeles = Megrendeles::with('felhasznaltAnyagok')->findOrFail($id);
         $ugyfelek = Ugyfel::all();
         $szolgaltatasok = Szolgaltatas::all();
         $szerelok = Szerelo::all();
         $anyagok = Anyag::all();
         $varosok = Varos::all();
-        $felhasznaltAnyag = FelhasznaltAnyag::all();
+        // Feltételezzük, hogy a $munka az egyik kapcsolódó Munka entitás
+        $munka = Munka::where('Megrendeles_ID', $megrendeles->Megrendeles_ID)->firstOrFail();
 
-        return view('megrendeles.edit', compact('megrendeles','ugyfelek', 'varosok', 'szolgaltatasok', 'szerelok', 'anyagok'));
+        return view('megrendeles.edit', compact('megrendeles', 'ugyfelek', 'szolgaltatasok', 'szerelok', 'anyagok', 'varosok', 'munka'));
     }
 
     public function destroy($id)
@@ -98,6 +100,7 @@ class MegrendelesController extends Controller
         $megrendeles->fill($request->only([
             'Megrendeles_Nev', 'Utca_Hazszam', 'Ugyfel_ID', 'Szolgaltatas_ID', 'Varos_ID'
         ]));
+        $megrendeles->Varos_ID = $request->Varos_ID;
         $megrendeles->save();
 
         // Munka létrehozása
@@ -105,9 +108,9 @@ class MegrendelesController extends Controller
             'Megrendeles_ID' => $megrendeles->Megrendeles_ID,
             'Szerelo_ID' => $request->Szerelo_ID,
             'Szolgaltatas_ID' => $request->Szolgaltatas_ID,
-                'Leiras' => $request->Leiras,
-                'Munkakezdes_Idopontja' => $request->Munkakezdes_Idopontja,
-                'Munkabefejezes_Idopontja' => $request->Munkabefejezes_Idopontja
+            'Leiras' => $request->Leiras,
+            'Munkakezdes_Idopontja' => $request->Munkakezdes_Idopontja,
+            'Munkabefejezes_Idopontja' => $request->Munkabefejezes_Idopontja
         ]);
         $munka->save();
 
@@ -160,61 +163,47 @@ class MegrendelesController extends Controller
 
 
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'Megrendeles_Nev' => 'required',
-        'Utca_Hazszam' => 'required',
-        'Varos_ID' => 'required|exists:varos,Varos_ID',
-        'Ugyfel_ID' => 'required|exists:ugyfel,Ugyfel_ID',
-        'Szolgaltatas_ID' => 'required|exists:szolgaltatas,Szolgaltatas_ID',
-        'Szerelo_ID' => 'required|exists:szerelo,Szerelo_ID',
-        'Leiras' => 'nullable',
-        'Munkakezdes_Idopontja' => 'required|date',
-        'Munkabefejezes_Idopontja' => 'required|date|after_or_equal:Munkakezdes_Idopontja',
-        'Alairt_e' => 'required|boolean',
-        'Pdf_EleresiUt' => 'nullable',
-        // Feltételezve, hogy van egy "Anyagok" mező a formban, ami tömbként jön
-        'Anyag_ID' => 'required|exists:anyag,Anyag_ID',
-        'Mennyiseg' => 'required|min:1',
-    ]);
-
-    $megrendeles = Megrendeles::find($id);
-    if (!$megrendeles) {
-        return redirect()->route('megrendeles.index')->with('error', 'A megrendelés nem található.');
-    }
-
-    // Megrendeles adatok frissítése
-    $megrendeles->update($request->only([
-        'Megrendeles_Nev',
-        'Utca_Hazszam',
-        'Varos_ID',
-        'Ugyfel_ID',
-        'Szolgaltatas_ID',
-        'Szerelo_ID',
-        'Leiras',
-        'Munkakezdes_Idopontja',
-        'Munkabefejezes_Idopontja',
-        'Alairt_e',
-        'Pdf_EleresiUt',
-    ]));
-
-    // Kapcsolódó FelhasznaltAnyagok kezelése
-    // Először töröljük a meglévő kapcsolódó rekordokat, hogy frissíthessük az újakkal
-    foreach ($megrendeles->felhasznaltAnyagok as $anyag) {
-        $anyag->delete();
-    }
-
-    // Új kapcsolódó anyagok hozzáadása
-    foreach ($request->Anyagok as $anyagData) {
-        $megrendeles->felhasznaltAnyagok()->create([
-            'Anyag_ID' => $anyagData['Anyag_ID'],
-            'Mennyiseg' => $anyagData['Mennyiseg'],
-            // További mezők, ha szükséges
+    {
+        $request->validate([
+            'Megrendeles_Nev' => 'required',
+            'Munka_ID' => 'required',
+            'Utca_Hazszam' => 'required',
+            'Varos_ID' => 'required|exists:varos,Varos_ID',
+            'Ugyfel_ID' => 'required|exists:ugyfel,Ugyfel_ID',
+            'Szolgaltatas_ID' => 'required|exists:szolgaltatas,Szolgaltatas_ID',
+            'Szerelo_ID' => 'required|exists:szerelo,Szerelo_ID',
+            'Leiras' => 'nullable',
+            'Munkakezdes_Idopontja' => 'required|date',
+            'Munkabefejezes_Idopontja' => 'required|date|after_or_equal:Munkakezdes_Idopontja',
+            'Alairt_e' => 'required|boolean',
+            'Pdf_EleresiUt' => 'nullable',
+            'Anyag_ID' => 'required|exists:anyag,Anyag_ID',
+            'Mennyiseg' => 'required|min:1',
         ]);
-    }
 
-    return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen frissítve.');
-}
+        $megrendeles = Megrendeles::findOrFail($id);
+        $megrendeles->update($request->only(['Megrendeles_Nev', 'Ugyfel_ID', 'Varos_ID', 'Utca_Hazszam', 'Alairt_e', 'Pdf_EleresiUt']));
+
+        // Frissíti a kapcsolódó Munka entitást
+        $munka = Munka::findOrFail($request->input('Munka_ID'));
+        $munka->update($request->only(['Szerelo_ID', 'Szolgaltatas_ID', 'Leiras', 'Munkakezdes_Idopontja', 'Munkabefejezes_Idopontja']));
+
+        // Kezeli a FelhasznaltAnyag entitásokat
+        FelhasznaltAnyag::where('Munka_ID', $munka->Munka_ID)->delete(); // Először törli a korábbiakat
+
+        $anyagok = $request->input('Anyag_ID');
+        $mennyisegek = $request->input('Mennyiseg');
+        foreach ($anyagok as $index => $anyagId) {
+            if (!empty($anyagId) && isset($mennyisegek[$index])) {
+                FelhasznaltAnyag::create([
+                    'Munka_ID' => $munka->Munka_ID,
+                    'Anyag_ID' => $anyagId,
+                    'Mennyiseg' => $mennyisegek[$index],
+                ]);
+            }
+        }
+        return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen frissítve.');
+    }
 
 
     public function getSzerelokBySzolgaltatas($szolgaltatasId)

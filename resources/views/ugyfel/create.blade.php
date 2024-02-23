@@ -30,6 +30,10 @@
 <div class="alert alert-warning">{{ $message }}</div>
 @enderror
 
+@error('Varos_ID')
+<div class="alert alert-warning">{{ $message }}</div>
+@enderror
+
 <form id="createForm" action="{{ route('ugyfel.store') }}" method="POST">
     @csrf
     <fieldset>
@@ -52,8 +56,19 @@
         <label for="szamnev">Számlázási név</label>
         <input type="text" name="szamnev" id="szamnev" value="{{ old('szamnev') }}">
     </fieldset>
+
     <fieldset>
-        <label for="szamcim">Számlázási cím</label>
+        <label for="Varos_ID">Város</label>
+        <select name="Varos_ID" id="Varos_ID">
+            <option value="">Válassz várost</option>
+            @foreach ($varosok as $varos)
+                <option value="{{ $varos->Varos_ID }}">{{ $varos->Irny_szam }} {{ $varos->Nev }}</option>
+            @endforeach
+        </select>
+    </fieldset>
+
+    <fieldset>
+        <label for="szamcim">Utca, házszám</label>
         <input type="text" name="szamcim" id="szamcim" value="{{ old('szamcim') }}">
     </fieldset>
     <fieldset>
@@ -68,7 +83,7 @@
             <div id="mentTovabit" class="hozzaad">+</div>
         </a>
     </div>
-    
+
 
 </form>
 <script>

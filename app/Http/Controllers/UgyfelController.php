@@ -27,11 +27,10 @@ class UgyfelController extends Controller
                 ->orWhere('Ugyfel_ID', 'like', "%$keyword%");
         }
 
-       $ugyfelek = Ugyfel::with('megrendelesek')->get();
+        $ugyfelek = Ugyfel::with('megrendelesek')->get();
         $ugyfel = $query->paginate(9);
 
         return view('ugyfel.index', compact('ugyfel'));
-
     }
 
 
@@ -42,7 +41,8 @@ class UgyfelController extends Controller
 
     public function create()
     {
-        return view('ugyfel.create');
+        $varosok = Varos::all();
+        return view('ugyfel.create', compact('varosok'));
     }
 
 
@@ -57,6 +57,7 @@ class UgyfelController extends Controller
             'szamnev' => ['required', 'regex:/^[A-Za-záéíóöőúüűÁÉÍÓÖŐÚÜŰ\s]{3,}$/'],
             'szamcim' => ['required', 'min:3'],
             'adoszam' => ['nullable', 'between:8,11'],
+            'Varos_ID' => ['required', 'exists:varos,Varos_ID']
         ], [
             'nev.required' => 'A név megadása kötelező.',
             'nev.regex' => 'A név csak betűket és szóközöket tartalmazhat, magyar betűket is elfogadva.',
@@ -72,7 +73,9 @@ class UgyfelController extends Controller
             'szamcim.required' => 'A számlázási cím megadása kötelező.',
             'szamcim.regex' => 'A számlázási cím érvénytelen karaktereket tartalmaz.',
             'szamcim.min' => 'A számlázási cím legalább 3 karakter hosszúnak kell lennie.',
-            'Ugyfel_ID' => 'Az Ugyfel_ID kitöltése kötelező'
+            'Ugyfel_ID.required' => 'Az Ugyfel_ID kitöltése kötelező',
+            'Varos_ID.required' => 'A város kiválasztása kötelező.',
+            'Varos_ID.exists' => 'A kiválasztott város nem létezik.'
         ]);
 
 
@@ -83,6 +86,7 @@ class UgyfelController extends Controller
         $ugyfel->Email = $request->email;
         $ugyfel->Telefonszam = $request->telefon;
         $ugyfel->Szamlazasi_Nev = $request->szamnev;
+        $ugyfel->Varos_ID = $request->Varos_ID;
         $ugyfel->Szamlazasi_Cim = $request->szamcim;
         $ugyfel->Adoszam = $request->adoszam;
 
@@ -103,8 +107,8 @@ class UgyfelController extends Controller
     public function edit($id)
     {
         $ugyfel = Ugyfel::find($id);
-
-        return view('ugyfel.edit', compact('ugyfel'));
+        $varosok = Varos::all();
+        return view('ugyfel.edit', compact('ugyfel', 'varosok'));
     }
 
 
@@ -120,6 +124,7 @@ class UgyfelController extends Controller
             'szamnev' => ['required', 'regex:/^[A-Za-záéíóöőúüűÁÉÍÓÖŐÚÜŰ\s]{3,}$/'],
             'szamcim' => ['required', 'min:3'],
             'adoszam' => ['nullable', 'between:8,11'],
+            'Varos_ID' => ['required', 'exists:varos,Varos_ID']
         ], [
             'nev.required' => 'A név megadása kötelező.',
             'nev.regex' => 'A név csak betűket és szóközöket tartalmazhat, magyar betűket is elfogadva.',
@@ -136,7 +141,9 @@ class UgyfelController extends Controller
             'szamcim.regex' => 'A számlázási cím érvénytelen karaktereket tartalmaz.',
             'szamcim.min' => 'A számlázási cím legalább 3 karakter hosszúnak kell lennie.',
             'adoszam.between' => 'Az adószám hossza 8 és 11 karakter között lehet.',
-            'Ugyfel_ID' => 'Az Ugyfel_ID kitöltése kötelező'
+            'Ugyfel_ID' => 'Az Ugyfel_ID kitöltése kötelező',
+            'Varos_ID.required' => 'A város kiválasztása kötelező.',
+            'Varos_ID.exists' => 'A kiválasztott város nem létezik.'
         ]);
 
 
@@ -150,26 +157,11 @@ class UgyfelController extends Controller
         $ugyfel->Szamlazasi_Nev = $request->szamnev;
         $ugyfel->Szamlazasi_Cim = $request->szamcim;
         $ugyfel->Adoszam = $request->adoszam;
-
-        /*
-        $szerelo = $request->input('szerelo');
-        $szolgaltatas = $request->input('szolgaltatas');
-        $munka = $request->input('munka');
-        if ($szerelo && $szolgaltatas && $munka) {
-            $ugyfel->SzereloID = $szerelo;
-            $ugyfel->SzolgID = $szolgaltatas;
-            $ugyfel->MunkaID = $munka;
-        }
-        $ugyfel->FelhasznaltAnyagok = $request->felhasznalt_anyagok;*/
+        $ugyfel->Varos_ID = $request->Varos_ID;
         $ugyfel->save();
         return redirect()->route('ugyfel.index')->with('success', 'Ügyfél sikeresen módosítva!');
     }
 
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $ugyfel = Ugyfel::find($id);
