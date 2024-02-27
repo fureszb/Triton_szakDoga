@@ -1,16 +1,13 @@
 @extends('layout')
 
 @section('content')
-    <h1>Új Megrendelés Szerkesztése</h1>
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+  <h1>Új Megrendelés Szerkesztése</h1>
+@if ($errors->any())
+@foreach ($errors->all() as $error)
+<div class="alert alert-warning">{{ $error }}</div>
+@endforeach
+</div>
+@endif
 
     <form id="editForm" action="{{ route('megrendeles.update', $megrendeles->Megrendeles_ID) }}" method="POST">
         @csrf
