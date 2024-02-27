@@ -15,13 +15,15 @@ class AnyagController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'leiras' => 'required',
+            'Nev' => 'required',
+            'Mertekegyseg' => 'required',
         ]);
 
         $anyag = new Anyag();
-        $anyag->leiras = $request->leiras;
+        $anyag->Nev = $request->Nev;
+        $anyag->Mertekegyseg = $request->Mertekegyseg;
         $anyag->save();
 
-
+        return redirect()->route('ugyfel.index')->with('success', 'Anyag sikeresen létrehozva!');
     }
 }

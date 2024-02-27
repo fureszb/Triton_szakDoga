@@ -204,41 +204,62 @@
             <div>
                 <div class="row">
                     <div class="col-md-6">
-                        <h3>Általános információk</h3>
+                        <h3>Ügyfél információk</h3>
                         <hr class="hr1">
                         <ul class="list-group">
-                            <li class="list-group-item"><strong>UgyfelID:</strong> {{ $ugyfel->UgyfelID }}</li>
-                            <li class="list-group-item"><strong>Név:</strong> {{ $ugyfel->Nev }}</li>
-                            <li class="list-group-item"><strong>Email:</strong> {{ $ugyfel->Email }}</li>
-                            <li class="list-group-item"><strong>Objektum címe:</strong> {{ $ugyfel->ObjCim }}</li>
-                            <li class="list-group-item"><strong>Telefonszám:</strong> {{ $ugyfel->Telefon }}</li>
-                            <li class="list-group-item"><strong>Számlázási név:</strong> {{ $ugyfel->SzamNev }}</li>
-                            <li class="list-group-item"><strong>Számlázási cím:</strong> {{ $ugyfel->SzamCim }}</li>
-                            <li class="list-group-item"><strong>Kezdés dátuma:</strong> {{ $ugyfel->KezdDatum }}</li>
-                            <li class="list-group-item"><strong>Befejezés dátuma:</strong> {{ $ugyfel->BefDatum }}</li>
-                            <li class="list-group-item"><strong>Adószám:</strong> {{ $ugyfel->AdoSzam }}</li>
+                            <li class="list-group-item"><strong>UgyfelID:</strong> {{ $megrendeles->ugyfel->Ugyfel_ID }}</li>
+                            <li class="list-group-item"><strong>Név:</strong> {{ $megrendeles->ugyfel->Nev }}</li>
+                            <li class="list-group-item"><strong>Email:</strong> {{ $megrendeles->ugyfel->Email }}</li>
+                            <li class="list-group-item"><strong>Telefonszám:</strong> {{ $megrendeles->ugyfel->Telefonszam }}</li>
+                            <li class="list-group-item"><strong>Számlázási név:</strong> {{ $megrendeles->ugyfel->Szamlazasi_Nev }}</li>
+                            <li class="list-group-item"><strong>Számlázási cím:</strong> {{ $megrendeles->ugyfel->varos->Irny_szam }} {{ $megrendeles->ugyfel->varos->Nev }}, {{ $megrendeles->ugyfel->Szamlazasi_Cim }}</li>
+                            @if (!is_null($megrendeles->ugyfel->Adoszam))
+                            <li class="list-group-item"><strong>Adószám:</strong> {{$megrendeles->ugyfel->Adoszam }}</li>                  
+                            @endif
+
                         </ul>
                     </div>
                     <div class="col-md-6">
-                        <br>
-                        <h3>Munka és szerel&#337;</h3>
-                        <hr class="hr2">
+                        <h3>Általános információk</h3>
+                        <hr class="hr1">
                         <ul class="list-group">
-                            <li class="list-group-item"><strong>Szerel&#337;:</strong> {{ $ugyfel->szerelo->Nev }}</li>
+                            <li class="list-group-item"><strong>Ügyfél neve:</strong> {{ $megrendeles->ugyfel->Nev ?? '-' }}</li>
+                            <li class="list-group-item"><strong>Megrendelő neve:</strong> {{ $megrendeles->Megrendeles_Nev }}
+                            </li>
+                            <li class="list-group-item"><strong>Címe:</strong> {{ $megrendeles->varos->Irny_szam}} {{ $megrendeles->varos->Nev}}, {{ $megrendeles->Utca_Hazszam }}
+                            </li>
+                            </li>
+                            @foreach ($megrendeles->munkak as $munka)
                             <li class="list-group-item"><strong>Szolgáltatás:</strong>
-                                {{ $ugyfel->szolgaltatas->jelleg }}
+                                {{ $munka->szolgaltatas->Tipus ?? '-' }}
                             </li>
-                            <li class="list-group-item"><strong>Munka:</strong> {{ $ugyfel->munka->Jelleg }}</li>
-                            <li class="list-group-item"><strong>Munka leírás:</strong> {{ $ugyfel->munka->Leiras }}
+                            <li class="list-group-item"><strong>Szerelő:</strong> {{ $munka->szerelo->Nev ?? '-' }}</li>
+                            <li class="list-group-item"><strong>Leírás:</strong> {{ $munka->Leiras }}</li>
+                            <li class="list-group-item"><strong>Munkakezdés időpontja:</strong>
+                                {{ $munka->Munkakezdes_Idopontja }}
                             </li>
-                            <li class="list-group-item"><strong>Felhasznált Anyagok:</strong>
-                                {{ $ugyfel->FelhasznaltAnyagok }}
+                            <li class="list-group-item"><strong>Munkabefejezés időpontja:</strong>
+                                {{ $munka->Munkabefejezes_Idopontja }}
                             </li>
+                            @endforeach
                         </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Felhasznált anyagok</h3>
+                        <hr class="hr1">
+                        @if ($megrendeles->felhasznaltAnyagok && count($megrendeles->felhasznaltAnyagok) > 0)
+                        <ul class="list-group">
+                            @foreach ($megrendeles->felhasznaltAnyagok as $anyag)
+                            <li class="list-group-item">{{ $anyag->anyag->Nev}}({{ $anyag->anyag->Mertekegyseg}}): {{ $anyag->Mennyiseg }}
+                            </li>
+                            @endforeach
+                        </ul>
+                        @else
+                        <p>Nincsenek felhasznált anyagok rögzítve.</p>
+                        @endif
                     </div>
                 </div>
             </div>
-
             <br>
             <div class="sign">
                 <div class="imageContainer">

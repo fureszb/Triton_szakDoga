@@ -26,7 +26,7 @@
             <ul>
                 <li><a href="{{ route('ugyfel.index') }}">Ügyfelek</a></li>
                 <li><a href="{{ route('megrendeles.index') }}">Megrendelők</a></li>
-                <li><a href="{{ route('ugyfel.create') }}">Új anyag</a></li>
+                <li><a href="{{ route('anyagok.create') }}">Új anyag</a></li>
                 @if (auth()->check())
                     <li>
                         <form action="{{ route('logout') }}" method="post">

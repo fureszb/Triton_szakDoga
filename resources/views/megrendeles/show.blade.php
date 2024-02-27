@@ -42,6 +42,7 @@
                         <p>Nincsenek felhasznált anyagok rögzítve.</p>
                     @endif
                 </div>
+                 <a href="{{ route('megrendeles.pdf', ['munkaId' => $munka->Munka_ID]) }}" target="_blank">PDF Letöltése</a>
             </div>
         </div>
     @else

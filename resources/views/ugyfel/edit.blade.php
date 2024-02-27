@@ -2,33 +2,13 @@
 
 @section('content')
 
-@error('nev')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('email')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('telefon')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('szamnev')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('szamcim')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('adoszam')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('Ugyfel_ID')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
+<h1>Ügyfél Szerkesztése</h1>
+@if ($errors->any())
+    @foreach ($errors->all() as $error)
+    <div class="alert alert-warning">{{ $error }}</div>
+    @endforeach
+</div>
+@endif
 
 
 

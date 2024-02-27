@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/megrendeles/{megrendeles}', [MegrendelesController::class, 'destroy'])->name('megrendeles.destroy');
 
     Route::get('/megrendeles/{megrendeles}/edit', [MegrendelesController::class, 'edit'])->name('megrendeles.edit');
+ Route::get('/megrendeles/{munkaId}/pdf', [MegrendelesController::class, 'generatePdf'])->name('megrendeles.pdf');
 
 
 
