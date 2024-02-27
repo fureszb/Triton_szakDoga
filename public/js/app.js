@@ -82,17 +82,21 @@ undoButton.addEventListener("click", () => {
 });
 
 // app.js
+document.addEventListener('DOMContentLoaded', function () {
 const savePNGButton = document.querySelector("[data-action=save-png]");
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
+//const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+console.log('savePNGButton megtalálva', savePNGButton);
 savePNGButton.addEventListener("click", () => {
+  console.log('savePNGButton kattint', savePNGButton);
     if (signaturePad.isEmpty()) {
       alert("Kérlek írd alá mentés előtt!");
+      event.preventDefault()
     } else {
       const dataURL = signaturePad.toDataURL();
       saveImage(dataURL);
     }
   });
+});
 
   function saveImage(dataURL) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
