@@ -11,27 +11,32 @@ use Illuminate\Support\Facades\Response;
 
 class TestController extends Controller
 {
-    public function sendMailWithPdf()
+   public function sendMailWithPdf()
     {
-        $ugyfel = Ugyfel::latest()->first();
+        // $varos = Varos::where('Varos_ID', $ugyfel->Varos_ID)->latest()->first();
+        $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag', 'munkak'])->latest()->first();
 
         $data["email"] = "frsz.bence@gmail.com";
         $data["title"] = "Szerződéskötés";
-        $data["ugyfel"] = $ugyfel;
+        $data["megrendeles"] = $megrendeles;
+
 
         $pdf = PDF::loadView('mail', $data)->setOptions(['defaultFont' => 'sans-serif', 'encoding' => 'UTF-8']);
 
+        $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.pdf';
+        $pdfFilePath = storage_path('app/public/' . $pdfFileName);
+        $pdf->save($pdfFilePath);
 
+        return  $pdf->save($pdfFilePath);
 
         // E-mail küldése
-        Mail::send('mail', $data, function ($message) use ($data, $pdf) {
+        Mail::send('mail', $data, function ($message) use ($data, $pdf, $megrendeles) {
+            $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.pdf';
             $message->to($data["email"])
                 ->subject($data["title"])
-                ->attachData($pdf->output(), "Triton-Security.pdf");
+                ->attachData($pdf->output(), $pdfFileName);
         });
 
-        $pdfFilePath = storage_path('app/public/Triton-Security.pdf');
-        $pdf->save($pdfFilePath);
 
         // Képek törlése a public/images mappából
         /*$folderPath = public_path('kepek');
@@ -41,7 +46,6 @@ class TestController extends Controller
            }*/
 
         // Letöltés a böngészőbe
-        $pdf->download('Triton-Security.pdf');
 
         $message = 'Az aláírás és az ügyfél sikeresen mentve lett és az email elküldve!';
 
@@ -51,7 +55,8 @@ class TestController extends Controller
         ->setStatus('OK')
         ->send();*/
         //return redirect('/ugyfel')->with('success', 'Az aláírás és az ügyfél sikeresen mentve lett és az email elküldve!');
+        // return  $pdf->download('Triton-Security.pdf');
+        //return  $pdf->save($pdfFilePath);
         return redirect()->route('ugyfel.index')->with('success', $message);
-
     }
 }
