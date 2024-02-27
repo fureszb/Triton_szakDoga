@@ -1,38 +1,14 @@
 @extends('layout')
 
 @section('content')
+
 <h1>Új ügyfél</h1>
-@error('nev')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('email')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('telefon')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('szamnev')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('szamcim')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('adoszam')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('Ugyfel_ID')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
-
-@error('Varos_ID')
-<div class="alert alert-warning">{{ $message }}</div>
-@enderror
+@if ($errors->any())
+@foreach ($errors->all() as $error)
+<div class="alert alert-warning">{{ $error }}</div>
+@endforeach
+</div>
+@endif
 
 <form id="createForm" action="{{ route('ugyfel.store') }}" method="POST">
     @csrf
