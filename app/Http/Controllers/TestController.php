@@ -8,6 +8,7 @@ use App\Models\Ugyfel;
 use PDF;
 use Mail;
 use Illuminate\Support\Facades\Response;
+use App\Models\Megrendeles;
 
 class TestController extends Controller
 {
@@ -27,7 +28,7 @@ class TestController extends Controller
         $pdfFilePath = storage_path('app/public/' . $pdfFileName);
         $pdf->save($pdfFilePath);
 
-        return  $pdf->save($pdfFilePath);
+        $pdf->save($pdfFilePath);
 
         // E-mail küldése
         Mail::send('mail', $data, function ($message) use ($data, $pdf, $megrendeles) {
