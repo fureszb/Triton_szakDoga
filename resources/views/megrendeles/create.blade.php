@@ -1,49 +1,13 @@
 @extends('layout')
 
 @section('content')
-    <h1>Új Megrendelés</h1>
-    @error('Megrendeles_Nev')
-        <div class="alert alert-warning">{{ $message }}</div>
-    @enderror
-
-    @error('Varos_ID')
-        <div class="alert alert-warning">{{ $message }}</div>
-    @enderror
-
-    @error('Utca_Hazszam')
-        <div class="alert alert-warning">{{ $message }}</div>
-    @enderror
-
-
-    @error('Ugyfel_ID')
-        <div class="alert alert-warning">{{ $message }}</div>
-    @enderror
-
-    @error('Szolgaltatas_ID')
-        <div class="alert alert-warning">{{ $message }}</div>
-    @enderror
-
-    @error('Szerelo_ID')
-        <div class="alert alert-warning">{{ $message }}</div>
-    @enderror
-
-    @error('Leiras')
-        <div class="alert alert-warning">{{ $message }}</div>
-    @enderror
-
-    @error('Munkakezdes_Idopontja')
-        <div class="alert alert-warning">{{ $message }}</div>
-    @enderror
-
-    @error('Munkabefejezes_Idopontja')
-        <div class="alert alert-warning">{{ $message }}</div>
-    @enderror
-    @error('Anyag_ID')
-        <div class="alert alert-warning">{{ $message }}</div>
-    @enderror
-    @error('Mennyiseg')
-        <div class="alert alert-warning">{{ $message }}</div>
-    @enderror
+<h1>Új Megrendelés</h1>
+@if ($errors->any())
+    @foreach ($errors->all() as $error)
+    <div class="alert alert-warning">{{ $error }}</div>
+    @endforeach
+</div>
+@endif
 
     <form id="createForm" action="{{ route('megrendeles.store') }}" method="POST">
         @csrf
@@ -177,8 +141,8 @@
         @include('signaturePad')
 
         <div class="grid">
-            <button id="saveButton" type="submit">Mentés új megrendelésként</button>
-            <a href="{{ route('ugyfel.create') }}" title="Új ügyfél hozzáadása">
+            <button id="saveButton" type="submit" data-action="save-png" class="button save">Mentés új megrendelésként</button>
+        <a href="{{ route('ugyfel.create') }}" title="Új ügyfél hozzáadása">
 
                 <div class="hozzaad">+</div>
             </a>
