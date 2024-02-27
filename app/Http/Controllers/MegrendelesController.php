@@ -13,6 +13,7 @@ use App\Models\Ugyfel;
 use App\Models\Varos;
 use Illuminate\Http\Request;
 use Psy\Readline\Hoa\Console;
+use PDF;
 
 class MegrendelesController extends Controller
 {
@@ -169,7 +170,9 @@ class MegrendelesController extends Controller
         }
 
 
-        return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen létrehozva.');
+        //return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen létrehozva.');
+        return redirect('/send-mail')->with('success', 'Az email sikeresen el lett küldve!');
+   
     }
 
 
@@ -224,5 +227,31 @@ class MegrendelesController extends Controller
         })->get(['Szerelo_ID', 'Nev']);
 
         return response()->json($szerelo);
+    }
+    public function generatePdf($munkaId)
+    {
+        // Először keresd meg a Munka rekordot a megadott Munka_ID alapján
+        $munka = Munka::findOrFail($munkaId);
+
+        // Ezután használd a Munka rekordhoz tartozó Megrendeles_ID-t
+        $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag', 'munkak'])
+            ->where('Megrendeles_ID', $munka->Megrendeles_ID)
+            ->firstOrFail();
+
+        $data = [
+            "email" => "frsz.bence@gmail.com",
+            "title" => "Szerződéskötés",
+            "megrendeles" => $megrendeles
+        ];
+
+        $pdf = PDF::loadView('mail', $data)
+            ->setOptions(['defaultFont' => 'DejaVu Sans', 'encoding' => 'UTF-8']);
+
+        $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.pdf';
+        $pdfFilePath = storage_path('app/public/' . $pdfFileName);
+        $pdf->save($pdfFilePath);
+
+        // Visszaadhatod az elérési útját a létrehozott PDF-nek, vagy akár közvetlenül is visszaküldheted a PDF-et a böngészőbe
+        return $pdf->download($pdfFileName);
     }
 }
