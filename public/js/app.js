@@ -109,7 +109,7 @@ savePNGButton.addEventListener("click", () => {
           if (response.ok) {
             console.log('Kép mente');
             // Sikerüzenet megjelenítése
-            //alert('Az aláírás és az ügyfél sikeresen mentve lett!');
+            alert('Az aláírás és az ügyfél sikeresen mentve lett!');
             // 1 másodperc várakozás után átirányítás
             setTimeout(() => {
               window.location.href = '/send-mail';

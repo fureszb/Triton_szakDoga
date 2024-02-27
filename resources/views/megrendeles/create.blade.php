@@ -161,7 +161,7 @@
                     container.appendChild(newPair);
                 });
 
-                // Eltávolítás funkció delegálása
+
                 document.getElementById('anyagokContainer').addEventListener('click', function(e) {
                     if (e.target.classList.contains('removeAnyag')) {
                         if (document.querySelectorAll('.anyagMennyisegPár').length > 1) {
@@ -183,5 +183,5 @@
                 <div class="hozzaad">+</div>
             </a>
         </div>
-    </form>
+        </form>
 @endsection
