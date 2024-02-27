@@ -25,9 +25,9 @@
           <button type="button" class="button undo" data-action="undo">Visszavonás</button>
 
         </div>
-        <div class="column">
-          <button type="button" class="button save" data-action="save-png">Mentés</button>
-        </div>
+        <!--<div class="column">
+          <button type="button" class="button save">Mentés</button>
+        </div>-->
       </div>
     </div>
   </div>
