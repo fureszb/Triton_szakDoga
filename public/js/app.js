@@ -116,9 +116,9 @@ function saveImage(dataURL) {
             // Sikerüzenet megjelenítése
             //alert('Az aláírás és az ügyfél sikeresen mentve lett!');
             // 1 másodperc várakozás után átirányítás
-            setTimeout(() => {
+            /*setTimeout(() => {
               window.location.href = '/send-mail';
-            }, 1000);
+            }, 1000);*/
           } else {
             console.error('Error saving image:', response.statusText);
           }
