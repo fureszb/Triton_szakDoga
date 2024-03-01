@@ -111,12 +111,15 @@ class MegrendelesController extends Controller
         ]);
 
         // Megrendeles létrehozása
-        $megrendeles = new Megrendeles();
-        $megrendeles->fill($request->only([
-            'Megrendeles_Nev', 'Utca_Hazszam', 'Ugyfel_ID', 'Szolgaltatas_ID', 'Varos_ID'
-        ]));
-        $megrendeles->Varos_ID = $request->Varos_ID;
+        $megrendeles = new Megrendeles([
+            'Megrendeles_Nev' => $request->input('Megrendeles_Nev'),
+            'Ugyfel_ID' => $request->Ugyfel_ID,
+            'Utca_Hazszam' => $request->input('Utca_Hazszam'),
+            'Szolgaltatas_ID' => $request->input('Szolgaltatas_ID'),
+            'Varos_ID' => $request->input('Varos_ID'),
+        ]);
         $megrendeles->save();
+        //dd($request->Ugyfel_ID);
 
 
         $ugyfel = Ugyfel::find($request->Ugyfel_ID);
@@ -124,6 +127,9 @@ class MegrendelesController extends Controller
             'Ugyfel_ID' => $ugyfel->Ugyfel_ID,
             'Nev' => $ugyfel->Nev
         ]);
+       
+
+
 
         // Munka létrehozása
         $munka = new Munka([
@@ -190,7 +196,6 @@ class MegrendelesController extends Controller
         //return redirect('megrendeles.saveImage')->with('success', 'Megrendelés sikeresen létrehozva.');
         //return redirect()->route('megrendeles.saveImage', ['megrendelesId' => $megrendeles->id])->with('success', 'Megrendelés sikeresen létrehozva.');
         return redirect('/send-mail')->with('success', 'Az email sikeresen el lett küldve!');
-
     }
 
 
@@ -256,6 +261,7 @@ class MegrendelesController extends Controller
             ->where('Megrendeles_ID', $munka->Megrendeles_ID)
             ->firstOrFail();
 
+
         $data = [
             "email" => "frsz.bence@gmail.com",
             "title" => "Szerződéskötés",
@@ -279,9 +285,9 @@ class MegrendelesController extends Controller
             return response()->json(['error' => 'Megrendelés nem található.'], 404);
         }
 
+        $ugyfelData = Session::get('ugyfelData');
+        $fileName = $ugyfelData['Ugyfel_ID'] . '_' . $ugyfelData['Nev'] . '.png';
 
-
-        $fileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.png';
         $folderPath = public_path('alaIrasokUgyfel');
 
         $imageData = $request->input('dataURL');

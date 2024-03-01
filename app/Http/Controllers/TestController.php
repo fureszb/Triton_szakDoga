@@ -26,11 +26,12 @@ class TestController extends Controller
         $szereloData = Session::get('szereloData');
         $imgPathSzerelo = $szereloData['Szerelo_ID'] . '_' . $szereloData['Nev'] . '.png';
 
+        $data["imgPathUgyfel"] = $imgPathUgyfel;
+        $data["imgPathSzerelo"] = $imgPathSzerelo;
         $data["email"] = "frsz.bence@gmail.com";
         $data["title"] = "Szerződéskötés";
         $data["megrendeles"] = $megrendeles;
-        $data["imgPathUgyfel"] = $imgPathUgyfel;
-        $data["imgPathSzerelo"] = $imgPathSzerelo;
+
 
 
         $pdf = PDF::loadView('mail', $data)->setOptions(['defaultFont' => 'sans-serif', 'encoding' => 'UTF-8']);
