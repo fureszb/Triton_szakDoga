@@ -269,7 +269,7 @@
                 </div>
                 <div class="imageContainer">
                     <h5>Ügyfél aláírása:</h5>
-                    <img src="http://127.0.0.1:8000/alaIrasokUgyfel/{{$imgPathUgyfel}}" alt="alairasUgyfel">
+                    <img src="http://127.0.0.1:8000/alaIrasokUgyfel/alairas.png" alt="alairasUgyfel">
 
                 </div>
 

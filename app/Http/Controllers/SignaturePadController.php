@@ -28,10 +28,7 @@ class SignaturePadController extends Controller
         $imageData = str_replace('data:image/png;base64,', '', $imageData);
         $imageData = base64_decode($imageData);
 
-
-        $ugyfelData = Session::get('ugyfelData');
-        dd($ugyfelData['Ugyfel_ID'] . " - " . $ugyfelData['Nev']);
-        $fileName = $ugyfelData['Ugyfel_ID'] . '_' . $ugyfelData['Nev'] . '.png';
+        $fileName = 'alairas.png';
         $folderPath = public_path('alaIrasokUgyfel');
 
 

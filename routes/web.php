@@ -70,10 +70,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/megrendeles/{megrendeles}/edit', [MegrendelesController::class, 'edit'])->name('megrendeles.edit');
     Route::get('/megrendeles/{munkaId}/pdf', [MegrendelesController::class, 'generatePdf'])->name('megrendeles.pdf');
 
-    //Route::get('/megrendeles/saveImage/{megrendelesId}', [MegrendelesController::class, 'saveImage']);
-
-
-
     Route::get('/send-mail', [TestController::class, 'sendMailWithPdf']);
 
     // routes/web.php

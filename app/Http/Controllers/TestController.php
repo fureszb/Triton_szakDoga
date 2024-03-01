@@ -13,20 +13,17 @@ use Illuminate\Support\Facades\Session;
 
 class TestController extends Controller
 {
-   public function sendMailWithPdf()
+    public function sendMailWithPdf()
     {
         // $varos = Varos::where('Varos_ID', $ugyfel->Varos_ID)->latest()->first();
         $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag', 'munkak'])->latest()->first();
 
         //$imgPath =  $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.png';
 
-        $ugyfelData = Session::get('ugyfelData');
-        $imgPathUgyfel = $ugyfelData['Ugyfel_ID'] . '_' . $ugyfelData['Nev'] . '.png';
-
         $szereloData = Session::get('szereloData');
         $imgPathSzerelo = $szereloData['Szerelo_ID'] . '_' . $szereloData['Nev'] . '.png';
 
-        $data["imgPathUgyfel"] = $imgPathUgyfel;
+
         $data["imgPathSzerelo"] = $imgPathSzerelo;
         $data["email"] = "frsz.bence@gmail.com";
         $data["title"] = "Szerződéskötés";
