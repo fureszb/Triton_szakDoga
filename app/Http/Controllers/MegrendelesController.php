@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\File;
 use App\Models\Anyag;
 use App\Models\FelhasznaltAnyag;
 use App\Models\Megrendeles;
@@ -12,6 +13,8 @@ use App\Models\Szolgaltatas;
 use App\Models\Ugyfel;
 use App\Models\Varos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Psy\Readline\Hoa\Console;
 use PDF;
 
@@ -115,6 +118,13 @@ class MegrendelesController extends Controller
         $megrendeles->Varos_ID = $request->Varos_ID;
         $megrendeles->save();
 
+
+        $ugyfel = Ugyfel::find($request->Ugyfel_ID);
+        Session::put('ugyfelData', [
+            'Ugyfel_ID' => $ugyfel->Ugyfel_ID,
+            'Nev' => $ugyfel->Nev
+        ]);
+
         // Munka létrehozása
         $munka = new Munka([
             'Megrendeles_ID' => $megrendeles->Megrendeles_ID,
@@ -126,6 +136,12 @@ class MegrendelesController extends Controller
         ]);
         $munka->save();
 
+        $szerelo = Szerelo::find($request->Szerelo_ID);
+        Session::put('szereloData', [
+            'Szerelo_ID' => $szerelo->Szerelo_ID,
+            'Nev' => $szerelo->Nev
+        ]);
+        //Log::debug('Ugyfel Data:', Session::get('ugyfelData') ?: ['empty' => 'No data found']);
 
         // A megrendelés és az első munka létrehozása után
         /*$szereloIDs = $request->input('Szerelo_ID');
@@ -171,8 +187,10 @@ class MegrendelesController extends Controller
 
 
         //return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen létrehozva.');
+        //return redirect('megrendeles.saveImage')->with('success', 'Megrendelés sikeresen létrehozva.');
+        //return redirect()->route('megrendeles.saveImage', ['megrendelesId' => $megrendeles->id])->with('success', 'Megrendelés sikeresen létrehozva.');
         return redirect('/send-mail')->with('success', 'Az email sikeresen el lett küldve!');
-   
+
     }
 
 
@@ -253,5 +271,30 @@ class MegrendelesController extends Controller
 
         // Visszaadhatod az elérési útját a létrehozott PDF-nek, vagy akár közvetlenül is visszaküldheted a PDF-et a böngészőbe
         return $pdf->download($pdfFileName);
+    }
+    public function saveImage(Request $request, $megrendelesId)
+    {
+        $megrendeles = Megrendeles::with(['ugyfel'])->find($megrendelesId);
+        if (!$megrendeles) {
+            return response()->json(['error' => 'Megrendelés nem található.'], 404);
+        }
+
+
+
+        $fileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.png';
+        $folderPath = public_path('alaIrasokUgyfel');
+
+        $imageData = $request->input('dataURL');
+        $imageData = str_replace('data:image/png;base64,', '', $imageData);
+        $imageData = base64_decode($imageData);
+
+        //
+
+        if (!File::isDirectory($folderPath)) {
+            File::makeDirectory($folderPath, 0777, true, true);
+        }
+
+        file_put_contents($folderPath . '/' . $fileName, $imageData);
+        return response()->json(['success' => true]);
     }
 }

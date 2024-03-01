@@ -68,7 +68,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/megrendeles/{megrendeles}', [MegrendelesController::class, 'destroy'])->name('megrendeles.destroy');
 
     Route::get('/megrendeles/{megrendeles}/edit', [MegrendelesController::class, 'edit'])->name('megrendeles.edit');
- Route::get('/megrendeles/{munkaId}/pdf', [MegrendelesController::class, 'generatePdf'])->name('megrendeles.pdf');
+    Route::get('/megrendeles/{munkaId}/pdf', [MegrendelesController::class, 'generatePdf'])->name('megrendeles.pdf');
+
+    //Route::get('/megrendeles/saveImage/{megrendelesId}', [MegrendelesController::class, 'saveImage']);
 
 
 
@@ -83,7 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/signaturepad', [SignaturePadController::class, 'upload'])->name('signaturepad.upload');
 
 
-    Route::get('generate-pdf', [PDFController::class, 'generatePDF']);
+    //Route::get('generate-pdf', [PDFController::class, 'generatePDF']);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

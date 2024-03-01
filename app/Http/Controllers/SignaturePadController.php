@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Megrendeles;
+use App\Models\Ugyfel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 class SignaturePadController extends Controller
@@ -16,9 +20,8 @@ class SignaturePadController extends Controller
 
     public function upload(Request $request)
     {
-        return redirect('/send-mail')->with('success', 'Az aláírás és az ügyfél sikeresen mentve lett!');
+        //return redirect('/megrendeles')->with('success', 'Az aláírás és az ügyfél sikeresen mentve lett!');
     }
-
     public function saveImage(Request $request)
     {
         $imageData = $request->input('dataURL');
@@ -32,4 +35,6 @@ class SignaturePadController extends Controller
         return response()->json(['success' => true]);
         //return redirect('/send-mail')->with('success', 'Az aláírás és az ügyfél sikeresen mentve lett!');
     }
+
+
 }

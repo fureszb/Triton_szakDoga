@@ -92,13 +92,14 @@ savePNGButton.addEventListener("click", () => {
       alert("Kérlek írd alá mentés előtt!");
       event.preventDefault()
     } else {
-      const dataURL = signaturePad.toDataURL();
-      saveImage(dataURL);
+        //window.location.href = '/megrendeles/saveImage'
+        const dataURL = signaturePad.toDataURL();
+        saveImage(dataURL);
     }
   });
 });
 
-  function saveImage(dataURL) {
+function saveImage(dataURL) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
     fetch('/save-image', {
@@ -113,7 +114,7 @@ savePNGButton.addEventListener("click", () => {
           if (response.ok) {
             console.log('Kép mente');
             // Sikerüzenet megjelenítése
-            alert('Az aláírás és az ügyfél sikeresen mentve lett!');
+            //alert('Az aláírás és az ügyfél sikeresen mentve lett!');
             // 1 másodperc várakozás után átirányítás
             setTimeout(() => {
               window.location.href = '/send-mail';
@@ -126,5 +127,6 @@ savePNGButton.addEventListener("click", () => {
           console.error('Error saving image:', error);
         });
     }
+
 
 

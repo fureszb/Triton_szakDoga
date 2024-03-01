@@ -192,7 +192,7 @@
             <div class="menu">
 
                 <div class="logo">
-                    <img src="{{ asset('logo.png') }}" alt="logo">
+                    <img src="{{asset('logo.png')}}" alt="logo">
                 </div>
                 <h1>Szerződéskötés</h1>
 
@@ -214,7 +214,7 @@
                             <li class="list-group-item"><strong>Számlázási név:</strong> {{ $megrendeles->ugyfel->Szamlazasi_Nev }}</li>
                             <li class="list-group-item"><strong>Számlázási cím:</strong> {{ $megrendeles->ugyfel->varos->Irny_szam }} {{ $megrendeles->ugyfel->varos->Nev }}, {{ $megrendeles->ugyfel->Szamlazasi_Cim }}</li>
                             @if (!is_null($megrendeles->ugyfel->Adoszam))
-                            <li class="list-group-item"><strong>Adószám:</strong> {{$megrendeles->ugyfel->Adoszam }}</li>                  
+                            <li class="list-group-item"><strong>Adószám:</strong> {{$megrendeles->ugyfel->Adoszam }}</li>
                             @endif
 
                         </ul>
@@ -264,12 +264,12 @@
             <div class="sign">
                 <div class="imageContainer">
                     <h5>Szerel&#337; aláírása:</h5>
-                    <img src="{{ asset('signature-image.png') }}" alt="alairasSzerelo">
+                    <img src="http://127.0.0.1:8000/alaIrasokSzerelok/{{$imgPathSzerelo}}" alt="alairasSzerelo">
 
                 </div>
                 <div class="imageContainer">
                     <h5>Ügyfél aláírása:</h5>
-                    <img src="{{ asset('kepek/alairas.png') }}" alt="alairasUgyfel">
+                    <img src="http://127.0.0.1:8000/alaIrasokUgyfel/{{$imgPathUgyfel}}" alt="alairasUgyfel">
 
                 </div>
 

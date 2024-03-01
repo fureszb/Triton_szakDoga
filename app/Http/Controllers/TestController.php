@@ -9,6 +9,7 @@ use PDF;
 use Mail;
 use Illuminate\Support\Facades\Response;
 use App\Models\Megrendeles;
+use Illuminate\Support\Facades\Session;
 
 class TestController extends Controller
 {
@@ -17,16 +18,25 @@ class TestController extends Controller
         // $varos = Varos::where('Varos_ID', $ugyfel->Varos_ID)->latest()->first();
         $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag', 'munkak'])->latest()->first();
 
+        //$imgPath =  $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.png';
+
+        $ugyfelData = Session::get('ugyfelData');
+        $imgPathUgyfel = $ugyfelData['Ugyfel_ID'] . '_' . $ugyfelData['Nev'] . '.png';
+
+        $szereloData = Session::get('szereloData');
+        $imgPathSzerelo = $szereloData['Szerelo_ID'] . '_' . $szereloData['Nev'] . '.png';
+
         $data["email"] = "frsz.bence@gmail.com";
         $data["title"] = "Szerződéskötés";
         $data["megrendeles"] = $megrendeles;
+        $data["imgPathUgyfel"] = $imgPathUgyfel;
+        $data["imgPathSzerelo"] = $imgPathSzerelo;
 
 
         $pdf = PDF::loadView('mail', $data)->setOptions(['defaultFont' => 'sans-serif', 'encoding' => 'UTF-8']);
 
         $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.pdf';
         $pdfFilePath = storage_path('app/public/' . $pdfFileName);
-        $pdf->save($pdfFilePath);
 
         $pdf->save($pdfFilePath);
 
