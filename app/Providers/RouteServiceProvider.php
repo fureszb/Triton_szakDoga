@@ -37,4 +37,12 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
         });
     }
+    public static function redirectTo()
+    {
+        if (auth()->user()->role == 'Ugyfel') {
+            return '/ugyfel/megrendelesek'; // Itt adod meg az útvonalat, ha a felhasználó szerepköre 'Ugyfel'
+        }
+
+        return '/dashboard'; // Alapértelmezett átirányítás, ha a felhasználó nem 'Ugyfel'
+    }
 }

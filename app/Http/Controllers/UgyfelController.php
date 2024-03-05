@@ -13,6 +13,7 @@ use App\Models\Ugyfel;
 use App\Models\User;
 use App\Models\Varos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UgyfelController extends Controller
@@ -56,7 +57,7 @@ class UgyfelController extends Controller
         $request->validate([
             'Ugyfel_ID' => ['required'],
             'nev' => ['required', 'regex:/^[\p{L} -]+$/u', 'min:3'],
-            'email' => ['required', 'regex:/^\S+@\S+\.\S+$/', 'min:3'],
+            'email' => ['required', 'regex:/^\S+@\S+\.\S+$/', 'min:3', 'email', 'unique:users'],
             'telefon' => ['required', 'regex:/^(\+36|06)?[0-9]{9}$/'],
             'szamnev' => ['required', 'regex:/^[A-Za-záéíóöőúüűÁÉÍÓÖŐÚÜŰ\s]{3,}$/'],
             'szamcim' => ['required', 'min:3'],
@@ -79,13 +80,21 @@ class UgyfelController extends Controller
             'szamcim.min' => 'A számlázási cím legalább 3 karakter hosszúnak kell lennie.',
             'Ugyfel_ID.required' => 'Az Ugyfel_ID kitöltése kötelező',
             'Varos_ID.required' => 'A város kiválasztása kötelező.',
-            'Varos_ID.exists' => 'A kiválasztott város nem létezik.'
+            'Varos_ID.exists' => 'A kiválasztott város nem létezik.',
+            'email.email' => 'AZ email legyen email formátumú.',
+            'email.unique' => 'Az Email cím már létezik a rendszerünkben',
+
         ]);
 
-
+        $user = User::create([
+            'nev' => $request->nev,
+            'email' => $request->email,
+            'password' => Hash::make('1122'),
+        ]);
 
         $ugyfel = new Ugyfel();
         $ugyfel->Ugyfel_ID = $request->Ugyfel_ID;
+        $ugyfel->User_ID = $user->User_ID;
         $ugyfel->Nev = $request->nev;
         $ugyfel->Email = $request->email;
         $ugyfel->Telefonszam = $request->telefon;
@@ -96,11 +105,8 @@ class UgyfelController extends Controller
 
         $ugyfel->save();
 
-        $user = User::create([
-            'name' =>  $request->validate['nev'],
-            'email' =>  $request->validate['email'],
-            'password' => Hash::make('1122'),
-        ]);
+
+
 
         return redirect()->route('ugyfel.index')->with('success', 'Ügyfél sikeresen létrehozva!');
     }
@@ -140,7 +146,7 @@ class UgyfelController extends Controller
             'nev.regex' => 'A név csak betűket és szóközöket tartalmazhat, magyar betűket is elfogadva.',
             'nev.min' => 'A név legalább 3 karakter hosszú legyen.',
             'email.email' => 'AZ email legyen email formátumú.',
-            'email.unique'=> 'Az Email cím már létezik a rendszerünkben',
+            'email.unique' => 'Az Email cím már létezik a rendszerünkben',
             'email.required' => 'Az email megadása kötelező.',
             'email.regex' => 'Érvénytelen email cím.',
             'email.min' => 'A email legalább 3 karakter hosszú legyen.',
@@ -171,6 +177,13 @@ class UgyfelController extends Controller
         $ugyfel->Adoszam = $request->adoszam;
         $ugyfel->Varos_ID = $request->Varos_ID;
         $ugyfel->save();
+
+        $user = User::findOrFail($ugyfel->User_ID);
+        $user->update([
+            'nev' => $request->nev,
+            'email' => $request->email,
+        ]);
+
         return redirect()->route('ugyfel.index')->with('success', 'Ügyfél sikeresen módosítva!');
     }
 
@@ -208,11 +221,23 @@ class UgyfelController extends Controller
 
         return view('ugyfel.index', compact('ugyfel'));
     }
-    public function megrendelesek($ugyfelId)
+    public function megrendelesek()
     {
+        // Ellenőrizzük, hogy van-e bejelentkezett felhasználó
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'A hozzáféréshez be kell jelentkezni.');
+        }
+
+        // Lekérjük a bejelentkezett felhasználóhoz kapcsolódó ügyfél azonosítóját
+        $ugyfelId = Auth::user()->ugyfel->Ugyfel_ID;
+
+        // Lekérjük az ügyfélhez tartozó megrendeléseket
         $megrendelesek = Megrendeles::where('Ugyfel_ID', $ugyfelId)->get();
+
+        // Opcionálisan, ha szeretnéd az ügyfél adatait is megjeleníteni
         $ugyfel = Ugyfel::with('megrendelesek')->findOrFail($ugyfelId);
 
+        // Visszaadjuk a nézetet az adatokkal
         return view('ugyfel.megrendelesek', compact('megrendelesek', 'ugyfel'));
     }
 }

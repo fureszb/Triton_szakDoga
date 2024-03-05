@@ -23,4 +23,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         //
     }
+
+    public function toResponse($request)
+    {
+        return redirect(RouteServiceProvider::redirectTo());
+    }
 }

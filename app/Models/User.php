@@ -17,11 +17,18 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $primaryKey = 'User_ID';
     protected $fillable = [
-        'name',
+        'nev',
         'email',
         'password',
+        'role',
     ];
+
+    public function ugyfel()
+    {
+        return $this->hasOne(Ugyfel::class, 'User_ID');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

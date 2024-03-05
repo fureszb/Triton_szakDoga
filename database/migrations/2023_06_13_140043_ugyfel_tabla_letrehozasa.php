@@ -9,10 +9,10 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('ugyfel', function (Blueprint $table){
+        Schema::create('ugyfel', function (Blueprint $table) {
             $table->unsignedBigInteger('Ugyfel_ID')->primary();
             $table->unsignedBigInteger('Varos_ID');
-            $table->foreignId('User_ID')->constrained('users');
+            $table->unsignedBigInteger('User_ID')->nullable();
             $table->string('Nev');
             $table->string('Email')->unique();
             $table->string('Telefonszam');
@@ -22,6 +22,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('Varos_ID')->references('Varos_ID')->on('varos');
+            $table->foreign('User_ID')->references('User_ID')->on('users');
+
 
             //$table->index('Ugyfel_ID');
         });
@@ -31,10 +33,10 @@ return new class extends Migration
                 'Ugyfel_ID' => '1',
                 'Varos_ID' => '1',
                 'Nev' => 'Gipsz Jakab',
-                'Email' =>"valami@gmail.com",
+                'Email' => "valami@gmail.com",
                 'Telefonszam' => '06301234567',
                 'Szamlazasi_Nev' => 'Gipsz Jakab',
-                'Szamlazasi_Cim' =>"Kossuth utca, 12",
+                'Szamlazasi_Cim' => "Kossuth utca, 12",
                 'created_at' => now(),
                 'updated_at' => now()
             ]

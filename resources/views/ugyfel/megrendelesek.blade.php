@@ -24,6 +24,7 @@
         {{ $m->Megrendeles_ID }} - {{ $m->Megrendeles_Nev }}
     </li>
     <a href="{{ route('megrendeles.show', ['id' => $m->Megrendeles_ID]) }}" class="button">Megjelenítés</a>
+    <div></div> <div></div>
     @endforeach
 </ul>
 @endsection

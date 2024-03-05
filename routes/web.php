@@ -8,6 +8,8 @@ use App\Http\Controllers\SignaturePadController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\MegrendelesController;
 use App\Http\Controllers\AnyagController;
+use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,12 +27,21 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return redirect()->route('ugyfel.index');
+    if (Auth::check()) {
+        $user = Auth::user();
+        if ($user->role == 'Ugyfel') {
+            return redirect()->route('ugyfel.megrendelesek');
+        }
+        if (($user->role == 'Admin')) {
+            return redirect()->route('ugyfel.index');
+        }
+        if (($user->role == 'Uzletkoto')) {
+            return redirect()->route('megrendeles.index');
+        }
+    }
+    return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-/*Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');*/
 
 Route::get('/szolgaltatas-szerelok/{szolgaltatasId}', [MegrendelesController::class, 'getSzerelokBySzolgaltatas']);
 
@@ -73,7 +84,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/send-mail', [TestController::class, 'sendMailWithPdf']);
 
-    Route::get('/ugyfel/{ugyfelId}/megrendelesek', [UgyfelController::class, 'megrendelesek'])->name('ugyfel.megrendelesek');
+    Route::get('/ugyfel/megrendelesek', [UgyfelController::class, 'megrendelesek'])->name('ugyfel.megrendelesek');
 
 
     Route::post('/save-image', [SignaturePadController::class, 'saveImage']);

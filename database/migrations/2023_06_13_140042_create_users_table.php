@@ -14,27 +14,36 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id('User_ID');
-            $table->foreignId('Ugyfel_ID')->nullable()->constrained('ugyfel')->onDelete('cascade');
-            $table->string('name');
+            $table->string('nev');
+            $table->string('role')->default('Ugyfel');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('role')->default('Ugyfel');
             $table->rememberToken();
             $table->timestamps();
         });
 
         DB::table('users')->insert([
             [
-                'name' => 'Bence',
+                'nev' => 'Admin',
+                'role' => 'Admin',
                 'email' =>'fureszb@gmail.com',
                 'password' => bcrypt('1122'),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'Bence2',
+                'nev' => 'Üzletkőtő János',
+                'role' => 'Uzletkoto',
                 'email' =>'frsz.bence@gmail.com',
+                'password' => bcrypt('1122'),
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nev' => 'Ugyfel',
+                'role' => 'Ugyfel',
+                'email' =>'frsz.bence2@gmail.com',
                 'password' => bcrypt('1122'),
                 'created_at' => now(),
                 'updated_at' => now()

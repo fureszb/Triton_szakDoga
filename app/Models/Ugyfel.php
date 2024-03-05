@@ -9,10 +9,12 @@ class Ugyfel extends Model
 {
     protected $table = 'ugyfel';
     protected $primaryKey = 'Ugyfel_ID';
-    protected $fillable = ['Varos_ID', 'Ugyfel_ID',  'Nev', 'Email', 'Telefonszam', 'Szamlazasi_Nev', 'Szamlazasi_Cim', 'Adoszam'];
+    protected $fillable = ['Varos_ID', 'Ugyfel_ID', 'User_ID', 'Nev', 'Email', 'Telefonszam', 'Szamlazasi_Nev', 'Szamlazasi_Cim', 'Adoszam'];
 
-
-    use HasFactory;
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'User_ID');
+    }
 
     public function szerelo()
     {
