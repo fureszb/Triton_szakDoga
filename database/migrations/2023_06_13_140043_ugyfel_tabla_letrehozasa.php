@@ -12,8 +12,9 @@ return new class extends Migration
         Schema::create('ugyfel', function (Blueprint $table){
             $table->unsignedBigInteger('Ugyfel_ID')->primary();
             $table->unsignedBigInteger('Varos_ID');
+            $table->foreignId('User_ID')->constrained('users');
             $table->string('Nev');
-            $table->string('Email');
+            $table->string('Email')->unique();
             $table->string('Telefonszam');
             $table->string('Szamlazasi_Nev');
             $table->string('Szamlazasi_Cim');

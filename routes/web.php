@@ -68,11 +68,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/megrendeles/{megrendeles}', [MegrendelesController::class, 'destroy'])->name('megrendeles.destroy');
 
     Route::get('/megrendeles/{megrendeles}/edit', [MegrendelesController::class, 'edit'])->name('megrendeles.edit');
-    Route::get('/megrendeles/{munkaId}/pdf', [MegrendelesController::class, 'generatePdf'])->name('megrendeles.pdf');
+
+    Route::get('/download-pdf/{ugyfelId}/{ugyfelNev}/{szolgaltatasId}', [MegrendelesController::class, 'downloadPdf']);
 
     Route::get('/send-mail', [TestController::class, 'sendMailWithPdf']);
 
-    // routes/web.php
+    Route::get('/ugyfel/{ugyfelId}/megrendelesek', [UgyfelController::class, 'megrendelesek'])->name('ugyfel.megrendelesek');
+
 
     Route::post('/save-image', [SignaturePadController::class, 'saveImage']);
 

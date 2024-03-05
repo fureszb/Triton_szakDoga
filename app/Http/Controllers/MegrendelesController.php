@@ -127,7 +127,7 @@ class MegrendelesController extends Controller
             'Ugyfel_ID' => $ugyfel->Ugyfel_ID,
             'Nev' => $ugyfel->Nev
         ]);
-       
+
 
 
 
@@ -142,10 +142,13 @@ class MegrendelesController extends Controller
         ]);
         $munka->save();
 
+
+
         $szerelo = Szerelo::find($request->Szerelo_ID);
         Session::put('szereloData', [
             'Szerelo_ID' => $szerelo->Szerelo_ID,
-            'Nev' => $szerelo->Nev
+            'Nev' => $szerelo->Nev,
+            'Szolgaltatas_ID' => $request->Szolgaltatas_ID
         ]);
         //Log::debug('Ugyfel Data:', Session::get('ugyfelData') ?: ['empty' => 'No data found']);
 
@@ -251,56 +254,34 @@ class MegrendelesController extends Controller
 
         return response()->json($szerelo);
     }
-    public function generatePdf($munkaId)
+    public function downloadPdf(Request $request, $ugyfelId, $ugyfelNev, $szolgaltatasId)
     {
-        // Először keresd meg a Munka rekordot a megadott Munka_ID alapján
-        $munka = Munka::findOrFail($munkaId);
+        // A megfelelő Megrendeles entitás keresése
+        $megrendeles = Megrendeles::with(['ugyfel', 'munkak'])
+            ->whereHas('ugyfel', function ($query) use ($ugyfelId, $ugyfelNev) {
+                $query->where('Ugyfel_ID', $ugyfelId)
+                    ->where('Nev', $ugyfelNev);
+            })
+            ->whereHas('munkak', function ($query) use ($szolgaltatasId) {
+                $query->where('Szolgaltatas_ID', $szolgaltatasId);
+            })
+            ->first();
 
-        // Ezután használd a Munka rekordhoz tartozó Megrendeles_ID-t
-        $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag', 'munkak'])
-            ->where('Megrendeles_ID', $munka->Megrendeles_ID)
-            ->firstOrFail();
-
-
-        $data = [
-            "email" => "frsz.bence@gmail.com",
-            "title" => "Szerződéskötés",
-            "megrendeles" => $megrendeles
-        ];
-
-        $pdf = PDF::loadView('mail', $data)
-            ->setOptions(['defaultFont' => 'DejaVu Sans', 'encoding' => 'UTF-8']);
-
-        $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.pdf';
-        $pdfFilePath = storage_path('app/public/' . $pdfFileName);
-        $pdf->save($pdfFilePath);
-
-        // Visszaadhatod az elérési útját a létrehozott PDF-nek, vagy akár közvetlenül is visszaküldheted a PDF-et a böngészőbe
-        return $pdf->download($pdfFileName);
-    }
-    public function saveImage(Request $request, $megrendelesId)
-    {
-        $megrendeles = Megrendeles::with(['ugyfel'])->find($megrendelesId);
         if (!$megrendeles) {
-            return response()->json(['error' => 'Megrendelés nem található.'], 404);
+            return response()->json(['error' => 'A dokumentum nem található.'], 404);
         }
 
-        $ugyfelData = Session::get('ugyfelData');
-        $fileName = $ugyfelData['Ugyfel_ID'] . '_' . $ugyfelData['Nev'] . '.png';
+        // A PDF fájl nevének összeállítása
+        $pdfFileName = $ugyfelId . '_' . $ugyfelNev . '_' . $szolgaltatasId . '.pdf';
+        $pdfFilePath = storage_path('app/public/' . $pdfFileName);
 
-        $folderPath = public_path('alaIrasokUgyfel');
-
-        $imageData = $request->input('dataURL');
-        $imageData = str_replace('data:image/png;base64,', '', $imageData);
-        $imageData = base64_decode($imageData);
-
-        //
-
-        if (!File::isDirectory($folderPath)) {
-            File::makeDirectory($folderPath, 0777, true, true);
+        // Ellenőrizzük, hogy létezik-e a fájl
+        if (File::exists($pdfFilePath)) {
+            // Letöltés indítása
+            return response()->download($pdfFilePath, $pdfFileName);
+        } else {
+            // Hibaüzenet, ha a fájl nem létezik
+            return response()->json(['error' => 'A fájl nem található.'], 404);
         }
-
-        file_put_contents($folderPath . '/' . $fileName, $imageData);
-        return response()->json(['success' => true]);
     }
 }

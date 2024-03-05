@@ -10,8 +10,10 @@ use App\Models\Munkanaplo;
 use App\Models\Szerelo;
 use App\Models\Szolgaltatas;
 use App\Models\Ugyfel;
+use App\Models\User;
 use App\Models\Varos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UgyfelController extends Controller
 {
@@ -94,6 +96,12 @@ class UgyfelController extends Controller
 
         $ugyfel->save();
 
+        $user = User::create([
+            'name' =>  $request->validate['nev'],
+            'email' =>  $request->validate['email'],
+            'password' => Hash::make('1122'),
+        ]);
+
         return redirect()->route('ugyfel.index')->with('success', 'Ügyfél sikeresen létrehozva!');
     }
 
@@ -101,7 +109,7 @@ class UgyfelController extends Controller
     {
         $ugyfel = Ugyfel::find($id);
         $varos = Varos::where('Varos_ID', $ugyfel->Varos_ID)->first();
-        return view('ugyfel.show', compact('ugyfel', 'varos'));
+        return view('ugyfel.show', compact('ugyfel', 'varos', 'megrendelesek'));
     }
 
 
@@ -121,7 +129,7 @@ class UgyfelController extends Controller
         $request->validate([
             'Ugyfel_ID' => ['required'],
             'nev' => ['required', 'regex:/^[\p{L} -]+$/u', 'min:3'],
-            'email' => ['required', 'regex:/^\S+@\S+\.\S+$/', 'min:3'],
+            'email' => ['required', 'regex:/^\S+@\S+\.\S+$/', 'min:3', 'email', 'unique:users'],
             'telefon' => ['required', 'regex:/^(\+36|06)?[0-9]{9}$/'],
             'szamnev' => ['required', 'regex:/^[A-Za-záéíóöőúüűÁÉÍÓÖŐÚÜŰ\s]{3,}$/'],
             'szamcim' => ['required', 'min:3'],
@@ -131,6 +139,8 @@ class UgyfelController extends Controller
             'nev.required' => 'A név megadása kötelező.',
             'nev.regex' => 'A név csak betűket és szóközöket tartalmazhat, magyar betűket is elfogadva.',
             'nev.min' => 'A név legalább 3 karakter hosszú legyen.',
+            'email.email' => 'AZ email legyen email formátumú.',
+            'email.unique'=> 'Az Email cím már létezik a rendszerünkben',
             'email.required' => 'Az email megadása kötelező.',
             'email.regex' => 'Érvénytelen email cím.',
             'email.min' => 'A email legalább 3 karakter hosszú legyen.',
@@ -197,5 +207,12 @@ class UgyfelController extends Controller
             ->paginate(9);
 
         return view('ugyfel.index', compact('ugyfel'));
+    }
+    public function megrendelesek($ugyfelId)
+    {
+        $megrendelesek = Megrendeles::where('Ugyfel_ID', $ugyfelId)->get();
+        $ugyfel = Ugyfel::with('megrendelesek')->findOrFail($ugyfelId);
+
+        return view('ugyfel.megrendelesek', compact('megrendelesek', 'ugyfel'));
     }
 }

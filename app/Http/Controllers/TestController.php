@@ -33,9 +33,8 @@ class TestController extends Controller
 
         $pdf = PDF::loadView('mail', $data)->setOptions(['defaultFont' => 'sans-serif', 'encoding' => 'UTF-8']);
 
-        $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.pdf';
+        $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '_' . $szereloData['Szolgaltatas_ID'] . '.pdf';
         $pdfFilePath = storage_path('app/public/' . $pdfFileName);
-
         $pdf->save($pdfFilePath);
 
         // E-mail küldése
@@ -68,4 +67,6 @@ class TestController extends Controller
         //return  $pdf->save($pdfFilePath);
         return redirect()->route('ugyfel.index')->with('success', $message);
     }
+
+
 }
