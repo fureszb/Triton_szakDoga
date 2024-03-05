@@ -8,30 +8,43 @@
     <title>Triton Security</title>
     <link rel="shortcut icon" href="{{ asset('logo.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
-   
+
 </head>
 
 <body>
     <header>
-
+        @php
+            $user = Auth::user();
+        @endphp
 
 
 
         <div class="logo">
-            <a href="{{ route('ugyfel.index') }}">
-                <img src="{{ asset('logo.png') }}" width="130px" alt="LOGO">
-            </a>
+            @if ($user->role != 'Ugyfel')
+                <a href="{{ route('ugyfel.index') }}">
+                    <img src="{{ asset('logo.png') }}" width="130px" alt="LOGO">
+                </a>
+            @else
+                <a href="{{ route('ugyfel.megrendelesek') }}">
+                    <img src="{{ asset('logo.png') }}" width="130px" alt="LOGO">
+                </a>
+            @endif
         </div>
         <nav>
             <ul>
-                <li><a href="{{ route('ugyfel.index') }}">Ügyfelek</a></li>
-                <li><a href="{{ route('megrendeles.index') }}">Megrendelők</a></li>
-                <li><a href="{{ route('anyagok.create') }}">Új anyag</a></li>
+                @if ($user->role != 'Ugyfel')
+                    <li><a href="{{ route('ugyfel.index') }}">Ügyfelek</a></li>
+                    <li><a href="{{ route('megrendeles.index') }}">Megrendelők</a></li>
+                    <li><a href="{{ route('anyagok.create') }}">Új anyag</a></li>
+                @else
+                    <li><a href="{{ route('ugyfel.megrendelesek') }}">Megrendeléseim</a></li>
+                @endif
+
                 @if (auth()->check())
                     <li>
                         <form action="{{ route('logout') }}" method="post">
                             @csrf
-                            <button type="submit">Kijelentkezés {{ auth()->user()->name }}</button>
+                            <button type="submit">Kijelentkezés ({{ auth()->user()->nev }})</button>
                         </form>
                     </li>
                 @endif
