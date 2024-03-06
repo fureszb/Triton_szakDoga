@@ -1,6 +1,6 @@
-@extends('layout')
+@extends('alkalmazas')
 
-@section('content')
+@section('main')
 
 <h1>Ügyfél Szerkesztése</h1>
 @if ($errors->any())

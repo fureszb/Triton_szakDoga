@@ -27,8 +27,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    if (Auth::check()) {
-        $user = Auth::user();
+    //if (Auth::check()) {
+        /*$user = Auth::user();
         if ($user->role == 'Ugyfel') {
             return redirect()->route('ugyfel.megrendelesek');
         }
@@ -37,8 +37,8 @@ Route::get('/dashboard', function () {
         }
         if (($user->role == 'Uzletkoto')) {
             return redirect()->route('megrendeles.index');
-        }
-    }
+        }*/
+  //  }
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::view('/ugyfel/create_modal', 'ugyfel.create_modal')->name('ugyfel.create_modal');
+    Route::get('/megrendeles/alkalmazas', [MegrendelesController::class, 'alkalmazas'])->name('megrendeles.alkalmazas');
 
 
 

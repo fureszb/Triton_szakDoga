@@ -20,6 +20,13 @@ use PDF;
 
 class MegrendelesController extends Controller
 {
+
+    public function alkalmazas()
+    {
+
+        return view('megrendeles.alkalmazas');
+    }
+
     public function index()
     {
         $megrendelesek = Megrendeles::all();
