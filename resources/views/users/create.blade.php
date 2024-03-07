@@ -51,4 +51,37 @@
         <button type="submit" class="btn btn-primary">Mentés</button>
     </form>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ugyfelSelect = document.getElementById('Ugyfel_ID');
+            const nevInput = document.getElementById('nev');
+            const emailInput = document.getElementById('email');
+
+            function toggleRequired(isRequired) {
+                if (isRequired) {
+                    nevInput.setAttribute('required');
+                    emailInput.setAttribute('required');
+                } else {
+                    nevInput.removeAttribute('required');
+                    emailInput.removeAttribute('required');
+                }
+            }
+
+            ugyfelSelect.addEventListener('change', function() {
+                const selected = this.value;
+
+                if (selected) {
+                    nevInput.parentElement.style.display = 'none';
+                    emailInput.parentElement.style.display = 'none';
+                    toggleRequired(false);
+                } else {
+                    nevInput.parentElement.style.display = 'block';
+                    emailInput.parentElement.style.display = 'block';
+                    toggleRequired(true);
+                }
+            });
+        });
+    </script>
+
+
 @endsection

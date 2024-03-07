@@ -37,8 +37,8 @@
             </fieldset>
 
             <fieldset>
-                <label for="ugyfel_id">Ügyfél (opcionális)</label>
-                <select name="Ugyfel_ID" id="ugyfel_id" class="form-control">
+                <label for="Ugyfel_ID">Ügyfél (opcionális)</label>
+                <select name="Ugyfel_ID" id="Ugyfel_ID" class="form-control">
                     <option value="">Válassz ügyfelet (opcionális)</option>
                     @foreach ($ugyfelek as $ugyfel)
                         <option value="{{ $ugyfel->Ugyfel_ID }}" {{ (old('Ugyfel_ID', optional($user->ugyfel)->Ugyfel_ID) == $ugyfel->Ugyfel_ID) ? 'selected' : '' }}>
