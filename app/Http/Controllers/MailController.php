@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Response;
 use App\Models\Megrendeles;
 use Illuminate\Support\Facades\Session;
 
-class TestController extends Controller
+class MailController extends Controller
 {
     public function sendMailWithPdf()
     {

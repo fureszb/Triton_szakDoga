@@ -36,6 +36,7 @@
                     <li><a href="{{ route('ugyfel.index') }}">Ügyfelek</a></li>
                     <li><a href="{{ route('megrendeles.index') }}">Megrendelők</a></li>
                     <li><a href="{{ route('anyagok.create') }}">Új anyag</a></li>
+                    <li><a href="{{ route('users.index') }}">Fiókok</a></li>
                 @else
                     <li><a href="{{ route('ugyfel.megrendelesek') }}">Megrendeléseim</a></li>
                 @endif

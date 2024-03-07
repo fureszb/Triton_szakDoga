@@ -3,12 +3,13 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UgyfelController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TestController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\SignaturePadController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\MegrendelesController;
 use App\Http\Controllers\AnyagController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -82,7 +83,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/download-pdf/{ugyfelId}/{ugyfelNev}/{szolgaltatasId}', [MegrendelesController::class, 'downloadPdf']);
 
-    Route::get('/send-mail', [TestController::class, 'sendMailWithPdf']);
+    Route::get('/send-mail', [MailController::class, 'sendMailWithPdf']);
 
     Route::get('/ugyfel/megrendelesek', [UgyfelController::class, 'megrendelesek'])->name('ugyfel.megrendelesek');
 
@@ -111,6 +112,9 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/ugyfel/search', 'UgyfelController@search')->name('ugyfel.search');
+
+    Route::resource('users', UserController::class);
+
 });
 Route::get('/elso-kep', 'App\Http\Controllers\HomeController@elsoKep');
 

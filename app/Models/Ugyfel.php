@@ -13,7 +13,7 @@ class Ugyfel extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'User_ID');
+        return $this->belongsTo(User::class, 'User_ID', 'User_ID');
     }
 
     public function szerelo()

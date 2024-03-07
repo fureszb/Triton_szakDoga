@@ -27,8 +27,9 @@ class User extends Authenticatable
 
     public function ugyfel()
     {
-        return $this->hasOne(Ugyfel::class, 'User_ID');
+        return $this->hasOne(Ugyfel::class, 'User_ID', 'User_ID');
     }
+
 
     /**
      * The attributes that should be hidden for serialization.

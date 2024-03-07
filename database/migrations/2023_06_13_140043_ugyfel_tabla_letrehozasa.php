@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('Varos_ID')->references('Varos_ID')->on('varos');
-            $table->foreign('User_ID')->references('User_ID')->on('users');
+            $table->foreign('User_ID')->references('User_ID')->on('users')->onDelete('set null');
 
 
             //$table->index('Ugyfel_ID');
