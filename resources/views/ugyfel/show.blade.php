@@ -1,6 +1,6 @@
-@extends('layout')
+@extends('alkalmazas')
 
-@section('content')
+@section('main')
 
 <h1>{{ $ugyfel->Nev }} Ügyfél részletek</h1>
 <div class="container">

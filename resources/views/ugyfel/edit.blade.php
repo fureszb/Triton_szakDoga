@@ -2,6 +2,9 @@
 
 @section('main')
 
+
+{{ Breadcrumbs::render('ugyfel.edit', $ugyfel->Ugyfel_ID) }}
+
 <h1>Ügyfél Szerkesztése</h1>
 @if ($errors->any())
     @foreach ($errors->all() as $error)

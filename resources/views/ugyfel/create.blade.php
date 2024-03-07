@@ -3,7 +3,7 @@
 @section('main')
 
     <div class="container mt-5">
-
+        {{ Breadcrumbs::render('ugyfel.create') }}
         <h1 class="mb-4">Új ügyfél</h1>
 
         @if ($errors->any())

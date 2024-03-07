@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('content')
+{{ Breadcrumbs::render('megrendeles.create') }}
 <h1>Új Megrendelés</h1>
 @if ($errors->any())
     @foreach ($errors->all() as $error)

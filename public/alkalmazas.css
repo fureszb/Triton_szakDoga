@@ -329,6 +329,14 @@ nav button {
     gap: 10px;
 }
 
+.ugyfelUl
+{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
 
 @media screen and (max-width: 650px) {
     .title > div:nth-child(3),

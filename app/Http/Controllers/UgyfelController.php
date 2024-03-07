@@ -115,7 +115,8 @@ class UgyfelController extends Controller
     {
         $ugyfel = Ugyfel::find($id);
         $varos = Varos::where('Varos_ID', $ugyfel->Varos_ID)->first();
-        return view('ugyfel.show', compact('ugyfel', 'varos', 'megrendelesek'));
+        return view('ugyfel.show', compact('ugyfel', 'varos'));
+        //, 'megrendelesek'
     }
 
 

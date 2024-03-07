@@ -62,7 +62,7 @@
             box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
         }
 
-        body form {
+        #createForm{
             background-color: white;
             border-radius: 0.5rem;
             padding: 37px;
@@ -266,6 +266,11 @@
         .kijelentkezes li {
             list-style: none;
         }
+        @use Illuminate\Support\Str;
+        .breadcrumb{
+            padding-top: 50px;
+        }
+
     </style>
 </head>
 
@@ -285,13 +290,13 @@
             <nav class="nav">
                 <div> <a href="#" class="nav_logo"> <img style="width: 30px;" class="bx nav_logo-icon"
                             src="{{ asset('logo.png') }}" /><span class="nav_logo-name">Triton Security</span> </a>
-                    <div class="nav_list"> <a href="#" class="nav_link active"> <i
-                                class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Kezdőlap</span> </a> <a
-                            href="#" class="nav_link"> <i class='bx bx-user nav_icon'></i>
-                            <span class="nav_name">Users</span> </a> <a href="#" class="nav_link"> <i
-                                class='bx bx-message-square-detail nav_icon'></i> <span class="nav_name">Messages</span>
+                    <div class="nav_list"> <a href="#" class="nav_link"> <i
+                                class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Kezdőlap</span> </a> <a href="{{ route('ugyfel.index') }}" class="nav_link {{ Str::startsWith(Route::currentRouteName(), 'ugyfel.') ? 'active' : '' }}">
+                                    <i class='bx bx-user nav_icon'></i>
+                            <span class="nav_name">Ügyfelek</span> </a> <a href="{{ route('megrendeles.index') }}" class="nav_link {{ Route::currentRouteName() == 'megrendeles.index' ? 'active' : '' }}"> <i
+                                class='bx bx-message-square-detail nav_icon'></i> <span class="nav_name">Megrendelesek</span>
                         </a> <a href="#" class="nav_link"> <i class='bx bx-bookmark nav_icon'></i> <span
-                                class="nav_name">Bookmark</span>
+                                class="nav_name">Level</span>
                         </a> <a href="#" class="nav_link"> <i class='bx bx-folder nav_icon'></i> <span
                                 class="nav_name">Files</span>
                         </a> <a href="#" class="nav_link"> <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span
