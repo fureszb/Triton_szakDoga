@@ -15,8 +15,8 @@ class Szolgaltatas extends Model
     use HasFactory;
 
 
-    public function munkanaplo()
+    public function szerelok()
     {
-        return $this->hasMany(Munkanaplo::class, 'Szolgaltatas_ID');
+        return $this->belongsToMany(Szerelo::class, 'szerelo_szolgaltatas', 'Szolgaltatas_ID', 'Szerelo_ID');
     }
 }

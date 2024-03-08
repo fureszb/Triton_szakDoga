@@ -18,10 +18,6 @@ class Szerelo extends Model
         return $this->hasMany(Ugyfel::class, 'Szerelo_ID');
     }
 
-    public function munkanaplo()
-    {
-        return $this->hasMany(Munkanaplo::class, 'Szerelo_ID');
-    }
     public function szolgaltatasok()
     {
         return $this->belongsToMany(Szolgaltatas::class, 'szerelo_szolgaltatas', 'Szerelo_ID', 'Szolgaltatas_ID');

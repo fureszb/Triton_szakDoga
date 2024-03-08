@@ -9,6 +9,7 @@ use App\Http\Controllers\PDFController;
 use App\Http\Controllers\MegrendelesController;
 use App\Http\Controllers\AnyagController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\SzereloController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 
@@ -58,8 +59,6 @@ Route::middleware('auth')->group(function () {
 
 
 
-    Route::get('/anyagok/create', [AnyagController::class, 'create'])->name('anyagok.create');
-    Route::post('/anyagok', [AnyagController::class, 'store'])->name('anyagok.store');
 
 
 
@@ -114,6 +113,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/ugyfel/search', 'UgyfelController@search')->name('ugyfel.search');
 
     Route::resource('users', UserController::class);
+    Route::resource('anyagok', AnyagController::class);
+    Route::resource('szerelok', SzereloController::class);
+    //Route::get('/anyagok/create', [AnyagController::class, 'create'])->name('anyagok.create');
+    //Route::post('/anyagok', [AnyagController::class, 'store'])->name('anyagok.store');
+
+
 
 });
 Route::get('/elso-kep', 'App\Http\Controllers\HomeController@elsoKep');
