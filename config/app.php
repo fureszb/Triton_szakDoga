@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 use Barryvdh\DomPDF\ServiceProvider as DomPDFServiceProvider;
 use Barryvdh\DomPDF\Facade as PDF;
+use Diglactic\Breadcrumbs\Breadcrumbs;
+use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
 return [
     /*
@@ -170,6 +172,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        //Diglactic\Breadcrumbs\ServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -186,5 +189,6 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'PDF' => Barryvdh\DomPDF\Facade\PDF::class,
+        //'Breadcrumbs' => Diglactic\Breadcrumbs\Facades\Breadcrumbs::class,
     ])->toArray(),
 ];

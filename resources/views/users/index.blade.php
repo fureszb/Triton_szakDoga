@@ -1,6 +1,8 @@
 @extends('layout')
 
 @section('content')
+    @include('breadcrumbs')
+
     <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
     <h1 class="title">Felhasználók
         <a href="{{ route('users.index', ['sort_by' => 'User_ID', 'sort_dir' => 'asc']) }}" title="Növekvő sorrend">

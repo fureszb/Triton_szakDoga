@@ -1,6 +1,8 @@
 @extends('layout')
 
 @section('content')
+
+@include('breadcrumbs')
 <h1>Új Anyag Hozzáadása</h1>
 
 @error('Nev')

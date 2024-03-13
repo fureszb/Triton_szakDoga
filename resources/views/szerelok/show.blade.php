@@ -1,6 +1,8 @@
 @extends('layout')
 
 @section('content')
+
+@include('breadcrumbs')
 <h1>Szerelő Részletei</h1>
 
 <div>

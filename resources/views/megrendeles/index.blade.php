@@ -3,6 +3,8 @@
 <div class="alert alert-warning">{{ $message }}</div>
 @enderror
 @section('content')
+
+@include('breadcrumbs')
 <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
 <h1 class="title">Megrendelések
     <a href="{{ route('megrendeles.index', ['sort_by' => 'Megrendeles_ID', 'sort_dir' => 'asc']) }}" title="Növekvő sorrend">

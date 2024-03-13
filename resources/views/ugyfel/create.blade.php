@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('content')
+@include('breadcrumbs')
 
 <h1>Új ügyfél</h1>
 @if ($errors->any())

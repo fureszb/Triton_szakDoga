@@ -1,6 +1,9 @@
 @extends('layout')
 
 @section('content')
+
+@include('breadcrumbs')
+
     @if ($megrendeles)
         <h1>{{$megrendeles->Megrendeles_ID}} - {{ $megrendeles->Megrendeles_Nev }} - Megrendelés részletei</h1>
         <div class="container">

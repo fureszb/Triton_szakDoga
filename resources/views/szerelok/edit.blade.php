@@ -1,6 +1,8 @@
 @extends('layout')
 
 @section('content')
+
+@include('breadcrumbs')
 <h1>Szerelő Szerkesztése</h1>
 
 <form action="{{ route('szerelok.update', $szerelo->Szerelo_ID) }}" method="POST">

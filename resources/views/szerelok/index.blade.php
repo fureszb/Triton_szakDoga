@@ -1,6 +1,8 @@
 @extends('layout')
 
 @section('content')
+
+@include('breadcrumbs')
 <h1>Szerelők Listája</h1>
 <a href="{{ route('szerelok.create') }}" class="btn btn-primary">Új Szerelő Hozzáadása</a>
 

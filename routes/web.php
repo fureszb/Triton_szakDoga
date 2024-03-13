@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UgyfelController;
+use App\Http\Controllers\SzolgaltatasController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\SignaturePadController;
@@ -9,9 +10,11 @@ use App\Http\Controllers\PDFController;
 use App\Http\Controllers\MegrendelesController;
 use App\Http\Controllers\AnyagController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SzereloController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -64,7 +67,7 @@ Route::middleware('auth')->group(function () {
 
     Route::view('/ugyfel/create_modal', 'ugyfel.create_modal')->name('ugyfel.create_modal');
 
-
+    Route::get('/szolgaltatasok', [SzolgaltatasController::class, 'index']);
 
     Route::get('/megrendeles', [MegrendelesController::class, 'index'])->name('megrendeles.index');
 
@@ -113,8 +116,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/ugyfel/search', 'UgyfelController@search')->name('ugyfel.search');
 
     Route::resource('users', UserController::class);
+    Route::resource('home', HomeController::class);
     Route::resource('anyagok', AnyagController::class);
     Route::resource('szerelok', SzereloController::class);
+
+    Route::post('/save-image2', 'SzereloController@saveImage')->name('save-image2');
+
     //Route::get('/anyagok/create', [AnyagController::class, 'create'])->name('anyagok.create');
     //Route::post('/anyagok', [AnyagController::class, 'store'])->name('anyagok.store');
 

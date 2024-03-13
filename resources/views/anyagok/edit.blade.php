@@ -1,6 +1,8 @@
 @extends('layout')
 
 @section('content')
+
+@include('breadcrumbs')
 <h1>Anyag Szerkesztése</h1>
 
 <form action="{{ route('anyagok.update', $anyag->Anyag_ID) }}" method="POST">

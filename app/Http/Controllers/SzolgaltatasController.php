@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\Szolgaltatas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 
-class HomeController extends Controller
+class SzolgaltatasController extends Controller
 {
     public function index()
     {
@@ -17,6 +18,6 @@ class HomeController extends Controller
             ->orderBy('Kereslet', 'desc')
             ->get();
         // Nézetbe való átadás
-        return view('home.index', ['szolgaltatasokKereslete' => $szolgaltatasokKereslete]);
+        return view('szolgaltatasok.index', ['szolgaltatasokKereslete' => $szolgaltatasokKereslete]);
     }
 }

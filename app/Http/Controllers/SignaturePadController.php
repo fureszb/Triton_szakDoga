@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Megrendeles;
+use App\Models\Szerelo;
 use App\Models\Ugyfel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -28,14 +29,23 @@ class SignaturePadController extends Controller
         $imageData = str_replace('data:image/png;base64,', '', $imageData);
         $imageData = base64_decode($imageData);
 
-        $fileName = 'alairas.png';
-        $folderPath = public_path('alaIrasokUgyfel');
+        // Lekérdezi az utoljára létrehozott, és az elmúlt fél percben létrehozott szerelőt
+        $latestSzerelo = Szerelo::getLatestIfRecent();
+        dd($latestSzerelo);
+
+        if ($latestSzerelo) {
+            // Ha van ilyen szerelő, akkor használja az ID és a nevét a fájlnévhez
+            $fileName = $latestSzerelo->Szerelo_ID . '_' . $latestSzerelo->Nev . '.png';
+            $folderPath = public_path('alaIrasokSzerelok');
+        } else {
+            // Ha nincs, akkor alapértelmezett fájlnév
+            $fileName = 'alairas.png';
+            $folderPath = public_path('alaIrasokUgyfel');
+        }
 
 
         file_put_contents($folderPath . '/' . $fileName, $imageData);
+
         return response()->json(['success' => true]);
-        //return redirect('/send-mail')->with('success', 'Az aláírás és az ügyfél sikeresen mentve lett!');
     }
-
-
 }

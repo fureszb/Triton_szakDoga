@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('content')
+@include('breadcrumbs')
 
 <h1>{{ $ugyfel->Nev }} Ügyfél részletek</h1>
 <div class="container">

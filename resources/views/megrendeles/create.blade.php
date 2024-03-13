@@ -1,6 +1,9 @@
 @extends('layout')
 
 @section('content')
+
+@include('breadcrumbs')
+
 <h1>Új Megrendelés</h1>
 @if ($errors->any())
     @foreach ($errors->all() as $error)

@@ -1,6 +1,8 @@
 @extends('layout')
 
 @section('content')
+
+@include('breadcrumbs')
 <h1>Anyagok Listája</h1>
 <a href="{{ route('anyagok.create') }}" class="btn btn-primary">Új Anyag Hozzáadása</a>
 
