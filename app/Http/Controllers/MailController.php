@@ -20,6 +20,13 @@ class MailController extends Controller
 
         //$imgPath =  $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.png';
 
+
+        $pdf = PDF::loadView('mail', $data)->setOptions(['defaultFont' => 'sans-serif', 'encoding' => 'UTF-8']);
+
+        $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '_' . $szereloData['Szolgaltatas_ID'] . '.pdf';
+        $pdfFilePath = storage_path('app/public/' . $pdfFileName);
+        $pdf->save($pdfFilePath);
+
         $szereloData = Session::get('szereloData');
         $imgPathSzerelo = $szereloData['Szerelo_ID'] . '_' . $szereloData['Nev'] . '.png';
 
@@ -31,11 +38,6 @@ class MailController extends Controller
 
 
 
-        $pdf = PDF::loadView('mail', $data)->setOptions(['defaultFont' => 'sans-serif', 'encoding' => 'UTF-8']);
-
-        $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '_' . $szereloData['Szolgaltatas_ID'] . '.pdf';
-        $pdfFilePath = storage_path('app/public/' . $pdfFileName);
-        $pdf->save($pdfFilePath);
 
         // E-mail küldése
         Mail::send('mail', $data, function ($message) use ($data, $pdf, $megrendeles) {

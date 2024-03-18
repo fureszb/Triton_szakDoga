@@ -83,7 +83,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/megrendeles/{megrendeles}/edit', [MegrendelesController::class, 'edit'])->name('megrendeles.edit');
 
-    Route::get('/download-pdf/{ugyfelId}/{ugyfelNev}/{szolgaltatasId}', [MegrendelesController::class, 'downloadPdf']);
+    Route::get('/download-pdf/{ugyfelId}_{ugyfelNev}_{szolgaltatasId}', [MegrendelesController::class, 'downloadPdf']);
 
     Route::get('/send-mail', [MailController::class, 'sendMailWithPdf']);
 
