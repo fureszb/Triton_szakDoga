@@ -54,7 +54,20 @@ main {
 
 h1 {
     margin: 1em 0;
-    font-size: 24px;
+    font-size: 15px;
+    letter-spacing: 7px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 10px;
+
+}
+
+.showHr {
+    width: 200px;
+    margin: auto;
+    border: 1px solid #ff000087;
+    border-radius: 19px;
+    margin-top: 0;
 }
 
 ul {
@@ -66,11 +79,31 @@ a {
 }
 
 /* forms */
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 4%;
+}
+
+input:focus-visible {
+    outline: 1.5px solid #ff000054;
+    border-color: white;
+    color: #000000bd;
+}
+
 fieldset {
-    border: none;
-    display: grid;
-    grid-template-columns: 1fr 3fr 2fr;
+    display: flex;
+    /*grid-template-columns: 1fr 3fr 2fr;*/
     margin-bottom: 0.5em;
+    border: 1px solid #808080d4;
+    padding: 5px 5px 8px 11px;
+    border-radius: 10px;
+    box-shadow: 2px 7px 6px 0px #00000029;
+    font-size: 14px;
+    width: 30%;
+    flex-flow: column;
+    flex-wrap: wrap;
 }
 
 input,
@@ -86,18 +119,67 @@ select,
 
 button,
 .button {
-    padding: 0.5em 1em;
+    padding: 0.7em 1em;
     font-weight: bold;
     background-color: #1f2937;
     color: #fff;
     transition: background-color 350ms ease-in-out;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
+
+}
+
+.fa-sort-alpha-up,
+.fa-sort-alpha-down-alt {
+    color: black;
+    font-size: 24px;
+    border: 2px solid black;
+    border-radius: 26px;
+    padding: 6px;
+
+
+}
+
+.fa-plus-square {
+    color: green;
+    font-size: 42px;
+}
+
+.fa-sort-alpha-up:hover,
+.fa-sort-alpha-down-alt:hover {
+    color: white;
+    background-color: black;
 }
 
 .torol {
-    background-color: #c9302c;
+    background-color: #c9302c !important;
     margin-top: 6px;
+}
+
+ol.cd-breadcrumb li {
+    margin-left: 7px;
+}
+
+li {
+    border: 1px solid #808080d4;
+    padding: 5px 5px 5px 11px;
+    border-radius: 10px;
+    box-shadow: 2px 7px 6px 0px #00000029;
+    font-size: 14px;
+    color: black;
+}
+
+.list-group li {
+    width: 30%;
+}
+
+.indexCim {
+    margin: 1em 0;
+    font-size: 15px;
+    color: #8080808a;
+    letter-spacing: 7px;
+    text-transform: uppercase;
+    text-align: center;
 }
 
 button:hover,
@@ -133,7 +215,7 @@ footer {
 
 form input,
 select {
-    border: 1.5px solid #00000094;
+    border: 1.5px solid #00000042;
     padding: 3px;
     font-size: 14px;
 }
@@ -152,6 +234,11 @@ header ul {
 
 header li {
     margin: 0 0 0 1em;
+}
+
+ul.list-group {
+    display: flex !important;
+    flex-wrap: wrap;
 }
 
 header a:hover {
@@ -278,7 +365,14 @@ main ul {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
     align-items: center;
+    margin-bottom: 30px;
+    border-radius: 25px;
+    box-shadow: 5px 9px 20px 8px #00000026;
+    margin-top: 20px;
 }
 
 .title>div:nth-child(1) {
@@ -328,22 +422,18 @@ nav button {
     justify-content: center;
 }
 
-.list-group {
-    display: grid;
-    grid-template-columns: 1fr;
-
-}
-
 .container h3 {
-    margin-bottom: 15px;
-    text-decoration: underline;
-}
-
-.hozzaad {
-    color: white;
-    background-color: #45c24a;
-    border-radius: 51px;
-    padding: 0px 6px 0px 6px;
+    margin-bottom: 20px;
+    font-size: 14.4px;
+    margin-top: 24px;
+    border-bottom: 2px solid #ff000087;
+    /* text-align: center; */
+    padding: 5px;
+    padding-bottom: 3px;
+    width: 200px;
+    border-radius: 14px;
+    text-align: center;
+    letter-spacing: 1.3px;
 }
 
 .munkaSzereloPár {

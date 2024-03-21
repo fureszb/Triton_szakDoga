@@ -1,9 +1,10 @@
-@extends('layout')
+@extends('ujlayout')
 
 @section('content')
 @include('breadcrumbs')
 
-<h1>{{ $ugyfel->Nev }} Ügyfél részletek</h1>
+<h1>{{ $ugyfel->Nev }}</h1>
+<hr class="showHr">
 <div class="container">
     <div class="row">
         <div class="col-md-6">

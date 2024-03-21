@@ -1,9 +1,10 @@
-@extends('layout')
+@extends('ujlayout')
 
 @section('content')
 @include('breadcrumbs')
 
-<h1>Ügyfél Szerkesztése</h1>
+<h1>{{$ugyfel->Nev}} - Szerkesztése</h1>
+<hr class="showHr">
 @if ($errors->any())
     @foreach ($errors->all() as $error)
     <div class="alert alert-warning">{{ $error }}</div>

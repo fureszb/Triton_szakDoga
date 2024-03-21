@@ -1,11 +1,11 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
-@extends('layout')
+@extends('ujlayout')
 
 
 @section('content')
     @include('breadcrumbs')
     <h1>Új Szerelő Hozzáadása</h1>
-
+    <hr class="showHr"></hr>
     <form action="{{ route('szerelok.store') }}" method="POST">
         @csrf
         <fieldset>

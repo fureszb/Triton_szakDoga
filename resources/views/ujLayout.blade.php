@@ -21,11 +21,13 @@
             <header><a class="menu-toggle" id="mobileMenu"><i class="fas fa-bars"></i></a><a
                     href="{{ route('home.index') }}" class="brand-logo"><img src="{{ asset('logo.png') }}"
                         width="60px" alt="LOGO" style="width: 60px !important"> <span>TRITON</span></a></header>
-                        <div class="nav-item-divider"></div>
-            <nav class="dashboard-nav-list"><a href="#" class="dashboard-nav-item"><i class="fas fa-home"></i>
+
+            <nav class="dashboard-nav-list">
+                <div class="nav-item-divider"></div>
+                <a href="{{ route('home.index') }}" class="dashboard-nav-item"><i class="fas fa-home"></i>
                     Kezdőlap </a>
                 <!--<a href="#" class="dashboard-nav-item active"><i class="fas fa-tachometer-alt"></i>Dashboard</a>-->
-                <div class='dashboard-nav-dropdown'><a href="#!"
+                <!--<<div class='dashboard-nav-dropdown'><a href="#!"
                         class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="fas fa-photo-video"></i>
                         Ügyfelek </a>
                     <div class='dashboard-nav-dropdown-menu'><a href="{{ route('ugyfel.index') }}"
@@ -39,24 +41,36 @@
                             class="dashboard-nav-dropdown-item">Összes</a><a href="{{ route('megrendeles.create') }}"
                             class="dashboard-nav-dropdown-item">Új létrehozás</a></div>
                 </div>
-                <div class='dashboard-nav-dropdown'><a href="#!"
+                div class='dashboard-nav-dropdown'><a href="#!"
                         class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="fas fa-money-check-alt"></i>
                         Anyagok </a>
-                        <div class='dashboard-nav-dropdown-menu'><a href="#"
+                    <div class='dashboard-nav-dropdown-menu'><a href="#"
                             class="dashboard-nav-dropdown-item">Összes</a><a href="#"
                             class="dashboard-nav-dropdown-item">Új létrehozás</a></div>
-                </div>
-                <a href="#" class="dashboard-nav-item"><i class="fas fa-cogs"></i> Szerelők </a><a href="#"
-                    class="dashboard-nav-item"><i class="fas fa-user"></i> Profile </a>
+                </div>-->
+                <a class="dashboard-nav-item" href="{{ route('ugyfel.index') }}"><i class="fas fa-photo-video"></i> Ügyfelek
+                </a>
+                <a class="dashboard-nav-item" href="{{ route('megrendeles.index') }}"><i class="fas fa-users"></i> Megrendelések
+                </a><a href="{{ route('anyagok.index') }}" class="dashboard-nav-item"><i class="fas fa-money-check"></i> Anyagok
+                </a>
+                <a class="dashboard-nav-item" href="{{ route('szerelok.index') }}"><i class="fas fa-cogs"></i> Szerelők
+                </a><a href="{{ route('users.index') }}" class="dashboard-nav-item"><i class="fas fa-user"></i> Profile
+                </a>
                 <div class="nav-item-divider"></div>
-                <a href="#" class="dashboard-nav-item"><i class="fas fa-sign-out-alt"></i> Kijelentkezés </a>
+                <form action="{{ route('logout') }}" method="post">
+                    @csrf
+                    <button type="submit" class="dashboard-nav-item"
+                        style="border: none; background: none; cursor: pointer;">
+                        <i class="fas fa-sign-out-alt"></i> Kijelentkezés
+                    </button>
+                </form>
+
             </nav>
         </div>
         <div class='dashboard-app'>
             <header class='dashboard-toolbar'><a href="#!" class="menu-toggle-dashboard"><i
                         class="fas fa-bars"></i></a>
             </header>
-            <div class="nav-item-divider"></div>
             <div class='dashboard-content'>
                 <div class='container'>
                     <div class='card'>

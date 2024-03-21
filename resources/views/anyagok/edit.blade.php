@@ -1,16 +1,16 @@
-@extends('layout')
+@extends('ujlayout')
 
 @section('content')
 
 @include('breadcrumbs')
 <h1>Anyag Szerkesztése</h1>
-
+<hr class="showHr"></hr>
 <form action="{{ route('anyagok.update', $anyag->Anyag_ID) }}" method="POST">
     @csrf
     @method('PUT')
 
     <fieldset>
-        <label for="Nev">Anyag Leírása</label>
+        <label for="Nev">Anyag neve</label>
         <input type="text" name="Nev" id="Nev" value="{{ old('Nev', $anyag->Nev) }}" required>
     </fieldset>
     <fieldset>

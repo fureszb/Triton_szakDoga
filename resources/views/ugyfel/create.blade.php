@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('ujlayout')
 
 
 
@@ -6,6 +6,7 @@
     @include('breadcrumbs')
 
     <h1>Új ügyfél</h1>
+    <hr class="showHr">
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             <div class="alert alert-warning">{{ $error }}</div>

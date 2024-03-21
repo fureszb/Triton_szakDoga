@@ -21,6 +21,8 @@ class MailController extends Controller
         $imgPathSzerelo = $szereloData['Szerelo_ID'] . '_' . $szereloData['Nev'] . '.png';
 
         //$imgPath =  $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.png';
+
+
         $data["imgPathSzerelo"] = $imgPathSzerelo;
         $data["email"] = "frsz.bence@gmail.com";
         $data["title"] = "Szerződéskötés";
@@ -29,7 +31,10 @@ class MailController extends Controller
 
         $pdf = PDF::loadView('mail', $data)->setOptions(['defaultFont' => 'sans-serif', 'encoding' => 'UTF-8']);
 
-        $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '_' . $szereloData['Szolgaltatas_ID'] . '_' . $megrendeles->Megrendeles_ID . '.pdf';
+
+
+         $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '_' . $szereloData['Szolgaltatas_ID'] . '_' . $megrendeles->Megrendeles_ID . '.pdf';
+        //$pdfFileName = "teszt.pdf";
         $pdfFilePath = storage_path('app/public/' . $pdfFileName);
         $pdf->save($pdfFilePath);
 
@@ -40,12 +45,13 @@ class MailController extends Controller
 
 
         // E-mail küldése
+        /*
         Mail::send('mail', $data, function ($message) use ($data, $pdf, $megrendeles) {
             $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.pdf';
             $message->to($data["email"])
                 ->subject($data["title"])
                 ->attachData($pdf->output(), $pdfFileName);
-        });
+        });*/
 
 
         // Képek törlése a public/images mappából

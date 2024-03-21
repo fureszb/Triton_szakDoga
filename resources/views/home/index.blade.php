@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('ujlayout')
 
 @section('content')
     <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>

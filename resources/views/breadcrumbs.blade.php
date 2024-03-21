@@ -48,6 +48,10 @@ Basic Style
         box-shadow: 4px 8px 14px 1px #0000000a;
     }
 
+    .my-breadcrumbs {
+        margin-bottom: 60px;
+    }
+
     .cd-breadcrumb::after,
     .cd-multi-steps::after {
         clear: both;
@@ -85,10 +89,16 @@ Basic Style
         color: #2c3f4c;
     }
 
+    ol.cd-breadcrumb li:hover {
+        background-color: #9e9e9e12;
+
+    }
+
     .cd-breadcrumb li.current>*,
     .cd-multi-steps li.current>* {
         /* selected step */
         color: #96c03d;
+        padding-right: 10px;
     }
 
     .no-touch .cd-breadcrumb a:hover,
@@ -104,7 +114,7 @@ Basic Style
         height: 16px;
         width: 16px;
         background: url(https://codyhouse.co/demo/breadcrumbs-multi-steps-indicator/img/cd-custom-separator.svg) no-repeat center center;
-        vertical-align: middle;
+        vertical-align: text-bottom;
     }
 
     .cd-breadcrumb.custom-icons li>*::before,
@@ -117,7 +127,7 @@ Basic Style
         margin-right: .4em;
         margin-top: -2px;
         background: url(https://codyhouse.co/demo/breadcrumbs-multi-steps-indicator/img/cd-custom-icons-01.svg) no-repeat 0 0;
-        vertical-align: middle;
+        vertical-align: sub;
     }
 
     .cd-breadcrumb.custom-icons li:not(.current):nth-of-type(2)>*::before,

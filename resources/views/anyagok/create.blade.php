@@ -1,10 +1,10 @@
-@extends('layout')
+@extends('ujlayout')
 
 @section('content')
 
 @include('breadcrumbs')
 <h1>Új Anyag Hozzáadása</h1>
-
+<hr class="showHr"></hr>
 @error('Nev')
 <div class="alert alert-warning">{{ $message }}</div>
 @enderror

@@ -1,10 +1,12 @@
 :root {
     --font-family-sans-serif: "Open Sans", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
@@ -23,8 +25,8 @@ nav {
 body {
     margin: 0;
     font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
@@ -33,7 +35,12 @@ body {
     background-color: #e9edf4;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     margin-top: 0;
     margin-bottom: 0.5rem;
 }
@@ -49,14 +56,26 @@ a {
     background-color: transparent;
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
     font-family: "Nunito", sans-serif;
     margin-bottom: 0.5rem;
     font-weight: 500;
     line-height: 1.2;
 }
 
-h1, .h1 {
+h1,
+.h1 {
     font-size: 2.5rem;
     font-weight: normal;
 }
@@ -126,6 +145,7 @@ h1, .h1 {
     -webkit-flex-grow: 2;
     -ms-flex-positive: 2;
     flex-grow: 2;
+    background-color: white;
 }
 
 .dashboard-nav {
@@ -135,7 +155,7 @@ h1, .h1 {
     top: 0;
     bottom: 0;
     overflow: auto;
-    background-color: #760404;
+    background-color: #f3f4f6;
 }
 
 .dashboard-compact .dashboard-nav {
@@ -143,7 +163,7 @@ h1, .h1 {
 }
 
 .dashboard-nav header {
-    min-height: 84px;
+    min-height: 83px;
     padding: 8px 27px;
     display: -webkit-box;
     display: -webkit-flex;
@@ -165,20 +185,22 @@ h1, .h1 {
 }
 
 .dashboard-nav a {
-    color: #515151;
+    color: black;
+}
+
+.brand-logo:hover {
+    color: gray !important;
 }
 
 .dashboard-nav a:hover {
-    text-decoration: none;
+    color: white;
 }
 
 .dashboard-nav {
-    background-color: #760404;
+    background-color: #76040400;
 }
 
-.dashboard-nav a {
-    color: #fff;
-}
+
 
 .brand-logo {
     font-family: "Nunito", sans-serif;
@@ -195,7 +217,9 @@ h1, .h1 {
     align-items: center;
 }
 
-.brand-logo:focus, .brand-logo:active, .brand-logo:hover {
+.brand-logo:focus,
+.brand-logo:active,
+.brand-logo:hover {
     color: #dbdbdb;
     text-decoration: none;
 }
@@ -231,6 +255,9 @@ h1, .h1 {
     align-items: center;
     letter-spacing: 0.02em;
     transition: ease-out 0.5s;
+    color: black;
+    width: 100%;
+    border-radius: 0;
 }
 
 .dashboard-nav-item i {
@@ -240,7 +267,9 @@ h1, .h1 {
 }
 
 .dashboard-nav-item:hover {
-    background: rgba(255, 255, 255, 0.04);
+    background-color: red !important;
+    color: white;
+
 }
 
 .active {
@@ -263,17 +292,17 @@ h1, .h1 {
     background: rgba(255, 255, 255, 0.04);
 }
 
-.dashboard-nav-dropdown.show > .dashboard-nav-dropdown-toggle {
+.dashboard-nav-dropdown.show>.dashboard-nav-dropdown-toggle {
     font-weight: bold;
 }
 
-.dashboard-nav-dropdown.show > .dashboard-nav-dropdown-toggle:after {
+.dashboard-nav-dropdown.show>.dashboard-nav-dropdown-toggle:after {
     -webkit-transform: none;
     -o-transform: none;
     transform: none;
 }
 
-.dashboard-nav-dropdown.show > .dashboard-nav-dropdown-menu {
+.dashboard-nav-dropdown.show>.dashboard-nav-dropdown-menu {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -344,7 +373,9 @@ h1, .h1 {
     color: #443ea2;
 }
 
-.menu-toggle:hover, .menu-toggle:active, .menu-toggle:focus {
+.menu-toggle:hover,
+.menu-toggle:active,
+.menu-toggle:focus {
     text-decoration: none;
     color: #875de5;
 }
@@ -376,7 +407,9 @@ h1, .h1 {
     height: 1px;
     margin: 0.5rem 0;
     overflow: hidden;
-    background-color: rgba(236, 238, 239, 0.3);
+    background-color: #9e9e9e;
+    margin-top: 0;
+
 }
 
 @media (min-width: 992px) {
@@ -409,6 +442,7 @@ h1, .h1 {
 
     .dashboard-nav.mobile-show {
         display: block;
+        background-color: #f3f4f6;
     }
 }
 

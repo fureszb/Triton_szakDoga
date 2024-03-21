@@ -1,9 +1,10 @@
-@extends('layout')
+@extends('ujlayout')
 
 @section('content')
     @include('breadcrumbs')
     <div class="container">
-        <h1>{{ $user->Name }} Felhasználó részletei</h1>
+        <h1>{{ $user->nev }} - részletei</h1>
+        <hr class="showHr"></hr>
         <div class="row">
             <div class="col-md-6">
                 <h3>Általános információk</h3>

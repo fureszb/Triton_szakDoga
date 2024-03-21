@@ -7,9 +7,11 @@
     <meta charset="UTF-8">
 
     <title>Triton Security</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="{{ asset('logo.png') }}" type="image/x-icon">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         * {
@@ -31,7 +33,7 @@
 
         body {
             color: black;
-            font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;
+            font-family: sans-serif;
             background-color: #f8f8f9;
         }
 
@@ -192,7 +194,7 @@
             <div class="menu">
 
                 <div class="logo">
-                    <img src="{{asset('logo.png')}}" alt="logo">
+                    <img src="{{ asset('logo.png') }}" alt="logo" width="200">
                 </div>
                 <h1>Szerződéskötés</h1>
 
@@ -207,14 +209,20 @@
                         <h3>Ügyfél információk</h3>
                         <hr class="hr1">
                         <ul class="list-group">
-                            <li class="list-group-item"><strong>UgyfelID:</strong> {{ $megrendeles->ugyfel->Ugyfel_ID }}</li>
+                            <li class="list-group-item"><strong>UgyfelID:</strong> {{ $megrendeles->ugyfel->Ugyfel_ID }}
+                            </li>
                             <li class="list-group-item"><strong>Név:</strong> {{ $megrendeles->ugyfel->Nev }}</li>
                             <li class="list-group-item"><strong>Email:</strong> {{ $megrendeles->ugyfel->Email }}</li>
-                            <li class="list-group-item"><strong>Telefonszám:</strong> {{ $megrendeles->ugyfel->Telefonszam }}</li>
-                            <li class="list-group-item"><strong>Számlázási név:</strong> {{ $megrendeles->ugyfel->Szamlazasi_Nev }}</li>
-                            <li class="list-group-item"><strong>Számlázási cím:</strong> {{ $megrendeles->ugyfel->varos->Irny_szam }} {{ $megrendeles->ugyfel->varos->Nev }}, {{ $megrendeles->ugyfel->Szamlazasi_Cim }}</li>
+                            <li class="list-group-item"><strong>Telefonszám:</strong>
+                                {{ $megrendeles->ugyfel->Telefonszam }}</li>
+                            <li class="list-group-item"><strong>Számlázási név:</strong>
+                                {{ $megrendeles->ugyfel->Szamlazasi_Nev }}</li>
+                            <li class="list-group-item"><strong>Számlázási cím:</strong>
+                                {{ $megrendeles->ugyfel->varos->Irny_szam }} {{ $megrendeles->ugyfel->varos->Nev }},
+                                {{ $megrendeles->ugyfel->Szamlazasi_Cim }}</li>
                             @if (!is_null($megrendeles->ugyfel->Adoszam))
-                            <li class="list-group-item"><strong>Adószám:</strong> {{$megrendeles->ugyfel->Adoszam }}</li>
+                                <li class="list-group-item"><strong>Adószám:</strong>
+                                    {{ $megrendeles->ugyfel->Adoszam }}</li>
                             @endif
 
                         </ul>
@@ -223,24 +231,28 @@
                         <h3>Általános információk</h3>
                         <hr class="hr1">
                         <ul class="list-group">
-                            <li class="list-group-item"><strong>Ügyfél neve:</strong> {{ $megrendeles->ugyfel->Nev ?? '-' }}</li>
-                            <li class="list-group-item"><strong>Megrendelő neve:</strong> {{ $megrendeles->Megrendeles_Nev }}
+                            <li class="list-group-item"><strong>Ügyfél neve:</strong>
+                                {{ $megrendeles->ugyfel->Nev ?? '-' }}</li>
+                            <li class="list-group-item"><strong>Megrendelő neve:</strong>
+                                {{ $megrendeles->Megrendeles_Nev }}
                             </li>
-                            <li class="list-group-item"><strong>Címe:</strong> {{ $megrendeles->varos->Irny_szam}} {{ $megrendeles->varos->Nev}}, {{ $megrendeles->Utca_Hazszam }}
+                            <li class="list-group-item"><strong>Címe:</strong> {{ $megrendeles->varos->Irny_szam }}
+                                {{ $megrendeles->varos->Nev }}, {{ $megrendeles->Utca_Hazszam }}
                             </li>
                             </li>
                             @foreach ($megrendeles->munkak as $munka)
-                            <li class="list-group-item"><strong>Szolgáltatás:</strong>
-                                {{ $munka->szolgaltatas->Tipus ?? '-' }}
-                            </li>
-                            <li class="list-group-item"><strong>Szerelő:</strong> {{ $munka->szerelo->Nev ?? '-' }}</li>
-                            <li class="list-group-item"><strong>Leírás:</strong> {{ $munka->Leiras }}</li>
-                            <li class="list-group-item"><strong>Munkakezdés időpontja:</strong>
-                                {{ $munka->Munkakezdes_Idopontja }}
-                            </li>
-                            <li class="list-group-item"><strong>Munkabefejezés időpontja:</strong>
-                                {{ $munka->Munkabefejezes_Idopontja }}
-                            </li>
+                                <li class="list-group-item"><strong>Szolgáltatás:</strong>
+                                    {{ $munka->szolgaltatas->Tipus ?? '-' }}
+                                </li>
+                                <li class="list-group-item"><strong>Szerelő:</strong> {{ $munka->szerelo->Nev ?? '-' }}
+                                </li>
+                                <li class="list-group-item"><strong>Leírás:</strong> {{ $munka->Leiras }}</li>
+                                <li class="list-group-item"><strong>Munkakezdés időpontja:</strong>
+                                    {{ $munka->Munkakezdes_Idopontja }}
+                                </li>
+                                <li class="list-group-item"><strong>Munkabefejezés időpontja:</strong>
+                                    {{ $munka->Munkabefejezes_Idopontja }}
+                                </li>
                             @endforeach
                         </ul>
                     </div>
@@ -248,14 +260,16 @@
                         <h3>Felhasznált anyagok</h3>
                         <hr class="hr1">
                         @if ($megrendeles->felhasznaltAnyagok && count($megrendeles->felhasznaltAnyagok) > 0)
-                        <ul class="list-group">
-                            @foreach ($megrendeles->felhasznaltAnyagok as $anyag)
-                            <li class="list-group-item">{{ $anyag->anyag->Nev}}({{ $anyag->anyag->Mertekegyseg}}): {{ $anyag->Mennyiseg }}
-                            </li>
-                            @endforeach
-                        </ul>
+                            <ul class="list-group">
+                                @foreach ($megrendeles->felhasznaltAnyagok as $anyag)
+                                    <li class="list-group-item">
+                                        {{ $anyag->anyag->Nev }}({{ $anyag->anyag->Mertekegyseg }}):
+                                        {{ $anyag->Mennyiseg }}
+                                    </li>
+                                @endforeach
+                            </ul>
                         @else
-                        <p>Nincsenek felhasznált anyagok rögzítve.</p>
+                            <p>Nincsenek felhasznált anyagok rögzítve.</p>
                         @endif
                     </div>
                 </div>
@@ -264,7 +278,7 @@
             <div class="sign">
                 <div class="imageContainer">
                     <h5>Szerel&#337; aláírása:</h5>
-                    <img src="http://127.0.0.1:8000/alaIrasokSzerelok/{{$imgPathSzerelo}}" alt="alairasSzerelo">
+                    <img src="http://127.0.0.1:8000/alaIrasokSzerelok/{{ $imgPathSzerelo }}" alt="alairasSzerelo">
 
                 </div>
                 <div class="imageContainer">

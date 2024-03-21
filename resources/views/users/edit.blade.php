@@ -1,9 +1,10 @@
-@extends('layout')
+@extends('ujlayout')
 
 @section('content')
     @include('breadcrumbs')
 
     <h1>Felhasználó Szerkesztése</h1>
+    <hr class="showHr"></hr>
     @if ($errors->any())
         <div>
             @foreach ($errors->all() as $error)

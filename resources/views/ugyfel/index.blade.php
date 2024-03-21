@@ -5,20 +5,22 @@
 
     <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
     <h1>Ügyfelek</h1>
+    <hr class="showHr">
     <div class="title">
         <a href="{{ route('ugyfel.index', ['sort_by' => 'UgyfelID', 'sort_dir' => 'asc']) }}" title="Növekvő sorrend">
             <div class="sort">
-                <img style="transform: rotate(180deg);" src="{{ asset('sort.png') }}" alt="">
+                <i class="fas fa-sort-alpha-up" src="{{ asset('sort.png') }}"></i>
             </div>
         </a>
         <a href="{{ route('ugyfel.index', ['sort_by' => 'UgyfelID', 'sort_dir' => 'desc']) }}" title="Csökkenő sorrend">
             <div class="sort">
-                <img src="{{ asset('sort.png') }}" alt="">
+                <i class="fas fa-sort-alpha-down-alt" src="{{ asset('sort.png') }}"></i>
             </div>
         </a>
         <a href="{{ route('ugyfel.create') }}" title="Új ügyfél hozzáadása">
 
-            <div class="hozzaad">+</div>
+            <i class="fas fa-plus-square"></i>
+
         </a>
         <form class="kereses" action="{{ route('ugyfel.index') }}" method="GET">
             <input type="text" name="search" placeholder="Keresés név vagy azonosító alapján">

@@ -1,9 +1,10 @@
-@extends('layout')
+@extends('ujlayout')
 
 @section('content')
 
 @include('breadcrumbs')
-<h1>Szerelő Szerkesztése</h1>
+<h1>{{ $szerelo->Nev }} - Szerkesztése</h1>
+<hr class="showHr">
 
 <form action="{{ route('szerelok.update', $szerelo->Szerelo_ID) }}" method="POST">
     @csrf
