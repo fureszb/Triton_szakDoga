@@ -69,23 +69,42 @@ undoButton.addEventListener("click", () => {
 
 // app.js
 document.addEventListener('DOMContentLoaded', function () {
-    const savePNGButton = document.querySelector("[data-action=save-png]");
-    //const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    console.log('savePNGButton megtalálva', savePNGButton);
-    savePNGButton.addEventListener("click", () => {
-        console.log('savePNGButton kattint', savePNGButton);
-        if (signaturePad.isEmpty()) {
-            alert("Kérlek írd alá mentés előtt!");
-            event.preventDefault()
-        } else {
-
-            const dataURL = signaturePad.toDataURL();
-            saveImage(dataURL);
 
 
+    if (window.location.pathname === "/szerelok/create" || window.location.pathname === "/szerelok") {
+        const savePNGButton2 = document.querySelector("[data-action=save-png2]");
+        console.log(savePNGButton2)
+        savePNGButton2.addEventListener("click", () => {
 
-        }
-    });
+            if (signaturePad.isEmpty()) {
+                alert("Kérlek írd alá mentés előtt!");
+                event.preventDefault();
+            } else {
+
+                const dataURL = signaturePad.toDataURL();
+                saveImage2(dataURL);
+            }
+
+        });
+    }
+    else {
+
+        const savePNGButton = document.querySelector("[data-action=save-png]");
+        //const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        console.log('savePNGButton megtalálva', savePNGButton);
+        savePNGButton.addEventListener("click", () => {
+            console.log('savePNGButton kattint', savePNGButton);
+            if (signaturePad.isEmpty()) {
+                alert("Kérlek írd alá mentés előtt!");
+                event.preventDefault()
+            } else {
+
+                const dataURL = signaturePad.toDataURL();
+                saveImage(dataURL);
+            }
+        });
+    }
+
 });
 
 function saveImage(dataURL) {
@@ -116,6 +135,34 @@ function saveImage(dataURL) {
             console.error('Error saving image:', error);
         });
 }
+
+// Ez a funkció mostantól fogad egy dataURL paramétert, amelyet a signaturePad.toDataURL() hívás eredményez
+function saveImage2(dataURL) {
+    const szereloNev = document.getElementById('Nev').value;
+    const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // Az adatok elküldése a backendre fetch segítségével, ahol a dataURL a funkció paraméteréből származik
+    fetch('/save-image2', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrftoken // CSRF token hozzáadása
+        },
+        body: JSON.stringify({
+            szereloNev: szereloNev,
+            signatureDataURL: dataURL // Itt használjuk a funkció paraméterében kapott dataURL-t
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
+
 
 
 

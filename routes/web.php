@@ -83,7 +83,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/megrendeles/{megrendeles}/edit', [MegrendelesController::class, 'edit'])->name('megrendeles.edit');
 
-    Route::get('/download-pdf/{ugyfelId}_{ugyfelNev}_{szolgaltatasId}', [MegrendelesController::class, 'downloadPdf']);
+    Route::get('/download-pdf/{ugyfelId}_{ugyfelNev}_{szolgaltatasId}_{Megrendeles_ID}', [MegrendelesController::class, 'downloadPdf']);
 
     Route::get('/send-mail', [MailController::class, 'sendMailWithPdf']);
 
@@ -120,7 +120,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('anyagok', AnyagController::class);
     Route::resource('szerelok', SzereloController::class);
 
-    Route::post('/save-image2', 'SzereloController@saveImage')->name('save-image2');
+    Route::post('/save-image2', [SzereloController::class, 'saveImage'])->name('save-image2');
 
     //Route::get('/anyagok/create', [AnyagController::class, 'create'])->name('anyagok.create');
     //Route::post('/anyagok', [AnyagController::class, 'store'])->name('anyagok.store');

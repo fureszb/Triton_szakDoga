@@ -17,24 +17,24 @@ class MailController extends Controller
     {
         // $varos = Varos::where('Varos_ID', $ugyfel->Varos_ID)->latest()->first();
         $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag', 'munkak'])->latest()->first();
-
-        //$imgPath =  $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.png';
-
-
-        $pdf = PDF::loadView('mail', $data)->setOptions(['defaultFont' => 'sans-serif', 'encoding' => 'UTF-8']);
-
-        $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '_' . $szereloData['Szolgaltatas_ID'] . '.pdf';
-        $pdfFilePath = storage_path('app/public/' . $pdfFileName);
-        $pdf->save($pdfFilePath);
-
         $szereloData = Session::get('szereloData');
         $imgPathSzerelo = $szereloData['Szerelo_ID'] . '_' . $szereloData['Nev'] . '.png';
 
-
+        //$imgPath =  $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.png';
         $data["imgPathSzerelo"] = $imgPathSzerelo;
         $data["email"] = "frsz.bence@gmail.com";
         $data["title"] = "Szerződéskötés";
         $data["megrendeles"] = $megrendeles;
+
+
+        $pdf = PDF::loadView('mail', $data)->setOptions(['defaultFont' => 'sans-serif', 'encoding' => 'UTF-8']);
+
+        $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '_' . $szereloData['Szolgaltatas_ID'] . '_' . $megrendeles->Megrendeles_ID . '.pdf';
+        $pdfFilePath = storage_path('app/public/' . $pdfFileName);
+        $pdf->save($pdfFilePath);
+
+
+
 
 
 
@@ -69,6 +69,4 @@ class MailController extends Controller
         //return  $pdf->save($pdfFilePath);
         return redirect()->route('ugyfel.index')->with('success', $message);
     }
-
-
 }

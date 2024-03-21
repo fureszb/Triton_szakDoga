@@ -45,7 +45,7 @@
                         <p>Nincsenek felhasznált anyagok rögzítve.</p>
                     @endif
                 </div>
-                <a href="{{ url('/download-pdf/' . $megrendeles->ugyfel->Ugyfel_ID . '_' . rawurlencode($megrendeles->ugyfel->Nev) . '_' .  $munka->szolgaltatas->Szolgaltatas_ID) }}" target="_blank">PDF Letöltése</a>
+                <a href="{{ url('/download-pdf/' . $megrendeles->ugyfel->Ugyfel_ID . '_' . rawurlencode($megrendeles->ugyfel->Nev) . '_' .  $munka->szolgaltatas->Szolgaltatas_ID) . '_'.$megrendeles->Megrendeles_ID }}" target="_blank">PDF Letöltése</a>
 
             </div>
         </div>

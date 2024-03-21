@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('ujLayout')
 @error('error')
 <div class="alert alert-warning">{{ $message }}</div>
 @enderror

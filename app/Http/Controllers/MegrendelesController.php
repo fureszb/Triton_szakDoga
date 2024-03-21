@@ -254,7 +254,7 @@ class MegrendelesController extends Controller
 
         return response()->json($szerelo);
     }
-    public function downloadPdf(Request $request, $ugyfelId, $ugyfelNev, $szolgaltatasId)
+    public function downloadPdf(Request $request, $ugyfelId, $ugyfelNev, $szolgaltatasId, $Megrendeles_ID)
     {
         // A megfelelő Megrendeles entitás keresése
         $megrendeles = Megrendeles::with(['ugyfel', 'munkak'])
@@ -272,7 +272,7 @@ class MegrendelesController extends Controller
         }
 
         // A PDF fájl nevének összeállítása
-        $pdfFileName = $ugyfelId . '_' . $ugyfelNev . '_' . $szolgaltatasId . '.pdf';
+        $pdfFileName = $ugyfelId . '_' . $ugyfelNev . '_' . $szolgaltatasId.'_'. $Megrendeles_ID . '.pdf';
         $pdfFilePath = storage_path('app/public/' . $pdfFileName);
 
         // Ellenőrizzük, hogy létezik-e a fájl

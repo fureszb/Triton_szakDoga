@@ -30,18 +30,10 @@ class SignaturePadController extends Controller
         $imageData = base64_decode($imageData);
 
         // Lekérdezi az utoljára létrehozott, és az elmúlt fél percben létrehozott szerelőt
-        $latestSzerelo = Szerelo::getLatestIfRecent();
-        dd($latestSzerelo);
 
-        if ($latestSzerelo) {
-            // Ha van ilyen szerelő, akkor használja az ID és a nevét a fájlnévhez
-            $fileName = $latestSzerelo->Szerelo_ID . '_' . $latestSzerelo->Nev . '.png';
-            $folderPath = public_path('alaIrasokSzerelok');
-        } else {
-            // Ha nincs, akkor alapértelmezett fájlnév
+             // Ha nincs, akkor alapértelmezett fájlnév
             $fileName = 'alairas.png';
             $folderPath = public_path('alaIrasokUgyfel');
-        }
 
 
         file_put_contents($folderPath . '/' . $fileName, $imageData);
