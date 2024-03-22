@@ -43,9 +43,11 @@ header,
 footer {
     min-height: 10vh;
 }
-.card{
+
+.card {
     padding: 1rem;
 }
+
 .card-body {
     min-height: 80vh;
     box-shadow: 0em 1em 2em 0px rgba(0, 0, 0, 0.5);
@@ -154,8 +156,8 @@ form {
 }
 
 .showDiv {
-    padding: 4px 14px 15px 14px;
-    box-shadow: 9px 10px 20px 3px #00000030;
+    /*padding: 4px 14px 15px 14px;
+    box-shadow: 9px 10px 20px 3px #00000030;*/
 }
 
 input:focus-visible {
@@ -531,6 +533,58 @@ nav button {
     margin-left: 10px;
 }
 
+.notification {
+
+    color: white;
+    text-decoration: none;
+    padding: 15px 26px;
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+}
+
+.notification i:hover {
+    background: rgba(255, 0, 0, 0.404);
+}
+
+.notification .badge {
+    position: absolute;
+    top: 16px;
+    right: 26px;
+    padding: 3px 5px;
+    border-radius: 50%;
+    /* background-color: white; */
+    color: black;
+    font-size: 11px;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #000000d1;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: gray;
+}
+
+.fa-bell {
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+}
+
 
 @media screen and (max-width: 650px) {
 
@@ -540,7 +594,7 @@ nav button {
     }
 
     .kereses {
-        justify-content: start;
+        justify-content: end;
         flex-grow: 1;
     }
 }

@@ -71,19 +71,18 @@ class Megrendeles extends Model
     }
 
 
-
-    /**
-     * Scope a query to only include orders where the name or address matches the keyword.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  mixed  $keyword
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSearch($query, $keyword)
+   /* public function scopeSearch($query, $keyword)
     {
         return $query->where(function ($query) use ($keyword) {
             $query->where('Megrendeles_Nev', 'LIKE', '%' . $keyword . '%')
                 ->orWhere('Objektum_Cim', 'LIKE', '%' . $keyword . '%');
+        });
+    }*/
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where(function ($query) use ($keyword) {
+            $query->where('Megrendeles_Nev', 'LIKE', '%' . $keyword . '%')
+                ->orWhere('Megrendeles_ID', $keyword);
         });
     }
 }

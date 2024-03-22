@@ -9,12 +9,12 @@
     <hr class="showHr">
 
     <div class="title">
-        <a href="{{ route('ugyfel.index', ['sort_by' => 'UgyfelID', 'sort_dir' => 'asc']) }}" title="Növekvő sorrend">
+        <a href="{{ route('megrendeles.index', ['sort_by' => 'Megrendeles_Nev', 'sort_dir' => 'asc']) }}" title="Növekvő sorrend">
             <div class="sort">
                 <i class="fas fa-sort-alpha-up" src="{{ asset('sort.png') }}"></i>
             </div>
         </a>
-        <a href="{{ route('ugyfel.index', ['sort_by' => 'UgyfelID', 'sort_dir' => 'desc']) }}" title="Csökkenő sorrend">
+        <a href="{{ route('megrendeles.index', ['sort_by' => 'Megrendeles_Nev', 'sort_dir' => 'desc']) }}" title="Csökkenő sorrend">
             <div class="sort">
                 <i class="fas fa-sort-alpha-down-alt" src="{{ asset('sort.png') }}"></i>
             </div>
@@ -24,7 +24,7 @@
             <i class="fas fa-plus-square"></i>
 
         </a>
-        <form class="kereses" action="{{ route('ugyfel.index') }}" method="GET">
+        <form class="kereses" action="{{ route('megrendeles.index') }}" method="GET">
             <input type="text" name="search" placeholder="Keresés név vagy azonosító alapján">
             <button type="submit">Keresés</button>
         </form>

@@ -23,6 +23,21 @@ class MegrendelesController extends Controller
     public function index()
     {
         $megrendelesek = Megrendeles::all();
+
+        $sort_by = request()->query('sort_by', 'Megrendeles_ID');
+        $sort_dir = request()->query('sort_dir', 'asc');
+        $keyword = request()->input('search');
+
+        $query = Megrendeles::orderBy($sort_by, $sort_dir);
+
+        if ($keyword) {
+            $query->where('Megrendeles_Nev', 'like', "%$keyword%")
+                ->orWhere('Megrendeles_ID', 'like', "%$keyword%");
+        }
+
+       
+        $megrendelesek = $query->paginate(9);
+
         return view('megrendeles.index', compact('megrendelesek'));
     }
 

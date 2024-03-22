@@ -9,12 +9,12 @@
         <hr class="showHr">
     </div>
     <div class="title">
-        <a href="{{ route('ugyfel.index', ['sort_by' => 'UgyfelID', 'sort_dir' => 'asc']) }}" title="Növekvő sorrend">
+        <a href="{{ route('ugyfel.index', ['sort_by' => 'Nev', 'sort_dir' => 'asc']) }}" title="Növekvő sorrend">
             <div class="sort">
                 <i class="fas fa-sort-alpha-up" src="{{ asset('sort.png') }}"></i>
             </div>
         </a>
-        <a href="{{ route('ugyfel.index', ['sort_by' => 'UgyfelID', 'sort_dir' => 'desc']) }}" title="Csökkenő sorrend">
+        <a href="{{ route('ugyfel.index', ['sort_by' => 'Nev', 'sort_dir' => 'desc']) }}" title="Csökkenő sorrend">
             <div class="sort">
                 <i class="fas fa-sort-alpha-down-alt" src="{{ asset('sort.png') }}"></i>
             </div>

@@ -383,10 +383,14 @@ h1,
 .menu-toggle i {
     font-size: 20px;
 }
+#mobileMenu .fa-bars{
+    color: black;
+    cursor: pointer;
+}
 
 .dashboard-toolbar {
     min-height: 84px;
-    background-color: #a00a0a;
+    background-color: #ed1b24;
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;

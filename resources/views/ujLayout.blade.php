@@ -87,6 +87,7 @@
         <div class='dashboard-app'>
             <header class='dashboard-toolbar'><a href="#!" class="menu-toggle-dashboard"><i
                         class="fas fa-bars"></i></a>
+                        <a style="display:none;" href="#" class="notification"><i class="fa-solid fa-bell"><span class="badge">3</span></i></a>
             </header>
             <div class='dashboard-content'>
                 <div class='container'>
