@@ -229,16 +229,24 @@ class UgyfelController extends Controller
             return redirect()->route('login')->with('error', 'A hozzáféréshez be kell jelentkezni.');
         }
 
+
+
         // Lekérjük a bejelentkezett felhasználóhoz kapcsolódó ügyfél azonosítóját
         $ugyfelId = Auth::user()->ugyfel->Ugyfel_ID;
 
+        if (is_null($ugyfelId)) {
+            return view('ugyfel.megrendelesek')->with('info', 'Nincsenek megrendeléseid');
+        } else {
+            $megrendelesek = Megrendeles::where('Ugyfel_ID', $ugyfelId)->get();
+
+            // Opcionálisan, ha szeretnéd az ügyfél adatait is megjeleníteni
+            $ugyfel = Ugyfel::with('megrendelesek')->findOrFail($ugyfelId);
+
+            // Visszaadjuk a nézetet az adatokkal
+            return view('ugyfel.megrendelesek', compact('megrendelesek', 'ugyfel'));
+        }
+
         // Lekérjük az ügyfélhez tartozó megrendeléseket
-        $megrendelesek = Megrendeles::where('Ugyfel_ID', $ugyfelId)->get();
 
-        // Opcionálisan, ha szeretnéd az ügyfél adatait is megjeleníteni
-        $ugyfel = Ugyfel::with('megrendelesek')->findOrFail($ugyfelId);
-
-        // Visszaadjuk a nézetet az adatokkal
-        return view('ugyfel.megrendelesek', compact('megrendelesek', 'ugyfel'));
     }
 }

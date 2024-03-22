@@ -45,13 +45,13 @@ class MailController extends Controller
 
 
         // E-mail küldése
-        /*
+
         Mail::send('mail', $data, function ($message) use ($data, $pdf, $megrendeles) {
             $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.pdf';
             $message->to($data["email"])
                 ->subject($data["title"])
                 ->attachData($pdf->output(), $pdfFileName);
-        });*/
+        });
 
 
         // Képek törlése a public/images mappából

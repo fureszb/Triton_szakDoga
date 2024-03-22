@@ -6,6 +6,7 @@
 
     @if ($megrendeles)
         <h1>{{$megrendeles->Megrendeles_ID}} - {{ $megrendeles->Megrendeles_Nev }} - Megrendelés részletei</h1>
+        <hr class="showHr">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
@@ -45,8 +46,8 @@
                         <p>Nincsenek felhasznált anyagok rögzítve.</p>
                     @endif
                 </div>
-                <a href="{{ url('/download-pdf/' . $megrendeles->ugyfel->Ugyfel_ID . '_' . rawurlencode($megrendeles->ugyfel->Nev) . '_' .  $munka->szolgaltatas->Szolgaltatas_ID) . '_'.$megrendeles->Megrendeles_ID }}" target="_blank">PDF Letöltése</a>
-
+                <div class="pdf">
+                <a href="{{ url('/download-pdf/' . $megrendeles->ugyfel->Ugyfel_ID . '_' . rawurlencode($megrendeles->ugyfel->Nev) . '_' .  $munka->szolgaltatas->Szolgaltatas_ID) . '_'.$megrendeles->Megrendeles_ID }}" target="_blank">PDF Letöltése</a></div>
             </div>
         </div>
     @else

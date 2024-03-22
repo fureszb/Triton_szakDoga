@@ -45,7 +45,7 @@ Basic Style
         width: 100%;
         padding: 0.5em 1em;
         border-radius: .25em;
-        box-shadow: 4px 8px 14px 1px #0000000a;
+        box-shadow: 4px 8px 14px 1px #00000000;
     }
 
     .my-breadcrumbs {

@@ -15,7 +15,9 @@
 </head>
 
 <body>
-
+    @php
+        $user = Auth::user();
+    @endphp
     <div class='dashboard'>
         <div class="dashboard-nav">
             <header><a class="menu-toggle" id="mobileMenu"><i class="fas fa-bars"></i></a><a
@@ -24,10 +26,11 @@
 
             <nav class="dashboard-nav-list">
                 <div class="nav-item-divider"></div>
-                <a href="{{ route('home.index') }}" class="dashboard-nav-item"><i class="fas fa-home"></i>
-                    Kezdőlap </a>
-                <!--<a href="#" class="dashboard-nav-item active"><i class="fas fa-tachometer-alt"></i>Dashboard</a>-->
-                <!--<<div class='dashboard-nav-dropdown'><a href="#!"
+                @if ($user->role != 'Ugyfel')
+                    <a href="{{ route('home.index') }}" class="dashboard-nav-item"><i class="fas fa-home"></i>
+                        Kezdőlap </a>
+                    <!--<a href="#" class="dashboard-nav-item active"><i class="fas fa-tachometer-alt"></i>Dashboard</a>-->
+                    <!--<<div class='dashboard-nav-dropdown'><a href="#!"
                         class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="fas fa-photo-video"></i>
                         Ügyfelek </a>
                     <div class='dashboard-nav-dropdown-menu'><a href="{{ route('ugyfel.index') }}"
@@ -48,14 +51,28 @@
                             class="dashboard-nav-dropdown-item">Összes</a><a href="#"
                             class="dashboard-nav-dropdown-item">Új létrehozás</a></div>
                 </div>-->
-                <a class="dashboard-nav-item" href="{{ route('ugyfel.index') }}"><i class="fas fa-photo-video"></i> Ügyfelek
-                </a>
-                <a class="dashboard-nav-item" href="{{ route('megrendeles.index') }}"><i class="fas fa-users"></i> Megrendelések
-                </a><a href="{{ route('anyagok.index') }}" class="dashboard-nav-item"><i class="fas fa-money-check"></i> Anyagok
-                </a>
-                <a class="dashboard-nav-item" href="{{ route('szerelok.index') }}"><i class="fas fa-cogs"></i> Szerelők
-                </a><a href="{{ route('users.index') }}" class="dashboard-nav-item"><i class="fas fa-user"></i> Profile
-                </a>
+                    <a class="dashboard-nav-item" href="{{ route('ugyfel.index') }}"><i class="fas fa-photo-video"></i>
+                        Ügyfelek
+                    </a>
+                    <a class="dashboard-nav-item" href="{{ route('megrendeles.index') }}"><i class="fas fa-users"></i>
+                        Megrendelések
+                    </a><a href="{{ route('anyagok.index') }}" class="dashboard-nav-item"><i
+                            class="fas fa-money-check"></i> Anyagok
+                    </a>
+                    <a class="dashboard-nav-item" href="{{ route('szerelok.index') }}"><i class="fas fa-cogs"></i>
+                        Szerelők
+                    </a><a href="{{ route('users.index') }}" class="dashboard-nav-item"><i class="fas fa-user"></i>
+                        Profilok
+                    </a>
+                    <a href="{{ route('profile.edit') }}" class="dashboard-nav-item"><i class="fas fa-user"></i> Fiókom
+                    </a>
+                @else
+                    <a href="{{ route('profile.edit') }}" class="dashboard-nav-item"><i class="fas fa-user"></i> Fiókom
+                    </a>
+                    <a href="{{ route('ugyfel.megrendelesek') }}" class="dashboard-nav-item"><i
+                            class="fas fa-money-check"></i> Megrendeléseim
+                    </a>
+                @endif
                 <div class="nav-item-divider"></div>
                 <form action="{{ route('logout') }}" method="post">
                     @csrf
