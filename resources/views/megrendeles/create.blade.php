@@ -2,18 +2,64 @@
 
 @section('content')
 
-@include('breadcrumbs')
+    @include('breadcrumbs')
 
-<h1>Új Megrendelés</h1>
-@if ($errors->any())
-    @foreach ($errors->all() as $error)
-    <div class="alert alert-warning">{{ $error }}</div>
-    @endforeach
-</div>
-@endif
+    <h1>Új Megrendelés</h1>
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <div class="alert alert-warning">{{ $error }}</div>
+        @endforeach
+        </div>
+    @endif
 
     <form id="createForm" action="{{ route('megrendeles.store') }}" method="POST">
         @csrf
+
+        <fieldset>
+            <label for="Ugyfel_ID">Ügyfél</label>
+            <select name="Ugyfel_ID" id="Ugyfel_ID">
+                <option value="">Válassz Ügyfelet</option>
+                @foreach ($ugyfelek as $ugyfel)
+                    <option value="{{ $ugyfel->Ugyfel_ID }}" data-nev="{{ $ugyfel->Nev }}"
+                        data-varos-id="{{ $ugyfel->Varos_ID }}" data-utca="{{ $ugyfel->Szamlazasi_Cim }}">
+                        {{ $ugyfel->Ugyfel_ID }} - {{ $ugyfel->Nev }}
+                    </option>
+                @endforeach
+            </select>
+            <label>
+                <input type="checkbox" id="ugyfelAdatokMatch" />
+                Az ügyfél adatai megegyeznek a megrendelésnél is.
+            </label>
+        </fieldset>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const ugyfelSelect = document.getElementById('Ugyfel_ID');
+                const ugyfelAdatokMatchCheckbox = document.getElementById('ugyfelAdatokMatch');
+                const megrendelesNevInput = document.getElementById('Megrendeles_Nev');
+                const varosSelect = document.getElementById('Varos_ID');
+                const utcaHazszamInput = document.getElementById('Utca_Hazszam');
+
+                function fillCustomerData() {
+                    const selectedOption = ugyfelSelect.options[ugyfelSelect.selectedIndex];
+                    if (selectedOption && ugyfelAdatokMatchCheckbox.checked) {
+                        megrendelesNevInput.value = selectedOption.getAttribute('data-nev');
+                        utcaHazszamInput.value = selectedOption.getAttribute('data-utca');
+                        varosSelect.value = selectedOption.getAttribute('data-varos-id');
+                    } else {
+                       megrendelesNevInput.value = '';
+                        utcaHazszamInput.value = '';
+                        varosSelect.value = '';
+                    }
+                }
+
+                ugyfelSelect.addEventListener('change', fillCustomerData);
+                ugyfelAdatokMatchCheckbox.addEventListener('change', fillCustomerData);
+            });
+        </script>
+
+
+
         <fieldset>
             <label for="Megrendeles_Nev">Megrendelő neve</label>
             <input type="text" name="Megrendeles_Nev" id="Megrendeles_Nev" value="{{ old('Megrendeles_Nev') }}">
@@ -34,16 +80,6 @@
             <input type="text" name="Utca_Hazszam" id="Utca_Hazszam" value="{{ old('Utca_Hazszam') }}">
         </fieldset>
 
-
-        <fieldset>
-            <label for="Ugyfel_ID">Ügyfél</label>
-            <select name="Ugyfel_ID" id="Ugyfel_ID">
-                <option value="">Válassz Ügyfelet</option>
-                @foreach ($ugyfelek as $ugyfel)
-                    <option value="{{ $ugyfel->Ugyfel_ID }}">{{ $ugyfel->Ugyfel_ID }} - {{ $ugyfel->Nev }}</option>
-                @endforeach
-            </select>
-        </fieldset>
 
         <fieldset>
             <label for="Szolgaltatas_ID">Szolgáltatás</label>
@@ -144,11 +180,12 @@
         @include('signaturePad')
 
         <div class="grid">
-            <button id="saveButton" type="submit" data-action="save-png" class="button save">Mentés új megrendelésként</button>
-        <a href="{{ route('ugyfel.create') }}" title="Új ügyfél hozzáadása">
+            <button id="saveButton" type="submit" data-action="save-png" class="button save">Mentés új
+                megrendelésként</button>
+            <a href="{{ route('ugyfel.create') }}" title="Új ügyfél hozzáadása">
 
                 <div class="hozzaad">+</div>
             </a>
         </div>
-        </form>
+    </form>
 @endsection

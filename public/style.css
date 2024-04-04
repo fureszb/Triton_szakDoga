@@ -261,6 +261,11 @@ button:hover,
     background-color: var(--medium-light);
 }
 
+.button {
+    padding: 10px !important;
+    padding-left: 18px !important;
+}
+
 label {
     margin: 0 1em 0 0;
 }
@@ -492,8 +497,12 @@ nav button {
 }
 
 .pagination {
-    display: flex;
+    display: flex !important;
     justify-content: center;
+}
+
+.pagination li {
+    padding: 4px 9px 4px 9px !important
 }
 
 .container h3 {
@@ -524,13 +533,24 @@ nav button {
     margin: auto;
 }
 
+input#ugyfelAdatokMatch {
+    margin-top: 16px;
+}
+
 .card-body ul {
     list-style: none;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     margin-left: 10px;
+}
+
+ul>li {
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 10px;
+    padding-left: 18px;
 }
 
 .notification {

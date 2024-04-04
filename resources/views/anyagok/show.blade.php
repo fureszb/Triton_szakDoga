@@ -17,7 +17,8 @@
                 </ul>
             </div>
         </div>
-        <a href="{{ route('anyagok.index') }}" class="btn btn-primary">Vissza a listához</a>
+        <a href="{{ route('anyagok.edit', $anyag->Anyag_ID) }}"><button>
+            Szerkesztés</button></a>
     </div>
 @else
     <p>Az anyag nem található.</p>

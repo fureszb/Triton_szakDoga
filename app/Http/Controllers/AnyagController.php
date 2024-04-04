@@ -9,7 +9,7 @@ class AnyagController extends Controller
 {
     public function index()
     {
-        $anyagok = Anyag::all();
+        $anyagok = Anyag::paginate(1);
         return view('anyagok.index', compact('anyagok'));
     }
 

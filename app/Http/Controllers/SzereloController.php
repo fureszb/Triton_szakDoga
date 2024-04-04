@@ -10,7 +10,7 @@ class SzereloController extends Controller
 {
     public function index()
     {
-        $szerelok = Szerelo::all();
+        $szerelok = Szerelo::paginate(5);
         return view('szerelok.index', compact('szerelok'));
     }
 

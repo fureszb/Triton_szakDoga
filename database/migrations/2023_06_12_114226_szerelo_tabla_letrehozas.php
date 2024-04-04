@@ -19,7 +19,7 @@ return new class extends Migration
         DB::table('szerelo')->insert([
             [
                 'Nev' => 'Ádám',
-                'Telefonszam' => '06302984409', 
+                'Telefonszam' => '06302984409',
                 'created_at' => now(),
                 'updated_at' => now()
             ],

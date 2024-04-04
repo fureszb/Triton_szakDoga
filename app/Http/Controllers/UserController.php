@@ -16,6 +16,8 @@ class UserController extends Controller
             return $user;
         });
 
+
+
         return view('users.index', compact('users'));
     }
 

@@ -45,4 +45,7 @@
     </ul>
 @endforeach
 
+@include('custom_pagination', ['paginator' => $szerelok])
+
+
 @endsection

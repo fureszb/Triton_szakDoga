@@ -9,12 +9,14 @@
     <hr class="showHr">
 
     <div class="title">
-        <a href="{{ route('megrendeles.index', ['sort_by' => 'Megrendeles_Nev', 'sort_dir' => 'asc']) }}" title="Növekvő sorrend">
+        <a href="{{ route('megrendeles.index', ['sort_by' => 'Megrendeles_Nev', 'sort_dir' => 'asc']) }}"
+            title="Növekvő sorrend">
             <div class="sort">
                 <i class="fas fa-sort-alpha-up" src="{{ asset('sort.png') }}"></i>
             </div>
         </a>
-        <a href="{{ route('megrendeles.index', ['sort_by' => 'Megrendeles_Nev', 'sort_dir' => 'desc']) }}" title="Csökkenő sorrend">
+        <a href="{{ route('megrendeles.index', ['sort_by' => 'Megrendeles_Nev', 'sort_dir' => 'desc']) }}"
+            title="Csökkenő sorrend">
             <div class="sort">
                 <i class="fas fa-sort-alpha-down-alt" src="{{ asset('sort.png') }}"></i>
             </div>
@@ -51,4 +53,56 @@
             </form>
         @endforeach
     </ul>
+
+    @include('custom_pagination', ['paginator' => $megrendelesek])
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .table-container {
+            width: 90%;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .button {
+            padding: 5px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .edit {
+            background-color: #f0ad4e;
+        }
+
+        .delete {
+            background-color: #d9534f;
+        }
+
+        .view {
+            background-color: #5bc0de;
+        }
+    </style>
 @endsection

@@ -18,9 +18,9 @@ class MailController extends Controller
         // $varos = Varos::where('Varos_ID', $ugyfel->Varos_ID)->latest()->first();
         $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag', 'munkak'])->latest()->first();
         $szereloData = Session::get('szereloData');
-        $imgPathSzerelo = $szereloData['Szerelo_ID'] . '_' . $szereloData['Nev'] . '.png';
+        $imgPathSzerelo =  $szereloData['Szerelo_ID'] . '_' . $szereloData['Nev'] . '.png';
 
-        //$imgPath =  $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.png';
+        $imgPath =  $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.png';
 
 
         $data["imgPathSzerelo"] = $imgPathSzerelo;
@@ -32,12 +32,13 @@ class MailController extends Controller
         $pdf = PDF::loadView('mail', $data)->setOptions(['defaultFont' => 'sans-serif', 'encoding' => 'UTF-8']);
 
 
-
-         $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '_' . $szereloData['Szolgaltatas_ID'] . '_' . $megrendeles->Megrendeles_ID . '.pdf';
+        $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '_' . $szereloData['Szolgaltatas_ID'] . '_' . $megrendeles->Megrendeles_ID . '.pdf';
         //$pdfFileName = "teszt.pdf";
         $pdfFilePath = storage_path('app/public/' . $pdfFileName);
         $pdf->save($pdfFilePath);
 
+        $megrendeles->Pdf_EleresiUt = $pdfFilePath;
+        $megrendeles->save();
 
 
 

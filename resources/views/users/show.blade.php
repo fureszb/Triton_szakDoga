@@ -4,7 +4,8 @@
     @include('breadcrumbs')
     <div class="container">
         <h1>{{ $user->nev }} - részletei</h1>
-        <hr class="showHr"></hr>
+        <hr class="showHr">
+        </hr>
         <div class="row">
             <div class="col-md-6">
                 <h3>Általános információk</h3>
@@ -17,6 +18,7 @@
                 </ul>
             </div>
         </div>
-        <a href="{{ route('users.index') }}" class="btn btn-primary mt-3">Vissza a listához</a>
+        <a href="{{ route('users.edit', $user->User_ID) }}"><button>
+            Szerkesztés</button></a>
     </div>
 @endsection

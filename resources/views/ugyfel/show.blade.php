@@ -25,8 +25,9 @@
             </ul>
         </div>
 
-
     </div>
 </div>
+<a href="{{ route('ugyfel.edit', ['ugyfel' => $ugyfel->Ugyfel_ID]) }}"><button>Szerkesztés</button></a>
+
 
 @endsection

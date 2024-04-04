@@ -49,4 +49,6 @@
             </form>
         </ul>
     @endforeach
+
+    @include('custom_pagination', ['paginator' => $ugyfel])
 @endsection
