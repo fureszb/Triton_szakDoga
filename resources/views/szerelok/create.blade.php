@@ -18,6 +18,6 @@
         </fieldset>
         @include('signaturePad')
 
-        <button id="saveSignatureButton" data-action="save-png2" type="submit" class="btn btn-primary">Mentés</button>
+        <button id="saveSignatureButton customAlertNoHeading" data-action="save-png2" type="submit" class="btn btn-primary">Mentés</button>
     </form>
 @endsection

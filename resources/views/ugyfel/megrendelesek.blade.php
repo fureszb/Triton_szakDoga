@@ -2,8 +2,8 @@
 
 @section('content')
 <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
-<h1 class="title">Megrendeléseim</h1>
-
+<div class="megrendeles"><h1>Megrendeléseim</h1>
+<hr class="showHr"></div>
 @if (session('info'))
     <div class="alert alert-info">{{ session('info') }}</div>
 @elseif (session('success'))
