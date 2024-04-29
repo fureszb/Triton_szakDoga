@@ -25,7 +25,11 @@ class SzereloController extends Controller
         $request->validate([
             'Nev' => 'required',
             'Telefonszam' => 'required',
+        ], [
+            'Nev.required' => 'A név megadása kötelező.',
+            'Telefonszam.required' => 'A telefonszám megadása kötelező.',
         ]);
+
 
         $szerelo = new Szerelo();
         $szerelo->Nev = $request->Nev;
@@ -37,7 +41,6 @@ class SzereloController extends Controller
         $this->renameImage($temporaryFileName, $szerelo->Szerelo_ID, $szerelo->Nev);
 
 
-        // Hozzárendeljük az összes Szolgaltatas entitást a frissen létrehozott Szerelo entitáshoz
         $szolgaltatasIds = Szolgaltatas::pluck('Szolgaltatas_ID')->toArray();
         $szerelo->szolgaltatasok()->sync($szolgaltatasIds);
 
@@ -55,7 +58,6 @@ class SzereloController extends Controller
         $szerelo = Szerelo::findOrFail($id);
         $szolgaltatasok = Szolgaltatas::all();
 
-        // Egyértelműen hivatkozunk a táblára és az oszlopra a pluck metódusban
         $selectedSzolgaltatasok = $szerelo->szolgaltatasok()->pluck('szolgaltatas.Szolgaltatas_ID')->toArray();
 
         return view('szerelok.edit', compact('szerelo', 'szolgaltatasok', 'selectedSzolgaltatasok'));
@@ -63,17 +65,20 @@ class SzereloController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'Nev' => 'required',
             'Telefonszam' => 'required',
+        ], [
+            'Nev.required' => 'A név megadása kötelező.',
+            'Telefonszam.required' => 'A telefonszám megadása kötelező.',
         ]);
+
 
         $szerelo = Szerelo::findOrFail($id);
         $szerelo->Nev = $request->Nev;
         $szerelo->Telefonszam = $request->Telefonszam;
         $szerelo->save();
 
-        // Hozzárendeljük az összes Szolgaltatas entitást a frissített Szerelo entitáshoz
         $szolgaltatasIds = Szolgaltatas::pluck('Szolgaltatas_ID')->toArray();
         $szerelo->szolgaltatasok()->sync($szolgaltatasIds);
 
@@ -87,7 +92,6 @@ class SzereloController extends Controller
         $fileName = $szerelo->Szerelo_ID . '_' . $szerelo->Nev . '.png';
         $filePath = public_path('alaIrasokSzerelok') . '/' . $fileName;
 
-        // A kép törlése, ha létezik
         if (file_exists($filePath)) {
             @unlink($filePath);
         }
@@ -99,7 +103,6 @@ class SzereloController extends Controller
     }
     public function saveImage(Request $request)
     {
-        // Az adatok fogadása
         $szereloNev = $request->szereloNev;
         $signatureDataURL = $request->signatureDataURL;
         $signatureDataURL = str_replace('data:image/png;base64,', '', $signatureDataURL);
@@ -112,9 +115,6 @@ class SzereloController extends Controller
 
         file_put_contents($folderPath . '/' . $fileName, $signatureDataURL);
 
-
-        // Itt implementálhatod az adatok feldolgozását, mentését stb.
-        // Például mentés adatbázisba, fájlrendszerre stb.
 
         return response()->json(['message' => 'Sikeres mentés!']);
     }
@@ -129,7 +129,7 @@ class SzereloController extends Controller
 
         if (file_exists($originalFilePath)) {
             rename($originalFilePath, $newFilePath);
-            return $newFileName; // Visszaadjuk az új fájlnév, ha később szükség van rá
+            return $newFileName;
         }
     }
 }

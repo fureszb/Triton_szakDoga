@@ -20,59 +20,66 @@
     @endphp
     <div class='dashboard'>
         <div class="dashboard-nav">
-            <header><a class="menu-toggle" id="mobileMenu"><i class="fas fa-bars"></i></a><a
-                    href="{{ route('home.index') }}" class="brand-logo"><img src="{{ asset('logo.png') }}"
-                        width="60px" alt="LOGO" style="width: 60px !important"> <span>TRITON</span></a></header>
+            @switch($user->role)
+                    @case('Ugyfel')
+                    <header><a class="menu-toggle" id="mobileMenu"><i class="fas fa-bars"></i></a><a
+                        href="{{ route('ugyfel.megrendelesek') }}" class="brand-logo"><img src="{{ asset('logo.png') }}"
+                            width="60px" alt="LOGO" style="width: 60px !important"> <span>TRITON</span></a></header>
+
+                    @break
+                    @case('Uzletkoto')
+                    <header><a class="menu-toggle" id="mobileMenu"><i class="fas fa-bars"></i></a><a
+                        href="{{ route('home.index') }}" class="brand-logo"><img src="{{ asset('logo.png') }}"
+                            width="60px" alt="LOGO" style="width: 60px !important"> <span>TRITON</span></a></header>
+
+                    @break
+                    @case('Admin')
+                    <header><a class="menu-toggle" id="mobileMenu"><i class="fas fa-bars"></i></a><a
+                        href="{{ route('home.index') }}" class="brand-logo"><img src="{{ asset('logo.png') }}"
+                            width="60px" alt="LOGO" style="width: 60px !important"> <span>TRITON</span></a></header>
+
+                    @break
+                @endswitch
 
             <nav class="dashboard-nav-list">
                 <div class="nav-item-divider"></div>
-                @if ($user->role != 'Ugyfel')
-                    <a href="{{ route('home.index') }}" class="dashboard-nav-item"><i class="fas fa-home"></i>
-                        Kezdőlap </a>
-                    <!--<a href="#" class="dashboard-nav-item active"><i class="fas fa-tachometer-alt"></i>Dashboard</a>-->
-                    <!--<<div class='dashboard-nav-dropdown'><a href="#!"
-                        class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="fas fa-photo-video"></i>
-                        Ügyfelek </a>
-                    <div class='dashboard-nav-dropdown-menu'><a href="{{ route('ugyfel.index') }}"
-                            class="dashboard-nav-dropdown-item">Összes</a><a href="{{ route('ugyfel.create') }}"
-                            class="dashboard-nav-dropdown-item">Új létrehozás</a></div>
-                </div>
-                <div class='dashboard-nav-dropdown'><a href="#!"
-                        class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="fas fa-users"></i>
-                        Megrendelések </a>
-                    <div class='dashboard-nav-dropdown-menu'><a href="{{ route('megrendeles.index') }}"
-                            class="dashboard-nav-dropdown-item">Összes</a><a href="{{ route('megrendeles.create') }}"
-                            class="dashboard-nav-dropdown-item">Új létrehozás</a></div>
-                </div>
-                div class='dashboard-nav-dropdown'><a href="#!"
-                        class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="fas fa-money-check-alt"></i>
-                        Anyagok </a>
-                    <div class='dashboard-nav-dropdown-menu'><a href="#"
-                            class="dashboard-nav-dropdown-item">Összes</a><a href="#"
-                            class="dashboard-nav-dropdown-item">Új létrehozás</a></div>
-                </div>-->
-                    <a class="dashboard-nav-item" href="{{ route('ugyfel.index') }}"><i class="fas fa-photo-video"></i>
-                        Ügyfelek
-                    </a>
-                    <a class="dashboard-nav-item" href="{{ route('megrendeles.index') }}"><i class="fas fa-users"></i>
-                        Megrendelések
-                    </a><a href="{{ route('anyagok.index') }}" class="dashboard-nav-item"><i
-                            class="fas fa-money-check"></i> Anyagok
-                    </a>
-                    <a class="dashboard-nav-item" href="{{ route('szerelok.index') }}"><i class="fas fa-cogs"></i>
-                        Szerelők
-                    </a><a href="{{ route('users.index') }}" class="dashboard-nav-item"><i class="fas fa-user"></i>
-                        Profilok
-                    </a>
-                    <a href="{{ route('profile.edit') }}" class="dashboard-nav-item"><i class="fas fa-user"></i> Fiókom
-                    </a>
-                @else
-                    <a href="{{ route('profile.edit') }}" class="dashboard-nav-item"><i class="fas fa-user"></i> Fiókom
-                    </a>
-                    <a href="{{ route('ugyfel.megrendelesek') }}" class="dashboard-nav-item"><i
-                            class="fas fa-money-check"></i> Megrendeléseim
-                    </a>
-                @endif
+
+                @switch($user->role)
+                    @case('Ugyfel')
+                        <a href="{{ route('profile.edit') }}" class="dashboard-nav-item"><i class="fas fa-user"></i>
+                            Fiókom</a>
+                        <a href="{{ route('ugyfel.megrendelesek') }}" class="dashboard-nav-item"><i
+                                class="fas fa-money-check"></i> Megrendeléseim</a>
+                    @break
+
+                    @case('Uzletkoto')
+                        <a href="{{ route('home.index') }}" class="dashboard-nav-item"><i class="fas fa-home"></i>
+                            Kezdőlap </a>
+                        <a class="dashboard-nav-item" href="{{ route('ugyfel.index') }}"><i class="fas fa-photo-video"></i>
+                            Ügyfelek</a>
+                        <a class="dashboard-nav-item" href="{{ route('megrendeles.index') }}"><i class="fas fa-users"></i>
+                            Megrendelések</a>
+                        <a href="{{ route('profile.edit') }}" class="dashboard-nav-item"><i class="fas fa-user"></i>
+                            Fiókom</a>
+                    @break
+
+                    @case('Admin')
+                        <a href="{{ route('home.index') }}" class="dashboard-nav-item"><i class="fas fa-home"></i>
+                            Kezdőlap </a>
+                        <a class="dashboard-nav-item" href="{{ route('ugyfel.index') }}"><i class="fas fa-photo-video"></i>
+                            Ügyfelek</a>
+                        <a class="dashboard-nav-item" href="{{ route('megrendeles.index') }}"><i class="fas fa-users"></i>
+                            Megrendelések</a>
+                        <a href="{{ route('anyagok.index') }}" class="dashboard-nav-item"><i class="fas fa-money-check"></i>
+                            Anyagok</a>
+                        <a class="dashboard-nav-item" href="{{ route('szerelok.index') }}"><i class="fas fa-cogs"></i>
+                            Szerelők</a>
+                        <a href="{{ route('users.index') }}" class="dashboard-nav-item"><i class="fas fa-user"></i>
+                            Profilok</a>
+                        <a href="{{ route('profile.edit') }}" class="dashboard-nav-item"><i class="fas fa-user"></i>
+                            Fiókom</a>
+                    @break
+                @endswitch
                 <div class="nav-item-divider"></div>
                 <form action="{{ route('logout') }}" method="post">
                     @csrf
@@ -87,7 +94,8 @@
         <div class='dashboard-app'>
             <header class='dashboard-toolbar'><a href="#!" class="menu-toggle-dashboard"><i
                         class="fas fa-bars"></i></a>
-                        <a style="display:none;" href="#" class="notification"><i class="fa-solid fa-bell"><span class="badge">3</span></i></a>
+                <a style="display:none;" href="#" class="notification"><i class="fa-solid fa-bell"><span
+                            class="badge">3</span></i></a>
             </header>
             <div class='dashboard-content'>
                 <div class='container'>

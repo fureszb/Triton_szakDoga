@@ -15,7 +15,6 @@ class MailController extends Controller
 {
     public function sendMailWithPdf()
     {
-        // $varos = Varos::where('Varos_ID', $ugyfel->Varos_ID)->latest()->first();
         $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag', 'munkak'])->latest()->first();
         $szereloData = Session::get('szereloData');
         $imgPathSzerelo =  $szereloData['Szerelo_ID'] . '_' . $szereloData['Nev'] . '.png';
@@ -33,19 +32,12 @@ class MailController extends Controller
 
 
         $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '_' . $szereloData['Szolgaltatas_ID'] . '_' . $megrendeles->Megrendeles_ID . '.pdf';
-        //$pdfFileName = "teszt.pdf";
         $pdfFilePath = storage_path('app/public/' . $pdfFileName);
         $pdf->save($pdfFilePath);
 
         $megrendeles->Pdf_EleresiUt = $pdfFilePath;
         $megrendeles->save();
 
-
-
-
-
-
-        // E-mail küldése
 
         Mail::send('mail', $data, function ($message) use ($data, $pdf, $megrendeles) {
             $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.pdf';
@@ -55,25 +47,14 @@ class MailController extends Controller
         });
 
 
-        // Képek törlése a public/images mappából
-        /*$folderPath = public_path('kepek');
-           $files = File::files($folderPath);
-           foreach ($files as $file) {
-               File::delete($file);
-           }*/
-
-        // Letöltés a böngészőbe
+        $folderPath = public_path('alaIrasokUgyfel');
+        $files = File::files($folderPath);
+        foreach ($files as $file) {
+            File::delete($file);
+        }
 
         $message = 'Az aláírás és az ügyfél sikeresen mentve lett és az email elküldve!';
 
-
-        /*return Response::make($pdf->output(), 'application/pdf')
-        ->setStatusCode(200)
-        ->setStatus('OK')
-        ->send();*/
-        //return redirect('/ugyfel')->with('success', 'Az aláírás és az ügyfél sikeresen mentve lett és az email elküldve!');
-        // return  $pdf->download('Triton-Security.pdf');
-        //return  $pdf->save($pdfFilePath);
-        return redirect()->route('ugyfel.index')->with('success', $message);
+        return redirect()->route('megrendeles.index')->with('success', $message);
     }
 }

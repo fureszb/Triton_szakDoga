@@ -2,11 +2,42 @@
 
 @section('content')
     <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
-    <div><h1 class="home">Kezdőlap</h1></div>
+    <style>
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .chart {
+            flex: 1;
+
+            max-width: 450px;
+
+            height: 500px;
+
+        }
+
+        h4 {
+            font-size: 14px;
+            letter-spacing: 3px;
+            color: #9e9e9e !important;
+        }
+    </style>
+
+    <h1>Kezdőlap</h1>
     <hr class="showHr">
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    @include('szolgaltatasok.index')
+    @include('diagrammok.varosStatisztika')
+    @include('diagrammok.szolgaltatasStatisztika')
+
+    <h4>Statisztika</h4>
+    <div class="chart-container">
+        <div id="bar_chart" class="chart" style="width: 100%;"></div>
+        <div id="pie_chart" class="chart" style="width: 100%;"></div>
+    </div>
 @endsection

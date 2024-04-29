@@ -34,7 +34,7 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = User::with('ugyfel')->findOrFail($id); // Kapcsolat betöltése
+        $user = User::with('ugyfel')->findOrFail($id);
         $ugyfelek = Ugyfel::whereNull('User_ID')->orWhere('Ugyfel_ID', optional($user->ugyfel)->Ugyfel_ID)->get();
 
         return view('users.edit', compact('user', 'ugyfelek'));
@@ -84,18 +84,18 @@ class UserController extends Controller
 
         $user = User::findOrFail($id);
 
-        // A User modell frissítése
+
         $user->nev = $validatedData['nev'];
         $user->email = $validatedData['email'];
         $user->role = $validatedData['role'];
         $user->save();
 
-        // Előző ügyfél User_ID mezőjének nullázása, ha volt
+
         if ($user->ugyfel) {
             $user->ugyfel->update(['User_ID' => null]);
         }
 
-        // Az új ügyfél User_ID mezőjének beállítása
+
         if (!is_null($validatedData['Ugyfel_ID'])) {
             $ugyfel = Ugyfel::findOrFail($validatedData['Ugyfel_ID']);
             $ugyfel->User_ID = $user->User_ID;

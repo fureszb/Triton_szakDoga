@@ -23,7 +23,6 @@ class Szerelo extends Model
         return $this->belongsToMany(Szolgaltatas::class, 'szerelo_szolgaltatas', 'Szerelo_ID', 'Szolgaltatas_ID');
     }
 
-    // Szerelo modellben
     public static function getLatestIfRecent()
     {
         $halfMinuteAgo = now()->subSeconds(30);

@@ -11,7 +11,6 @@
         @foreach ($errors->all() as $error)
             <div class="alert alert-warning">{{ $error }}</div>
         @endforeach
-        </div>
     @endif
 
     <form id="createForm" action="{{ route('ugyfel.store') }}" method="POST">
@@ -58,10 +57,6 @@
 
         <div class="grid">
             <button id="saveButton" type="submit">Mentés új ügyfélként</button>
-
-            <a href="{{ route('megrendeles.create') }}" title="Új megrendeléshez rendelés">
-                <!--<div id="mentTovabit" class="hozzaad">+</div>-->
-            </a>
         </div>
 
 

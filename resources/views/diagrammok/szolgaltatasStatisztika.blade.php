@@ -11,7 +11,6 @@
         google.charts.setOnLoadCallback(drawCharts);
 
         function drawCharts() {
-            // Kördiagram rajzolása
             var pieData = google.visualization.arrayToDataTable([
                 ['Típus', 'Mennyiség'],
                 @foreach ($szolgaltatasokKereslete as $szolgaltatas)
@@ -21,20 +20,19 @@
 
 
             var pieOptions = {
-                title: 'Szolgáltatások Megoszlása'
+                title: 'Megrendelt szolgáltatások megoszlása'
             };
 
             var pieChart = new google.visualization.PieChart(document.getElementById('pie_chart'));
             pieChart.draw(pieData, pieOptions);
 
-            // További diagramok rajzolása...
         }
     </script>
 </head>
 
 <body>
-    <div id="pie_chart" style="width: 900px; height: 500px;"></div>
-    <!-- További diagramok konténerei ide kerülnek -->
+
+
 </body>
 
 </html>

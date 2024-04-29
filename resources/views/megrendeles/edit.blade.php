@@ -1,15 +1,14 @@
 @extends('ujlayout')
 
 @section('content')
-
-@include('breadcrumbs')
-  <h1>Új Megrendelés Szerkesztése</h1>
-@if ($errors->any())
-@foreach ($errors->all() as $error)
-<div class="alert alert-warning">{{ $error }}</div>
-@endforeach
-</div>
-@endif
+    @include('breadcrumbs')
+    <h1>Új Megrendelés Szerkesztése</h1>
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <div class="alert alert-warning">{{ $error }}</div>
+        @endforeach
+        </div>
+    @endif
 
     <form id="editForm" action="{{ route('megrendeles.update', $megrendeles->Megrendeles_ID) }}" method="POST">
         @csrf
@@ -130,24 +129,23 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // Új anyag hozzáadása gomb eseménykezelője
                 document.getElementById('addAnyag').addEventListener('click', function() {
                     var container = document.getElementById('anyagokContainer');
                     var newPair = container.firstElementChild.cloneNode(true);
                     newPair.querySelector('.anyagSelect').selectedIndex = 0;
                     newPair.querySelector('input[type=number]').value = '';
                     newPair.querySelector('.removeAnyag').addEventListener('click',
-                    removeAnyagFunction); // Hozzáadunk egy új eseménykezelőt az eltávolítás gombhoz
+                        removeAnyagFunction);
                     container.appendChild(newPair);
                 });
 
-                // Eseménykezelő hozzáadása az eltávolítás gombokhoz
+
                 var removeButtons = document.querySelectorAll('.removeAnyag');
                 removeButtons.forEach(function(button) {
                     button.addEventListener('click', removeAnyagFunction);
                 });
 
-                // Az eltávolítás funkciója
+
                 function removeAnyagFunction(e) {
                     var container = document.getElementById('anyagokContainer');
                     if (container.querySelectorAll('.anyagMennyisegPár').length > 1) {

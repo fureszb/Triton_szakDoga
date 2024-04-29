@@ -33,7 +33,7 @@
                         @foreach ($munkak as $munka)
                             <li class="list-group-item"><strong>Szolgáltatás:</strong>
                                 {{ $munka->szolgaltatas->Tipus ?? '-' }}</li>
-                            <li class="list-group-item"><strong>Szerelő:</strong> {{ $munka->szerelo->Nev ?? '-' }}</li>
+                            <li class="list-group-item"><strong>Szerelő:</strong> {{ $munka->szerelo->Nev ?? '-' }} <br><strong>Telefonszám: </strong>{{$munka->szerelo->Telefonszam ?? '-'}}</li>
                             <li class="list-group-item"><strong>Leírás:</strong> {{ $munka->Leiras }}</li>
                             <li class="list-group-item"><strong>Munkakezdés időpontja:</strong>
                                 {{ $munka->Munkakezdes_Idopontja }}</li>

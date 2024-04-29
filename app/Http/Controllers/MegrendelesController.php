@@ -35,7 +35,7 @@ class MegrendelesController extends Controller
                 ->orWhere('Megrendeles_ID', 'like', "%$keyword%");
         }
 
-       
+
         $megrendelesek = $query->paginate(9);
 
         return view('megrendeles.index', compact('megrendelesek'));
@@ -85,7 +85,6 @@ class MegrendelesController extends Controller
         $szerelok = Szerelo::all();
         $anyagok = Anyag::all();
         $varosok = Varos::all();
-        // Feltételezzük, hogy a $munka az egyik kapcsolódó Munka entitás
         $munka = Munka::where('Megrendeles_ID', $megrendeles->Megrendeles_ID)->firstOrFail();
 
         return view('megrendeles.edit', compact('megrendeles', 'ugyfelek', 'szolgaltatasok', 'szerelok', 'anyagok', 'varosok', 'munka'));
@@ -123,9 +122,28 @@ class MegrendelesController extends Controller
             'Munkabefejezes_Idopontja' => 'required|date|after:Munkakezdes_Idopontja',
             'Anyag_ID' => 'required|exists:anyag,Anyag_ID',
             'Mennyiseg' => 'required|min:1'
+        ], [
+            'Megrendeles_Nev.required' => 'A megrendelés nevének megadása kötelező.',
+            'Varos_ID.required' => 'A város kiválasztása kötelező.',
+            'Varos_ID.exists' => 'A kiválasztott város nem létezik az adatbázisban.',
+            'Utca_Hazszam.required' => 'Az utca és házszám megadása kötelező.',
+            'Ugyfel_ID.required' => 'Az ügyfél azonosítójának megadása kötelező.',
+            'Ugyfel_ID.exists' => 'A megadott ügyfél azonosító nem létezik az adatbázisban.',
+            'Szolgaltatas_ID.required' => 'A szolgáltatás kiválasztása kötelező.',
+            'Szolgaltatas_ID.exists' => 'A kiválasztott szolgáltatás nem létezik az adatbázisban.',
+            'Szerelo_ID.required' => 'A szerelő kiválasztása kötelező.',
+            'Szerelo_ID.exists' => 'A kiválasztott szerelő nem létezik az adatbázisban.',
+            'Munkakezdes_Idopontja.required' => 'A munkakezdés időpontjának megadása kötelező.',
+            'Munkakezdes_Idopontja.date' => 'A munkakezdés időpontja dátum formátumú kell legyen.',
+            'Munkabefejezes_Idopontja.required' => 'A munka befejezésének időpontja kötelező.',
+            'Munkabefejezes_Idopontja.date' => 'A munka befejezésének időpontja dátum formátumú kell legyen.',
+            'Munkabefejezes_Idopontja.after' => 'A munka befejezés időpontja nem lehet korábbi, mint a munkakezdés időpontja.',
+            'Anyag_ID.required' => 'Az anyag kiválasztása kötelező.',
+            'Anyag_ID.exists' => 'A kiválasztott anyag nem létezik az adatbázisban.',
+            'Mennyiseg.required' => 'A mennyiség megadása kötelező.',
+            'Mennyiseg.min' => 'A mennyiségnek legalább 1-nek kell lennie.'
         ]);
 
-        // Megrendeles létrehozása
         $megrendeles = new Megrendeles([
             'Megrendeles_Nev' => $request->input('Megrendeles_Nev'),
             'Ugyfel_ID' => $request->Ugyfel_ID,
@@ -134,7 +152,6 @@ class MegrendelesController extends Controller
             'Varos_ID' => $request->input('Varos_ID'),
         ]);
         $megrendeles->save();
-        //dd($request->Ugyfel_ID);
 
 
         $ugyfel = Ugyfel::find($request->Ugyfel_ID);
@@ -146,7 +163,6 @@ class MegrendelesController extends Controller
 
 
 
-        // Munka létrehozása
         $munka = new Munka([
             'Megrendeles_ID' => $megrendeles->Megrendeles_ID,
             'Szerelo_ID' => $request->Szerelo_ID,
@@ -165,38 +181,12 @@ class MegrendelesController extends Controller
             'Nev' => $szerelo->Nev,
             'Szolgaltatas_ID' => $request->Szolgaltatas_ID
         ]);
-        //Log::debug('Ugyfel Data:', Session::get('ugyfelData') ?: ['empty' => 'No data found']);
-
-        // A megrendelés és az első munka létrehozása után
-        /*$szereloIDs = $request->input('Szerelo_ID');
-        $szolgaltatasIDs = $request->input('Szolgaltatas_ID');
-        $eredetiLeiras = $request->input('Leiras');
-        $eredetiMunkakezdes = $request->input('Munkakezdes_Idopontja');
-        $eredetiMunkabefejezes = $request->input('Munkabefejezes_Idopontja');
-
-        foreach ($szereloIDs as $index => $szereloID) {
-            if (!empty($szereloID) && !empty($szolgaltatasIDs[$index])) {
-                $munka = new Munkanaplo([
-                    'Megrendeles_ID' => $megrendeles->id,
-                    'Szerelo_ID' => $szereloID,
-                    'Szolgaltatas_ID' => $szolgaltatasIDs[$index],
-                    'Leiras' => $eredetiLeiras, // Az eredeti leírás használata minden munkánál
-                    'Munkakezdes_Idopontja' => $eredetiMunkakezdes, // Az eredeti munkakezdés használata
-                    'Munkabefejezes_Idopontja' => $eredetiMunkabefejezes, // Az eredeti munkabefejezés használata
-                ]);
-                $munka->save();
-            }
-        }*/
-
-
-
 
         $anyagok = $request->input('Anyag_ID');
         $mennyisegek = $request->input('Mennyiseg');
 
 
         if (is_array($anyagok) && is_array($mennyisegek)) {
-            //dd($anyagok, $mennyisegek);
             foreach ($anyagok as $index => $Anyag_ID) {
                 if (isset($mennyisegek[$index])) {
                     $felhasznaltAnyag = new FelhasznaltAnyag([
@@ -209,10 +199,6 @@ class MegrendelesController extends Controller
             }
         }
 
-
-        //return redirect()->route('megrendeles.index')->with('success', 'Megrendelés sikeresen létrehozva.');
-        //return redirect('megrendeles.saveImage')->with('success', 'Megrendelés sikeresen létrehozva.');
-        //return redirect()->route('megrendeles.saveImage', ['megrendelesId' => $megrendeles->id])->with('success', 'Megrendelés sikeresen létrehozva.');
         return redirect('/send-mail')->with('success', 'Az email sikeresen el lett küldve!');
     }
 
@@ -234,17 +220,35 @@ class MegrendelesController extends Controller
             'Pdf_EleresiUt' => 'nullable',
             'Anyag_ID' => 'required|exists:anyag,Anyag_ID',
             'Mennyiseg' => 'required|min:1',
+        ], [
+            'Megrendeles_Nev.required' => 'A megrendelés nevének megadása kötelező.',
+            'Varos_ID.required' => 'A város kiválasztása kötelező.',
+            'Varos_ID.exists' => 'A kiválasztott város nem létezik az adatbázisban.',
+            'Utca_Hazszam.required' => 'Az utca és házszám megadása kötelező.',
+            'Ugyfel_ID.required' => 'Az ügyfél azonosítójának megadása kötelező.',
+            'Ugyfel_ID.exists' => 'A megadott ügyfél azonosító nem létezik az adatbázisban.',
+            'Szolgaltatas_ID.required' => 'A szolgáltatás kiválasztása kötelező.',
+            'Szolgaltatas_ID.exists' => 'A kiválasztott szolgáltatás nem létezik az adatbázisban.',
+            'Szerelo_ID.required' => 'A szerelő kiválasztása kötelező.',
+            'Szerelo_ID.exists' => 'A kiválasztott szerelő nem létezik az adatbázisban.',
+            'Munkakezdes_Idopontja.required' => 'A munkakezdés időpontjának megadása kötelező.',
+            'Munkakezdes_Idopontja.date' => 'A munkakezdés időpontja dátum formátumú kell legyen.',
+            'Munkabefejezes_Idopontja.required' => 'A munka befejezésének időpontja kötelező.',
+            'Munkabefejezes_Idopontja.date' => 'A munka befejezésének időpontja dátum formátumú kell legyen.',
+            'Munkabefejezes_Idopontja.after' => 'A munka befejezés időpontja nem lehet korábbi, mint a munkakezdés időpontja.',
+            'Anyag_ID.required' => 'Az anyag kiválasztása kötelező.',
+            'Anyag_ID.exists' => 'A kiválasztott anyag nem létezik az adatbázisban.',
+            'Mennyiseg.required' => 'A mennyiség megadása kötelező.',
+            'Mennyiseg.min' => 'A mennyiségnek legalább 1-nek kell lennie.'
         ]);
 
         $megrendeles = Megrendeles::findOrFail($id);
         $megrendeles->update($request->only(['Megrendeles_Nev', 'Ugyfel_ID', 'Varos_ID', 'Utca_Hazszam', 'Alairt_e', 'Pdf_EleresiUt']));
 
-        // Frissíti a kapcsolódó Munka entitást
-        $munka = Munka::findOrFail($request->input('Munka_ID'));
+       $munka = Munka::findOrFail($request->input('Munka_ID'));
         $munka->update($request->only(['Szerelo_ID', 'Szolgaltatas_ID', 'Leiras', 'Munkakezdes_Idopontja', 'Munkabefejezes_Idopontja']));
 
-        // Kezeli a FelhasznaltAnyag entitásokat
-        FelhasznaltAnyag::where('Munka_ID', $munka->Munka_ID)->delete(); // Először törli a korábbiakat
+        FelhasznaltAnyag::where('Munka_ID', $munka->Munka_ID)->delete();
 
         $anyagok = $request->input('Anyag_ID');
         $mennyisegek = $request->input('Mennyiseg');
@@ -271,8 +275,7 @@ class MegrendelesController extends Controller
     }
     public function downloadPdf(Request $request, $ugyfelId, $ugyfelNev, $szolgaltatasId, $Megrendeles_ID)
     {
-        // A megfelelő Megrendeles entitás keresése
-        $megrendeles = Megrendeles::with(['ugyfel', 'munkak'])
+         $megrendeles = Megrendeles::with(['ugyfel', 'munkak'])
             ->whereHas('ugyfel', function ($query) use ($ugyfelId, $ugyfelNev) {
                 $query->where('Ugyfel_ID', $ugyfelId)
                     ->where('Nev', $ugyfelNev);
@@ -286,16 +289,12 @@ class MegrendelesController extends Controller
             return response()->json(['error' => 'A dokumentum nem található.'], 404);
         }
 
-        // A PDF fájl nevének összeállítása
-        $pdfFileName = $ugyfelId . '_' . $ugyfelNev . '_' . $szolgaltatasId.'_'. $Megrendeles_ID . '.pdf';
+        $pdfFileName = $ugyfelId . '_' . $ugyfelNev . '_' . $szolgaltatasId . '_' . $Megrendeles_ID . '.pdf';
         $pdfFilePath = storage_path('app/public/' . $pdfFileName);
 
-        // Ellenőrizzük, hogy létezik-e a fájl
         if (File::exists($pdfFilePath)) {
-            // Letöltés indítása
-            return response()->download($pdfFilePath, $pdfFileName);
+             return response()->download($pdfFilePath, $pdfFileName);
         } else {
-            // Hibaüzenet, ha a fájl nem létezik
             return response()->json(['error' => 'A fájl nem található.'], 404);
         }
     }

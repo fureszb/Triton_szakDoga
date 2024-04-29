@@ -19,21 +19,14 @@ class SignaturePadController extends Controller
         return view('signaturePad');
     }
 
-    public function upload(Request $request)
-    {
-        //return redirect('/megrendeles')->with('success', 'Az aláírás és az ügyfél sikeresen mentve lett!');
-    }
     public function saveImage(Request $request)
     {
         $imageData = $request->input('dataURL');
         $imageData = str_replace('data:image/png;base64,', '', $imageData);
         $imageData = base64_decode($imageData);
 
-        // Lekérdezi az utoljára létrehozott, és az elmúlt fél percben létrehozott szerelőt
-
-             // Ha nincs, akkor alapértelmezett fájlnév
-            $fileName = 'alairas.png';
-            $folderPath = public_path('alaIrasokUgyfel');
+        $fileName = 'alairas.png';
+        $folderPath = public_path('alaIrasokUgyfel');
 
 
         file_put_contents($folderPath . '/' . $fileName, $imageData);

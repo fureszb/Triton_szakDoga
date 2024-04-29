@@ -70,14 +70,6 @@ class Megrendeles extends Model
         return view('megrendeles.create', compact('ugyfelek'));
     }
 
-
-   /* public function scopeSearch($query, $keyword)
-    {
-        return $query->where(function ($query) use ($keyword) {
-            $query->where('Megrendeles_Nev', 'LIKE', '%' . $keyword . '%')
-                ->orWhere('Objektum_Cim', 'LIKE', '%' . $keyword . '%');
-        });
-    }*/
     public function scopeSearch($query, $keyword)
     {
         return $query->where(function ($query) use ($keyword) {

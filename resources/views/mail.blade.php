@@ -180,6 +180,10 @@
             display: grid;
             grid-template-columns: auto auto;
         }
+
+        .col-md-6 {
+            padding-top: 40px;
+        }
     </style>
 </head>
 
@@ -196,7 +200,7 @@
                 <div class="logo">
                     <img src="{{ asset('logo.png') }}" alt="logo" width="200">
                 </div>
-                <h1>Szerződéskötés</h1>
+                <h1>Kontraktus</h1>
 
             </div>
 
@@ -244,13 +248,17 @@
                                 <li class="list-group-item"><strong>Szolgáltatás:</strong>
                                     {{ $munka->szolgaltatas->Tipus ?? '-' }}
                                 </li>
-                                <li class="list-group-item"><strong>Szerelő:</strong> {{ $munka->szerelo->Nev ?? '-' }}
+                                <li class="list-group-item"><strong>Szerelést végezte:</strong>
+                                    {{ $munka->szerelo->Nev ?? '-' }}
+                                </li>
+                                <li class="list-group-item"><strong>Telefonszáma:</strong>
+                                    {{ $munka->szerelo->Telefonszam ?? '-' }}
                                 </li>
                                 <li class="list-group-item"><strong>Leírás:</strong> {{ $munka->Leiras }}</li>
-                                <li class="list-group-item"><strong>Munkakezdés időpontja:</strong>
+                                <li class="list-group-item"><strong>Munkakezdete:</strong>
                                     {{ $munka->Munkakezdes_Idopontja }}
                                 </li>
-                                <li class="list-group-item"><strong>Munkabefejezés időpontja:</strong>
+                                <li class="list-group-item"><strong>Munkabefejezte:</strong>
                                     {{ $munka->Munkabefejezes_Idopontja }}
                                 </li>
                             @endforeach
@@ -277,7 +285,7 @@
             <br>
             <div class="sign">
                 <div class="imageContainer">
-                    <h5>Szerel&#337; aláírása:</h5>
+                    <h5>Szerelo aláírása:</h5>
                     <img src="http://127.0.0.1:8000/alaIrasokSzerelok/{{ $imgPathSzerelo }}" alt="alairasSzerelo">
 
                 </div>

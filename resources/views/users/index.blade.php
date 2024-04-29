@@ -35,7 +35,7 @@
     <ul>
         @foreach ($users as $user)
             <li>
-                {{ $user->nev }} - {{ $user->ugyfel->Nev ?? 'Nincs' }}
+                {{ $user->nev }} - {{ $user->role}}
 
             </li>
             <a href="{{ route('users.show', ['user' => $user->User_ID]) }}" class="button">Megtekintés</a>

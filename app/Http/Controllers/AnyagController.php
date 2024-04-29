@@ -9,7 +9,7 @@ class AnyagController extends Controller
 {
     public function index()
     {
-        $anyagok = Anyag::paginate(1);
+        $anyagok = Anyag::paginate(10);
         return view('anyagok.index', compact('anyagok'));
     }
 
@@ -28,6 +28,9 @@ class AnyagController extends Controller
         $request->validate([
             'Nev' => 'required',
             'Mertekegyseg' => 'required',
+        ], [
+            'Nev.required' => 'A név megadása kötelező.',
+            'Mertekegyseg.required' => 'A mértékegység megadása kötelező.',
         ]);
 
         $anyag = Anyag::findOrFail($id);
@@ -56,7 +59,11 @@ class AnyagController extends Controller
         $request->validate([
             'Nev' => 'required',
             'Mertekegyseg' => 'required',
+        ], [
+            'Nev.required' => 'A név megadása kötelező.',
+            'Mertekegyseg.required' => 'A mértékegység megadása kötelező.',
         ]);
+
 
         $anyag = new Anyag();
         $anyag->Nev = $request->Nev;

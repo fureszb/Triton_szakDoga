@@ -14,11 +14,6 @@ class FelhasznaltAnyag extends Pivot
 
     use HasFactory;
 
-    public function munkanaplo()
-    {
-        return $this->belongsTo(Munkanaplo::class, 'Munka_ID');
-    }
-
     public function anyag()
     {
         return $this->belongsTo(Anyag::class, 'Anyag_ID');

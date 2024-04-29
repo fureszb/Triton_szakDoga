@@ -31,8 +31,6 @@ class UgyfelController extends Controller
             $query->where('Nev', 'like', "%$keyword%")
                 ->orWhere('Ugyfel_ID', 'like', "%$keyword%");
         }
-
-        $ugyfelek = Ugyfel::with('megrendelesek')->get();
         $ugyfel = $query->paginate(9);
 
         return view('ugyfel.index', compact('ugyfel'));
@@ -116,7 +114,6 @@ class UgyfelController extends Controller
         $ugyfel = Ugyfel::find($id);
         $varos = Varos::where('Varos_ID', $ugyfel->Varos_ID)->first();
         return view('ugyfel.show', compact('ugyfel', 'varos'));
-        //, 'megrendelesek'
     }
 
 
@@ -224,29 +221,10 @@ class UgyfelController extends Controller
     }
     public function megrendelesek()
     {
-        // Ellenőrizzük, hogy van-e bejelentkezett felhasználó
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'A hozzáféréshez be kell jelentkezni.');
-        }
 
-
-
-        // Lekérjük a bejelentkezett felhasználóhoz kapcsolódó ügyfél azonosítóját
         $ugyfelId = Auth::user()->ugyfel->Ugyfel_ID;
 
-        if (is_null($ugyfelId)) {
-            return view('ugyfel.megrendelesek')->with('info', 'Nincsenek megrendeléseid');
-        } else {
-            $megrendelesek = Megrendeles::where('Ugyfel_ID', $ugyfelId)->get();
-
-            // Opcionálisan, ha szeretnéd az ügyfél adatait is megjeleníteni
-            $ugyfel = Ugyfel::with('megrendelesek')->findOrFail($ugyfelId);
-
-            // Visszaadjuk a nézetet az adatokkal
-            return view('ugyfel.megrendelesek', compact('megrendelesek', 'ugyfel'));
-        }
-
-        // Lekérjük az ügyfélhez tartozó megrendeléseket
-
+        $megrendelesek = Megrendeles::where('Ugyfel_ID', $ugyfelId)->get();
+        return view('ugyfel.megrendelesek', compact('megrendelesek'));
     }
 }
