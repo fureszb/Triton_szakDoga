@@ -43,7 +43,7 @@
                         404                    </div>
 
                     <div class="ml-4 text-lg text-gray-500 tracking-wider">
-                        Nem található az oldal.</div>
+                        Nem található ez az oldal.</div>
 
 
                 </div>

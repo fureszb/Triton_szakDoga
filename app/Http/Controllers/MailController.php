@@ -47,11 +47,11 @@ class MailController extends Controller
         });
 
 
-        $folderPath = public_path('alaIrasokUgyfel');
+        /*$folderPath = public_path('alaIrasokUgyfel');
         $files = File::files($folderPath);
         foreach ($files as $file) {
             File::delete($file);
-        }
+        }*/
 
         $message = 'Az aláírás és az ügyfél sikeresen mentve lett és az email elküldve!';
 

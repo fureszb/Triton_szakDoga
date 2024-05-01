@@ -237,7 +237,7 @@
                         <ul class="list-group">
                             <li class="list-group-item"><strong>Ügyfél neve:</strong>
                                 {{ $megrendeles->ugyfel->Nev ?? '-' }}</li>
-                            <li class="list-group-item"><strong>Megrendelő neve:</strong>
+                            <li class="list-group-item"><strong>Megrendelo neve:</strong>
                                 {{ $megrendeles->Megrendeles_Nev }}
                             </li>
                             <li class="list-group-item"><strong>Címe:</strong> {{ $megrendeles->varos->Irny_szam }}

@@ -7,22 +7,38 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: auto;
 
         }
 
         .chart {
             flex: 1;
-
             max-width: 450px;
-
             height: 500px;
-
         }
 
         h4 {
             font-size: 14px;
             letter-spacing: 3px;
             color: #9e9e9e !important;
+        }
+
+        @media screen and (max-width: 1100px) {
+            .chart-container {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+
+            h4 {
+                padding-top: 10px;
+            }
+
+            .chart {
+                max-width: 400px;
+            }
+
+
+
         }
     </style>
 

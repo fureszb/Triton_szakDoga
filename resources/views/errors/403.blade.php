@@ -43,7 +43,7 @@
                         403                    </div>
 
                     <div class="ml-4 text-lg text-gray-500 tracking-wider">
-                        Nincs hozzá jogosultságod hogy elérd ezt az oldalt.</div>
+                        Nincs hozzá jogosultságod, hogy elérd ezt az oldalt.</div>
 
 
                 </div>
