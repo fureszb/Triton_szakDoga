@@ -98,7 +98,7 @@
                             class="badge">3</span></i></a>
             </header>
             <div class='dashboard-content'>
-                <div class='container'>
+                <div>
                     <div class='card'>
                         <!--<div class='card-header'>
                             <h1>Üdvözlünk {{ auth()->user()->nev }}!</h1>

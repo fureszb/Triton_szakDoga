@@ -7,12 +7,20 @@
     google.charts.setOnLoadCallback(drawCharts);
 
     function drawCharts() {
-        var columnData = google.visualization.arrayToDataTable([
+        var dataArray = [
             ['Város', 'Megrendelések száma'],
             @foreach ($statistics as $stat)
                 ['{{ $stat->Nev }}', {{ $stat->MegrendelesekSzama }}],
             @endforeach
-        ]);
+        ];
+
+
+        if (dataArray.length <= 1) {
+            document.getElementById('bar_chart').innerHTML = '<div class="statisztika" style="color: grey; text-align: center;">Nem áll rendelkezésre elég adat a város statisztika betöltéséhez</div>';
+            return;
+        }
+
+        var columnData = google.visualization.arrayToDataTable(dataArray);
 
         var columnOptions = {
             title: 'Megrendelések száma városonként',

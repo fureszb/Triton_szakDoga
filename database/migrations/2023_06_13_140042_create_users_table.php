@@ -25,9 +25,9 @@ return new class extends Migration
 
         DB::table('users')->insert([
             [
-                'nev' => 'Admin',
+                'nev' => 'Admin Elek',
                 'role' => 'Admin',
-                'email' =>'fureszb@gmail.com',
+                'email' =>'admin@gmail.com',
                 'password' => bcrypt('1122'),
                 'created_at' => now(),
                 'updated_at' => now()
@@ -35,15 +35,15 @@ return new class extends Migration
             [
                 'nev' => 'Üzletkőtő János',
                 'role' => 'Uzletkoto',
-                'email' =>'frsz.bence@gmail.com',
+                'email' =>'uzletkoto@gmail.com',
                 'password' => bcrypt('1122'),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'nev' => 'Ugyfel',
+                'nev' => 'Ügyfél Béla',
                 'role' => 'Ugyfel',
-                'email' =>'frsz.bence2@gmail.com',
+                'email' =>'ugyfel@gmail.com',
                 'password' => bcrypt('1122'),
                 'created_at' => now(),
                 'updated_at' => now()

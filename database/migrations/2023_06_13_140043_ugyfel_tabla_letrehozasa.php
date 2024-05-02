@@ -28,19 +28,22 @@ return new class extends Migration
             //$table->index('Ugyfel_ID');
         });
 
+      
+
         DB::table('ugyfel')->insert([
             [
                 'Ugyfel_ID' => '1',
                 'Varos_ID' => '1',
-                'Nev' => 'Gipsz Jakab',
-                'Email' => "valami@gmail.com",
+                'Nev' => 'Ügyfél Béla',
+                'Email' => "ugyfel@gmail.com",
                 'Telefonszam' => '06301234567',
-                'Szamlazasi_Nev' => 'Gipsz Jakab',
+                'Szamlazasi_Nev' => 'Ügyfél Béla',
                 'Szamlazasi_Cim' => "Kossuth utca, 12",
                 'created_at' => now(),
                 'updated_at' => now()
             ]
         ]);
+
     }
 
     public function down(): void

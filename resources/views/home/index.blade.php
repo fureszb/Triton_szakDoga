@@ -18,9 +18,20 @@
         }
 
         h4 {
-            font-size: 14px;
+            font-size: 0.9rem !important;
             letter-spacing: 3px;
             color: #9e9e9e !important;
+            text-transform: uppercase;
+            margin-top: 15px !important;
+            margin-bottom: 15px !important;
+        }
+
+        .statisztika {
+            margin: 40px;
+            font-size: 0.9rem !important;
+        }
+        .dashboard a{
+            text-decoration: none;
         }
 
         @media screen and (max-width: 1100px) {
@@ -40,6 +51,12 @@
 
 
         }
+
+        @media screen and (max-width: 700px) {
+            .statisztika {
+                margin: 10px;
+            }
+        }
     </style>
 
     <h1>Kezdőlap</h1>
@@ -48,6 +65,8 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    <h4>Útmutató lépései</h4>
+    @include('home.guide')
     @include('diagrammok.varosStatisztika')
     @include('diagrammok.szolgaltatasStatisztika')
 
