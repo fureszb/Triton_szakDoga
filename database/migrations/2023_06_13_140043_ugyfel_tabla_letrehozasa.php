@@ -28,12 +28,13 @@ return new class extends Migration
             //$table->index('Ugyfel_ID');
         });
 
-      
+
 
         DB::table('ugyfel')->insert([
             [
                 'Ugyfel_ID' => '1',
                 'Varos_ID' => '1',
+                'User_ID' => '3',
                 'Nev' => 'Ügyfél Béla',
                 'Email' => "ugyfel@gmail.com",
                 'Telefonszam' => '06301234567',
@@ -43,7 +44,6 @@ return new class extends Migration
                 'updated_at' => now()
             ]
         ]);
-
     }
 
     public function down(): void
