@@ -35,7 +35,7 @@
                                     <div class="timeline-icon"><i class="fa fa-address-card" aria-hidden="true"></i></div>
                                     <a href="{{ route('szerelok.create') }}"><div class="timeline-text">
                                         <h6>Szerelők felvétele </h6>
-                                        <p>Elöször vegyél fel szerelőket, akik elvégzik a rájuk bízott munkákat!</p>
+                                        <p>Előszőr vegyél fel szerelőket, akik elvégzik a rájuk bízott munkákat!</p>
                                     </div></a>
                                 </div>
                             </div>
@@ -54,7 +54,7 @@
                                     <a href="{{ route('users.create') }}"><div class="timeline-text">
                                         <h6>Profilok felvétele</h6>
                                         <p>Ha szükséges, vigyél fel további admin vagy üzletkőtő profilokat!</p>
-                                    </div>
+                                    </div></a>
                                 </div>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
 
                     <div class="single-timeline-area">
                         <div class="timeline-date wow fadeInLeft" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
-                            <p>Üzletkötö</p>
+                            <p>Üzletkőtő</p>
                         </div>
                         <div class="row">
                             <div class="col-12 col-md-6 col-lg-4">

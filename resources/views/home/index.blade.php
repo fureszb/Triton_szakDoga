@@ -18,7 +18,7 @@
         }
 
         h4 {
-            font-size: 0.9rem !important;
+            font-size: 0.8rem !important;
             letter-spacing: 3px;
             color: #9e9e9e !important;
             text-transform: uppercase;

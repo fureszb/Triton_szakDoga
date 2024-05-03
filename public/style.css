@@ -137,6 +137,7 @@ h1 {
     border: 1px solid #ff000087;
     border-radius: 19px;
     margin-top: 0;
+    opacity: 0.9;
 }
 
 ul {
