@@ -1,0 +1,498 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Teszteles",
+    "collectionId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+    "dateExported": "2024-05-06T08:15:53.835Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "ea60ce96-0379-47ee-a3ca-7837b4e7c6ee",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "BejelentkezesJo",
+            "url": "login",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-04-30T09:29:56.201Z",
+            "modified": "2024-05-06T08:09:35.848Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "email",
+                    "value": "fureszb@gmail.com",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "password",
+                    "value": "1122",
+                    "isDisabled": true,
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"1122\"\n  }\n",
+                "form": []
+            }
+        },
+        {
+            "_id": "84ec5482-7207-409b-8217-be36b2f134c7",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "BejelentkezesRossz",
+            "url": "login",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-04-30T09:31:25.598Z",
+            "modified": "2024-05-06T07:23:26.900Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "email",
+                    "value": "helytelen@gmail.com",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "password",
+                    "value": "1122",
+                    "isDisabled": true,
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"email\": \"helytelen@gmail.com\",\n    \"password\": \"3344\"\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "cfaf282c-0999-451e-b7b1-441f11f96b37",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "UjugyfelJo",
+            "url": "ugyfel",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-04-30T12:27:30.668Z",
+            "modified": "2024-05-06T07:34:19.591Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"Ugyfel_ID\": \"3010\",\n  \"nev\": \"Teszt Elek\",\n  \"email\": \"tesztelek@example.com\",\n  \"telefon\": \"+36123456789\",\n  \"szamnev\": \"Teszt Elek\",\n  \"szamcim\": \"1015 Budapest, Teszt utca 1.\",\n  \"adoszam\": \"\",\n  \"Varos_ID\": \"1\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "8a78cc28-23f8-48ef-906e-efc6be853bf5",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "UjUgyfelRossz",
+            "url": "ugyfel",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2024-05-06T07:24:35.021Z",
+            "modified": "2024-05-06T07:34:28.197Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"Ugyfel_ID\": \"3010\",\n  \"nev\": \"Teszt Elek\",\n  \"email\": \"tesztelek@example.com\",\n  \"telefon\": \"+36123456789\",\n  \"szamnev\": \"\",\n  \"szamcim\": \"1015 Budapest, Teszt utca 1.\",\n  \"adoszam\": \"\",\n  \"Varos_ID\": \"1\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "47e26f04-7bbb-4dd1-b5a4-54fed146ae30",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "ModosítUgyfelJo",
+            "url": "ugyfel/1",
+            "method": "PUT",
+            "sortNum": 45000,
+            "created": "2024-05-06T07:31:18.396Z",
+            "modified": "2024-05-06T07:33:58.952Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"nev\": \"Teszt Elek\",\n  \"email\": \"tesztelek@example.com\",\n  \"telefon\": \"+36123456789\",\n  \"szamnev\": \"Kitalat utca, 6\",\n  \"szamcim\": \"1015 Budapest, Teszt utca 1.\",\n  \"adoszam\": \"\",\n  \"Varos_ID\": \"1\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "b6db8e08-3a30-4dcb-aca3-2cb1c8c107d5",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "UjAnyagJo",
+            "url": "anyagok",
+            "method": "POST",
+            "sortNum": 45625,
+            "created": "2024-05-06T07:52:11.017Z",
+            "modified": "2024-05-06T08:11:31.901Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"Nev\": \"Teszt anyag\",\n  \"Mertekegyseg\": \"db\"\n}\n",
+                "form": []
+            },
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "578c0789-7225-4bf9-b7ed-a3b4d7b30b06",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "ModosítUgyfelRossz",
+            "url": "ugyfel/1",
+            "method": "PUT",
+            "sortNum": 50000,
+            "created": "2024-05-06T07:28:06.020Z",
+            "modified": "2024-05-06T07:33:55.396Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"Ugyfel_ID\": \"1\",\n  \"nev\": \"Teszt Elek\",\n  \"email\": \"tesztelek@example.com\",\n  \"telefon\": \"+36123456789\",\n  \"szamnev\": \"\",\n  \"szamcim\": \"1015 Budapest, Teszt utca 1.\",\n  \"adoszam\": \"\",\n  \"Varos_ID\": \"1\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "e3b4dfc9-fa1e-4e40-8c58-6778870bb949",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "TorolMegrendeles",
+            "url": "megrendeles/1",
+            "method": "DELETE",
+            "sortNum": 51250,
+            "created": "2024-05-06T07:47:32.046Z",
+            "modified": "2024-05-06T07:47:54.601Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "74f0ad24-cd2e-45eb-a8e3-5392447e6d73",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "ModositMegerendelesJo",
+            "url": "megrendeles/1",
+            "method": "PUT",
+            "sortNum": 52500,
+            "created": "2024-05-06T07:43:22.178Z",
+            "modified": "2024-05-06T07:46:12.851Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n  \"Megrendeles_Nev\": \"Teszt megrendelés\",\r\n  \"Munka_ID\": 1,\r\n  \"Utca_Hazszam\": \"Teszt utca 123\",\r\n  \"Varos_ID\": 1,\r\n  \"Ugyfel_ID\": 1,\r\n  \"Szolgaltatas_ID\": 1,\r\n  \"Szerelo_ID\": 1,\r\n  \"Leiras\": \"Teszt leírás\",\r\n  \"Munkakezdes_Idopontja\": \"2024-05-06 10:00:00\",\r\n  \"Munkabefejezes_Idopontja\": \"2024-05-06 15:00:00\",\r\n  \"Alairt_e\": true,\r\n  \"Pdf_EleresiUt\": \"teszt.pdf\",\r\n  \"Anyag_ID\": [1, 2],\r\n  \"Mennyiseg\": [3, 4]\r\n}\r\n",
+                "form": []
+            },
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "44d8ffd8-40c6-46cf-8c1d-b416e891a6de",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "UjMegerendelesJo",
+            "url": "megrendeles",
+            "method": "POST",
+            "sortNum": 55000,
+            "created": "2024-05-06T07:40:58.809Z",
+            "modified": "2024-05-06T07:41:40.667Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n  \"Megrendeles_Nev\": \"Teszt megrendelés\",\r\n  \"Varos_ID\": 1,\r\n  \"Utca_Hazszam\": \"Teszt utca 123\",\r\n  \"Ugyfel_ID\": 1,\r\n  \"Szolgaltatas_ID\": 1,\r\n  \"Szerelo_ID\": 1,\r\n  \"Leiras\": \"Teszt leírás\",\r\n  \"Munkakezdes_Idopontja\": \"2024-05-06 10:00:00\",\r\n  \"Munkabefejezes_Idopontja\": \"2024-05-06 15:00:00\",\r\n  \"Anyag_ID\": [1, 2],\r\n  \"Mennyiseg\": [3, 4]\r\n}\r\n",
+                "form": []
+            },
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "bd885bcf-6482-4179-a640-8be29f6b6746",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "UjAnyagRossz",
+            "url": "anyagok",
+            "method": "POST",
+            "sortNum": 55625,
+            "created": "2024-05-06T08:07:31.125Z",
+            "modified": "2024-05-06T08:11:35.186Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"Nev\": \"\",\n  \"Mertekegyseg\": \"db\"\n}\n",
+                "form": []
+            },
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "f3255a72-6f01-4c96-aa05-3f0146baca37",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "TorolAnyag",
+            "url": "anyagok/1",
+            "method": "DELETE",
+            "sortNum": 57812.5,
+            "created": "2024-05-06T08:14:47.871Z",
+            "modified": "2024-05-06T08:15:15.126Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "05034b70-7646-4edf-95bb-28ac943a8bc1",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "ModositMegerendelesRossz",
+            "url": "megrendeles/1",
+            "method": "PUT",
+            "sortNum": 62500,
+            "created": "2024-05-06T07:46:24.888Z",
+            "modified": "2024-05-06T07:47:02.074Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"Megrendeles_Nev\": \"\",\n  \"Munka_ID\": 1,\n  \"Utca_Hazszam\": \"Teszt utca 123\",\n  \"Varos_ID\": 1,\n  \"Ugyfel_ID\": 1,\n  \"Szolgaltatas_ID\": 1,\n  \"Szerelo_ID\": 1,\n  \"Leiras\": \"Teszt leírás\",\n  \"Munkakezdes_Idopontja\": \"2024-05-06 10:00:00\",\n  \"Munkabefejezes_Idopontja\": \"2024-05-06 10:00:00\",\n  \"Alairt_e\": true,\n  \"Pdf_EleresiUt\": \"teszt.pdf\",\n  \"Anyag_ID\": [1, 2],\n  \"Mennyiseg\": [3, 4]\n}\n",
+                "form": []
+            },
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "57605785-a8d6-4d11-a534-aa37d9aa415e",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "UjMegerendelesRossz",
+            "url": "megrendeles",
+            "method": "POST",
+            "sortNum": 65000,
+            "created": "2024-05-06T07:41:46.235Z",
+            "modified": "2024-05-06T07:47:12.486Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"Megrendeles_Nev\": \"\",\n  \"Varos_ID\": 1,\n  \"Utca_Hazszam\": \"Teszt utca 123\",\n  \"Ugyfel_ID\": 1,\n  \"Szolgaltatas_ID\": 1,\n  \"Szerelo_ID\": 1,\n  \"Leiras\": \"Teszt leírás\",\n  \"Munkakezdes_Idopontja\": \"2024-05-06 10:00:00\",\n  \"Munkabefejezes_Idopontja\": \"2024-05-06 10:00:00\",\n  \"Anyag_ID\": [1, 2],\n  \"Mennyiseg\": [3, 4]\n}\n",
+                "form": []
+            },
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "58e776fe-01c5-474b-ad34-d182e3c265cc",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "ModositAnyagJo",
+            "url": "anyagok/1",
+            "method": "PUT",
+            "sortNum": 65625,
+            "created": "2024-05-06T08:08:07.756Z",
+            "modified": "2024-05-06T08:11:40.482Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"Nev\": \"Teszt\",\n  \"Mertekegyseg\": \"db\"\n}\n",
+                "form": []
+            },
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "178e2129-6257-4353-bebf-05c27c10a20a",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "TorolUgyfel",
+            "url": "ugyfel/1",
+            "method": "DELETE",
+            "sortNum": 70000,
+            "created": "2024-05-06T07:33:12.515Z",
+            "modified": "2024-05-06T07:33:35.508Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        },
+        {
+            "_id": "a5e729cf-894d-48dc-9237-18a195db1cbb",
+            "colId": "05cca0a9-d8be-46f8-9425-4b6fbd2d0c7b",
+            "containerId": "",
+            "name": "ModositAnyagRossz",
+            "url": "anyagok/1",
+            "method": "PUT",
+            "sortNum": 75625,
+            "created": "2024-05-06T08:09:57.253Z",
+            "modified": "2024-05-06T08:11:44.205Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"Nev\": \"\",\n  \"Mertekegyseg\": \"db\"\n}\n",
+                "form": []
+            },
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "admin@gmail.com",
+                    "password": "1122"
+                }
+            }
+        }
+    ],
+    "settings": {
+        "options": {
+            "baseUrl": "http://127.0.0.1:8000/"
+        }
+    },
+    "ref": "3q-yjx5xTx2L6ByRdlsupcMxAAXOei_aIdkG91a6okFIwMcBfxskapcjyG2Xitew5gvRRIZXb4qFa2Y5Ok2puQ"
+}
