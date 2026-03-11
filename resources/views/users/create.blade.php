@@ -1,10 +1,17 @@
 @extends('ujlayout')
 
 @section('content')
-@include('breadcrumbs')
+    @include('breadcrumbs')
 
-    <h1>Új Felhasználó</h1>
-    <hr class="showHr"></hr>
+    <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
+
+    <div class="page-header">
+        <h1><i class="fas fa-user-plus"></i> Új felhasználó</h1>
+        <a href="{{ route('users.index') }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Vissza
+        </a>
+    </div>
+
     @if ($errors->any())
         <div class="alert alert-warning">
             @foreach ($errors->all() as $error)
@@ -19,17 +26,14 @@
             <label for="nev">Név</label>
             <input type="text" name="nev" id="nev" value="{{ old('nev') }}" required>
         </fieldset>
-
         <fieldset>
             <label for="email">Email</label>
             <input type="email" name="Email" id="email" value="{{ old('Email') }}" required>
         </fieldset>
-
         <fieldset>
             <label for="password">Jelszó</label>
             <input type="password" name="Password" id="password" required>
         </fieldset>
-
         <fieldset>
             <label for="role">Szerepkör</label>
             <select name="Role" id="role" required>
@@ -39,7 +43,6 @@
                 <option value="Uzletkoto">Üzletkötő</option>
             </select>
         </fieldset>
-
         <fieldset>
             <label for="Ugyfel_ID">Ügyfél (opcionális)</label>
             <select name="Ugyfel_ID" id="Ugyfel_ID">
@@ -50,7 +53,11 @@
             </select>
         </fieldset>
 
-        <button type="submit" class="btn btn-primary">Mentés</button>
+        <div style="width:100%;">
+            <button type="submit" class="btn-save">
+                <i class="fas fa-save"></i> Mentés
+            </button>
+        </div>
     </form>
 
     <script>
@@ -61,8 +68,8 @@
 
             function toggleRequired(isRequired) {
                 if (isRequired) {
-                    nevInput.setAttribute('required');
-                    emailInput.setAttribute('required');
+                    nevInput.setAttribute('required', '');
+                    emailInput.setAttribute('required', '');
                 } else {
                     nevInput.removeAttribute('required');
                     emailInput.removeAttribute('required');
@@ -71,19 +78,16 @@
 
             ugyfelSelect.addEventListener('change', function() {
                 const selected = this.value;
-
                 if (selected) {
                     nevInput.parentElement.style.display = 'none';
                     emailInput.parentElement.style.display = 'none';
                     toggleRequired(false);
                 } else {
-                    nevInput.parentElement.style.display = 'block';
-                    emailInput.parentElement.style.display = 'block';
+                    nevInput.parentElement.style.display = 'flex';
+                    emailInput.parentElement.style.display = 'flex';
                     toggleRequired(true);
                 }
             });
         });
     </script>
-
-
 @endsection

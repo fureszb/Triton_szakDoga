@@ -298,4 +298,33 @@ class MegrendelesController extends Controller
             return response()->json(['error' => 'A fájl nem található.'], 404);
         }
     }
+
+    public function viewPdf(Request $request, $ugyfelId, $ugyfelNev, $szolgaltatasId, $Megrendeles_ID)
+    {
+        $megrendeles = Megrendeles::with(['ugyfel', 'munkak'])
+            ->whereHas('ugyfel', function ($query) use ($ugyfelId, $ugyfelNev) {
+                $query->where('Ugyfel_ID', $ugyfelId)
+                    ->where('Nev', $ugyfelNev);
+            })
+            ->whereHas('munkak', function ($query) use ($szolgaltatasId) {
+                $query->where('Szolgaltatas_ID', $szolgaltatasId);
+            })
+            ->first();
+
+        if (!$megrendeles) {
+            return response()->json(['error' => 'A dokumentum nem található.'], 404);
+        }
+
+        $pdfFileName = $ugyfelId . '_' . $ugyfelNev . '_' . $szolgaltatasId . '_' . $Megrendeles_ID . '.pdf';
+        $pdfFilePath = storage_path('app/public/' . $pdfFileName);
+
+        if (File::exists($pdfFilePath)) {
+            return response()->file($pdfFilePath, [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $pdfFileName . '"',
+            ]);
+        } else {
+            return response()->json(['error' => 'A fájl nem található.'], 404);
+        }
+    }
 }

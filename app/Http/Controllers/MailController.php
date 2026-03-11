@@ -9,10 +9,20 @@ use PDF;
 use Mail;
 use Illuminate\Support\Facades\Response;
 use App\Models\Megrendeles;
+use App\Models\Cegadat;
 use Illuminate\Support\Facades\Session;
 
 class MailController extends Controller
 {
+    public function previewPdf()
+    {
+        $megrendeles = Megrendeles::with(['ugyfel', 'ugyfel.varos', 'munkak', 'munkak.szerelo', 'munkak.szolgaltatas', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag'])->latest()->first();
+        $szereloData = Session::get('szereloData') ?? ['Szerelo_ID' => '', 'Nev' => 'Szerelo', 'Szolgaltatas_ID' => ''];
+        $imgPathSzerelo = $szereloData['Szerelo_ID'] . '_' . $szereloData['Nev'] . '.png';
+        $cegadat = Cegadat::get();
+        return view('mail', compact('megrendeles', 'imgPathSzerelo', 'cegadat'));
+    }
+
     public function sendMailWithPdf()
     {
         $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag', 'munkak'])->latest()->first();
@@ -22,13 +32,21 @@ class MailController extends Controller
         $imgPath =  $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '.png';
 
 
+        $cegadat = Cegadat::get();
+
         $data["imgPathSzerelo"] = $imgPathSzerelo;
         $data["email"] = "frsz.bence@gmail.com";
         $data["title"] = "Szerződéskötés";
         $data["megrendeles"] = $megrendeles;
+        $data["cegadat"] = $cegadat;
 
 
-        $pdf = PDF::loadView('mail', $data)->setOptions(['defaultFont' => 'sans-serif', 'encoding' => 'UTF-8']);
+        $pdf = PDF::loadView('mail', $data)->setOptions([
+            'defaultFont'         => 'DejaVu Sans',
+            'isRemoteEnabled'     => true,
+            'isHtml5ParserEnabled'=> true,
+            'chroot'              => public_path(),
+        ]);
 
 
         $pdfFileName = $megrendeles->ugyfel->Ugyfel_ID . '_' . $megrendeles->ugyfel->Nev . '_' . $szereloData['Szolgaltatas_ID'] . '_' . $megrendeles->Megrendeles_ID . '.pdf';

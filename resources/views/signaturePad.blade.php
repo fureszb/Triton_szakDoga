@@ -1,37 +1,29 @@
-<!doctype html>
-<html lang="hu">
-<head>
-  <meta charset="utf-8">
-  <title>Triton Security</title>
-  <link rel="shortcut icon" href="{{asset('logo.png')}}" type="image/x-icon">
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+<div style="width:100%; margin: 8px 0 4px;">
+    <label style="font-size:12px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:10px;">
+        Ügyfél aláírása
+    </label>
 
-  <link rel="stylesheet" href="../css/signature-pad.css">
-</head>
-<body onselectstart="return false">
-
-  <div id="signature-pad" class="signature-pad">
-    <div class="signature-pad--body">
-      <canvas></canvas>
-    </div>
-    <div class="signature-pad--footer">
-      <div class="signature-pad--actions">
-        <div class="column">
-          <button type="button" class="button clear" data-action="clear">Törlés</button>
-          <button type="button" class="button undo" data-action="undo">Visszavonás</button>
-
+    <div id="signature-pad" class="signature-pad">
+        <div class="signature-pad--body">
+            <canvas></canvas>
         </div>
-        <!--<div class="column">
-          <button type="button" class="button save">Mentés</button>
-        </div>-->
-      </div>
+        <div class="signature-pad--footer">
+            <div class="signature-pad--actions">
+                <div class="column">
+                    <button type="button" class="button clear" data-action="clear">
+                        <i class="fas fa-trash-alt"></i> Törlés
+                    </button>
+                    <button type="button" class="button undo" data-action="undo">
+                        <i class="fas fa-undo"></i> Visszavonás
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <script src="../js/signature_pad.umd.js"></script>
-  <script src="../js/app.js"></script>
-</body>
-</html>
+</div>
+
+<link rel="stylesheet" href="{{ asset('css/signature-pad.css') }}">
+<script src="{{ asset('js/signature_pad.umd.js') }}"></script>
+<script src="{{ asset('js/app.js') }}"></script>

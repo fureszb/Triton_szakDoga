@@ -9,6 +9,12 @@ Breadcrumbs::for('home.index', function (BreadcrumbTrail $trail) {
     $trail->push('Kezdőlap', route('home.index'));
 });
 
+// Home > Cégadatok
+Breadcrumbs::for('cegadatok.edit', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Cégadatok', route('cegadatok.edit'));
+});
+
 // Home > Users
 Breadcrumbs::for('users.index', function (BreadcrumbTrail $trail) {
     $trail->parent('home.index');

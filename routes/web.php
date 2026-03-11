@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SzereloController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CegadatController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -64,6 +65,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/megrendeles/{megrendeles}/edit', [MegrendelesController::class, 'edit'])->name('megrendeles.edit');
 
         Route::get('/send-mail', [MailController::class, 'sendMailWithPdf']);
+        Route::get('/preview-pdf', [MailController::class, 'previewPdf']);
         Route::post('/save-image', [SignaturePadController::class, 'saveImage']);
         Route::get('/signaturepad', [SignaturePadController::class, 'index'])->name('signaturepad');
 
@@ -84,6 +86,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('anyagok', AnyagController::class);
         Route::resource('szerelok', SzereloController::class);
         Route::post('/save-image2', [SzereloController::class, 'saveImage'])->name('save-image2');
+
+        Route::get('/cegadatok', [CegadatController::class, 'edit'])->name('cegadatok.edit');
+        Route::put('/cegadatok', [CegadatController::class, 'update'])->name('cegadatok.update');
     });
     Route::middleware('can:access-uzletkoto')->group(function () {
     });
@@ -94,6 +99,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/szolgaltatas-szerelok/{szolgaltatasId}', [MegrendelesController::class, 'getSzerelokBySzolgaltatas']);
     Route::get('/download-pdf/{ugyfelId}_{ugyfelNev}_{szolgaltatasId}_{Megrendeles_ID}', [MegrendelesController::class, 'downloadPdf']);
+    Route::get('/view-pdf/{ugyfelId}_{ugyfelNev}_{szolgaltatasId}_{Megrendeles_ID}', [MegrendelesController::class, 'viewPdf']);
 });
 
 require __DIR__ . '/auth.php';

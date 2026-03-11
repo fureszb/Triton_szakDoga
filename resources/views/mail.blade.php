@@ -1,323 +1,413 @@
-<?php header('Content-Type: text/html; charset=utf-8'); ?>
-
 <!DOCTYPE html>
 <html lang="hu">
-
 <head>
     <meta charset="UTF-8">
-
-    <title>Triton Security</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" href="{{ asset('logo.png') }}" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Triton Security – Szerződés</title>
     <style>
-        * {
+        /* DejaVu Sans – teljes UTF-8/Unicode támogatás dompdf-ben */
+        body {
+            font-family: 'DejaVu Sans', sans-serif;
+            font-size: 9px;
+            color: #1e293b;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            background: #ffffff;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .fa {
-            color: white;
-            padding: 5px;
-            font-size: 20px;
-            width: 34px;
-            text-decoration: none;
-            margin: 5px 2px;
-            border-radius: 50%;
-            border: 1.5px solid white;
-        }
+        /* ── Fejléc ───────────────────────────────── */
+        .header { background: #0f172a; padding: 14px 24px; width: 100%; }
+        .header-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .header-logo { width: 58px; vertical-align: middle; }
+        .header-brand { width: 56%; vertical-align: middle; padding-left: 10px; overflow: hidden; }
+        .brand-name  { font-size: 15px; font-weight: bold; color: #ffffff; letter-spacing: 2px; }
+        .brand-sub   { font-size: 7px; color: #94a3b8; letter-spacing: 2px; margin-top: 1px; }
+        .brand-info  { font-size: 7.5px; color: #64748b; line-height: 1.7; margin-top: 4px; word-break: break-word; }
+        .header-doc  { width: 40%; vertical-align: middle; text-align: right; padding-left: 6px; word-break: break-word; overflow-wrap: break-word; }
+        .doc-title-big { font-size: 18px; font-weight: bold; color: #ed1b24; letter-spacing: 4px; }
+        .doc-meta { font-size: 7.5px; color: #94a3b8; line-height: 1.8; margin-top: 3px; word-break: break-word; }
 
-        body {
-            color: black;
-            font-family: sans-serif;
-            background-color: #f8f8f9;
-        }
+        /* ── Piros csík ──────────────────────────── */
+        .stripe { background: #ed1b24; height: 3px; font-size: 0; line-height: 0; }
 
-        main {
-            background-color: white;
-
-            margin: auto;
-            max-width: 640px;
-        }
-
-        .menu {
-            display: grid;
-            grid-template-columns: 30% 70%;
-        }
-
-        nav hr {
-            background-color: #ed1b24;
-            height: 4px;
-            border: 0;
-        }
-
-        .felirat p {
-            direction: ltr;
-            font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 4px;
-            line-height: 120%;
+        /* ── Dokumentum cím ──────────────────────── */
+        .doc-heading {
             text-align: center;
-            margin: 8px;
+            border-bottom: 1.5px solid #ed1b24;
+            padding: 12px 0 8px;
+            margin-bottom: 4px;
+        }
+        .doc-heading-main {
+            font-size: 14px; font-weight: bold; color: #0f172a;
+            letter-spacing: 5px; text-transform: uppercase;
+        }
+        .doc-heading-sub {
+            font-size: 7.5px; color: #64748b; margin-top: 4px; letter-spacing: 1px;
         }
 
-        .logo img {
-            height: auto;
-            display: block;
-            border: 0;
-            max-width: 152px;
-            width: 100%;
-            margin: 5px;
-            margin-top: 0;
+        /* ── Tartalom margó ──────────────────────── */
+        .content { padding: 12px 24px; }
+
+        /* ── Szekció ─────────────────────────────── */
+        .section { margin-bottom: 12px; page-break-inside: avoid; }
+        .section-label {
+            font-size: 7.5px; font-weight: bold; color: #64748b;
+            text-transform: uppercase; letter-spacing: 2px;
+            border-bottom: 1.5px solid #ed1b24;
+            padding-bottom: 3px; margin-bottom: 7px;
         }
 
-        nav h1 {
-            color: #000000;
-            font-size: 42px;
-            font-weight: bold;
-            font-family: Tahoma, Verdana, Segoe, sans-serif;
-            padding-left: 30px;
-            padding-top: 55px;
+        /* ── Felek táblázat ──────────────────────── */
+        .parties { width: 100%; border-collapse: collapse; }
+        .parties td { width: 50%; vertical-align: top; }
+        .parties td.left { padding-right: 6px; }
+        .parties td.right { padding-left: 6px; }
+
+        .party-box { border: 1px solid #e2e8f0; border-radius: 4px; overflow: hidden; }
+        .party-head {
+            background: #1e293b; color: #ffffff; padding: 5px 10px;
+            font-size: 8px; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase;
+        }
+        .party-body { padding: 7px 10px; background: #f8fafc; }
+        .pr { margin-bottom: 4px; }
+        .pl { font-size: 7.5px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+        .pv { font-size: 9.5px; color: #1e293b; font-weight: 500; word-break: break-word; }
+
+        /* ── Info rács ───────────────────────────── */
+        .info { width: 100%; border-collapse: collapse; }
+        .info td {
+            padding: 6px 8px; vertical-align: top;
+            border: 1px solid #f1f5f9; font-size: 9px;
+            word-break: break-word; word-wrap: break-word;
+        }
+        .info tr:nth-child(odd) td { background: #f8fafc; }
+        .lbl { width: 22%; font-size: 7.5px; color: #64748b; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .val { width: 28%; color: #1e293b; }
+
+        /* ── Anyag táblázat ──────────────────────── */
+        .mat { width: 100%; border-collapse: collapse; }
+        .mat th {
+            background: #1e293b; color: #fff;
+            padding: 6px 10px; font-size: 7.5px;
+            text-transform: uppercase; letter-spacing: 1px; text-align: left;
+        }
+        .mat td { padding: 6px 10px; border-bottom: 1px solid #f1f5f9; font-size: 9px; color: #1e293b; }
+        .mat tr:nth-child(even) td { background: #f8fafc; }
+
+        /* ── Státusz ─────────────────────────────── */
+        .badge { padding: 2px 8px; border-radius: 9px; font-size: 7.5px; font-weight: bold; }
+        .b-active { background: #d1fae5; color: #065f46; }
+        .b-done   { background: #dbeafe; color: #1e40af; }
+
+        /* ── Jogi doboz ──────────────────────────── */
+        .legal {
+            border: 1px solid #e2e8f0; border-left: 3px solid #ed1b24;
+            padding: 9px 12px; background: #fafafa;
+            font-size: 8.5px; line-height: 1.75; color: #475569;
         }
 
-        .social-media {
-            display: grid;
-            grid-template-columns: repeat(4, 55px);
-            padding-bottom: 10px;
-            padding-left: 10px;
-            padding-right: 10px;
-            padding-top: 5px;
-            text-align: center;
-            justify-content: center;
-            justify-items: center;
+        /* ── Aláírás ─────────────────────────────── */
+        .sign-table { width: 100%; border-collapse: collapse; }
+        .sign-table td { width: 50%; vertical-align: bottom; text-align: center; padding: 6px 24px; }
+        .sign-lbl { font-size: 7.5px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .sign-box {
+            width: 200px; height: 88px;
+            border: 1.5px solid #cbd5e1; border-radius: 5px;
+            background: #fff; padding: 3px; display: inline-block;
         }
+        .sign-box img { max-width: 194px; max-height: 82px; }
+        .sign-name { border-top: 1.5px solid #334155; margin-top: 6px; padding-top: 4px; font-size: 9px; font-weight: bold; color: #1e293b; }
+        .sign-date { font-size: 7.5px; color: #64748b; margin-top: 2px; }
 
-        .contact {
-            padding-bottom: 10px;
-            padding-left: 40px;
-            padding-right: 40px;
-            padding-top: 15px;
-        }
-
-        .contact p {
-            font-size: 11px;
-            font-style: italic;
-            line-height: 1.9;
-            text-align: left;
-        }
-
-        footer hr {
-            background-color: white;
-            height: 0.5px;
-            border: 0;
-            margin: 10px;
-        }
-
-        footer {
-            background-color: #ed1b24;
-            color: white;
-            padding-bottom: 30px;
-            padding-top: 20px;
-        }
-
-        .coppyright {
-            text-align: center;
-            font-size: 12px;
-            letter-spacing: 3px;
-            padding-top: 30px;
-        }
-
-        section {
-            margin: 50px;
-            padding: 10px;
-
-        }
-
-        .row h3 {
-            padding-bottom: 1px;
-        }
-
-        .row hr {
-            margin-bottom: 20px;
-            background-color: #ed1b24;
-            height: 1.5px;
-            border: 0;
-            border-radius: 100px;
-        }
-
-        .hr1 {
-            width: 190px;
-            margin-left: 5px;
-
-        }
-
-        .hr2 {
-            width: 155px;
-            margin-left: 1px;
-
-        }
-
-        .imageContainer {
-            text-align: center;
-        }
-
-        .imageContainer img {
-            margin-top: 10px;
-            width: 75%;
-            border: 1px solid;
-            border-radius: 10px;
-        }
-
-        .sign {
-            margin-top: 30px;
-            margin-bottom: 50px;
-            gap: 100px;
-            display: grid;
-            grid-template-columns: auto auto;
-        }
-
-        .col-md-6 {
-            padding-top: 40px;
+        /* ── Lábléc ──────────────────────────────── */
+        .footer { background: #0f172a; padding: 12px 24px; font-size: 7.5px; color: #64748b; line-height: 1.7; }
+        .footer-row { width: 100%; border-collapse: collapse; }
+        .footer-row td { vertical-align: top; font-size: 7.5px; color: #64748b; }
+        .footer-copy {
+            text-align: center; margin-top: 8px;
+            font-size: 7px; color: #475569; letter-spacing: 2px; text-transform: uppercase;
+            border-top: 1px solid #1e293b; padding-top: 7px;
         }
     </style>
 </head>
-
 <body>
-    <?php header('Content-Type: text/html; charset=UTF-8'); ?>
-    <main>
-        <nav>
-            <div class="felirat">
-                <hr>
-                <p>Triton Security Kft</p>
-            </div>
-            <div class="menu">
 
-                <div class="logo">
-                    <img src="{{ asset('logo.png') }}" alt="logo" width="200">
+{{-- ══════════════════════════════════════════════════════
+     FEJLÉC
+     ══════════════════════════════════════════════════════ --}}
+<div class="header">
+    @php
+        $logoPath = public_path('logo.png');
+        $logoB64  = file_exists($logoPath)
+            ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath))
+            : null;
+    @endphp
+    <table class="header-table">
+        <tr>
+            <td class="header-logo">
+                @if($logoB64)
+                    <img src="{{ $logoB64 }}" width="48" height="48"
+                         alt="logo" style="border-radius:6px; display:block;">
+                @endif
+            </td>
+            <td class="header-brand">
+                <div class="brand-name">{{ $cegadat->nev }}</div>
+                <div class="brand-sub">Biztonságtechnikai vállalkozás</div>
+                <div class="brand-info">
+                    Székhely: {{ $cegadat->szekhelycim }}<br>
+                    Adószám: {{ $cegadat->adoszam }} &nbsp;|&nbsp; Cégjegyzékszám: {{ $cegadat->cegjegyzekszam }}<br>
+                    Tel.: {{ $cegadat->telefon }} &nbsp;|&nbsp; {{ $cegadat->email }}
                 </div>
-                <h1>Kontraktus</h1>
+            </td>
+            <td class="header-doc">
+                <div class="doc-title-big">SZERZŐDÉS</div>
+                <div class="doc-meta">
+                    Sz. szám:&nbsp;{{ str_pad($megrendeles->Megrendeles_ID, 6, '0', STR_PAD_LEFT) }}/{{ now()->format('Y') }}<br>
+                    Kelt:&nbsp;{{ now()->format('Y. m. d.') }}<br>
+                    Helyszín:&nbsp;{{ ($megrendeles->varos->Irny_szam ?? '') . ' ' . ($megrendeles->varos->Nev ?? '') }}
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="stripe">&nbsp;</div>
 
-            </div>
+{{-- ══════════════════════════════════════════════════════
+     TARTALOM
+     ══════════════════════════════════════════════════════ --}}
+<div class="content">
 
+    {{-- Dokumentum cím --}}
+    <div class="doc-heading">
+        <div class="doc-heading-main">Vállalkozási szerződés – Munkalap</div>
+        <div class="doc-heading-sub">
+            Okosotthon kiépítési és biztonságtechnikai rendszer telepítési megrendelési dokumentum
+        </div>
+    </div>
 
-        </nav>
-        <section>
-            <div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h3>Ügyfél információk</h3>
-                        <hr class="hr1">
-                        <ul class="list-group">
-                            <li class="list-group-item"><strong>UgyfelID:</strong> {{ $megrendeles->ugyfel->Ugyfel_ID }}
-                            </li>
-                            <li class="list-group-item"><strong>Név:</strong> {{ $megrendeles->ugyfel->Nev }}</li>
-                            <li class="list-group-item"><strong>Email:</strong> {{ $megrendeles->ugyfel->Email }}</li>
-                            <li class="list-group-item"><strong>Telefonszám:</strong>
-                                {{ $megrendeles->ugyfel->Telefonszam }}</li>
-                            <li class="list-group-item"><strong>Számlázási név:</strong>
-                                {{ $megrendeles->ugyfel->Szamlazasi_Nev }}</li>
-                            <li class="list-group-item"><strong>Számlázási cím:</strong>
-                                {{ $megrendeles->ugyfel->varos->Irny_szam }} {{ $megrendeles->ugyfel->varos->Nev }},
-                                {{ $megrendeles->ugyfel->Szamlazasi_Cim }}</li>
-                            @if (!is_null($megrendeles->ugyfel->Adoszam))
-                                <li class="list-group-item"><strong>Adószám:</strong>
-                                    {{ $megrendeles->ugyfel->Adoszam }}</li>
-                            @endif
-
-                        </ul>
+    {{-- ── Szerződő felek ──────────────────────────── --}}
+    <div class="section">
+        <div class="section-label">Szerződő felek</div>
+        <table class="parties">
+            <tr>
+                <td class="left">
+                    <div class="party-box">
+                        <div class="party-head">Megrendelő (1. fél)</div>
+                        <div class="party-body">
+                            <div class="pr"><div class="pl">Megrendelő neve</div><div class="pv">{{ $megrendeles->ugyfel->Nev ?? '-' }}</div></div>
+                            <div class="pr"><div class="pl">Számlázási név</div><div class="pv">{{ $megrendeles->ugyfel->Szamlazasi_Nev ?? '-' }}</div></div>
+                            <div class="pr">
+                                <div class="pl">Számlázási cím</div>
+                                <div class="pv">{{ ($megrendeles->ugyfel->varos->Irny_szam ?? '') . ' ' . ($megrendeles->ugyfel->varos->Nev ?? '') }}, {{ $megrendeles->ugyfel->Szamlazasi_Cim ?? '-' }}</div>
+                            </div>
+                            <div class="pr"><div class="pl">Adószám</div><div class="pv">{{ $megrendeles->ugyfel->Adoszam ?? '–' }}</div></div>
+                            <div class="pr"><div class="pl">Telefonszám</div><div class="pv">{{ $megrendeles->ugyfel->Telefonszam ?? '-' }}</div></div>
+                            <div class="pr"><div class="pl">E-mail cím</div><div class="pv">{{ $megrendeles->ugyfel->Email ?? '-' }}</div></div>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <h3>Általános információk</h3>
-                        <hr class="hr1">
-                        <ul class="list-group">
-                            <li class="list-group-item"><strong>Ügyfél neve:</strong>
-                                {{ $megrendeles->ugyfel->Nev ?? '-' }}</li>
-                            <li class="list-group-item"><strong>Megrendelo neve:</strong>
-                                {{ $megrendeles->Megrendeles_Nev }}
-                            </li>
-                            <li class="list-group-item"><strong>Címe:</strong> {{ $megrendeles->varos->Irny_szam }}
-                                {{ $megrendeles->varos->Nev }}, {{ $megrendeles->Utca_Hazszam }}
-                            </li>
-                            </li>
-                            @foreach ($megrendeles->munkak as $munka)
-                                <li class="list-group-item"><strong>Szolgáltatás:</strong>
-                                    {{ $munka->szolgaltatas->Tipus ?? '-' }}
-                                </li>
-                                <li class="list-group-item"><strong>Szerelést végezte:</strong>
-                                    {{ $munka->szerelo->Nev ?? '-' }}
-                                </li>
-                                <li class="list-group-item"><strong>Telefonszáma:</strong>
-                                    {{ $munka->szerelo->Telefonszam ?? '-' }}
-                                </li>
-                                <li class="list-group-item"><strong>Leírás:</strong> {{ $munka->Leiras }}</li>
-                                <li class="list-group-item"><strong>Munkakezdete:</strong>
-                                    {{ $munka->Munkakezdes_Idopontja }}
-                                </li>
-                                <li class="list-group-item"><strong>Munkabefejezte:</strong>
-                                    {{ $munka->Munkabefejezes_Idopontja }}
-                                </li>
-                            @endforeach
-                        </ul>
+                </td>
+                <td class="right">
+                    <div class="party-box">
+                        <div class="party-head">Vállalkozó (2. fél)</div>
+                        <div class="party-body">
+                            <div class="pr"><div class="pl">Cégnév</div><div class="pv">Triton Security Kft.</div></div>
+                            <div class="pr"><div class="pl">Székhely</div><div class="pv">1234 Budapest, Minta utca 1.</div></div>
+                            <div class="pr"><div class="pl">Adószám</div><div class="pv">12345678-2-42</div></div>
+                            <div class="pr"><div class="pl">Cégjegyzékszám</div><div class="pv">01-09-123456</div></div>
+                            <div class="pr"><div class="pl">Képviseli</div><div class="pv">{{ $megrendeles->munkak->first()?->szerelo?->Nev ?? '–' }}</div></div>
+                            <div class="pr"><div class="pl">Telefonszám</div><div class="pv">+36 1 234 5678</div></div>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <h3>Felhasznált anyagok</h3>
-                        <hr class="hr1">
-                        @if ($megrendeles->felhasznaltAnyagok && count($megrendeles->felhasznaltAnyagok) > 0)
-                            <ul class="list-group">
-                                @foreach ($megrendeles->felhasznaltAnyagok as $anyag)
-                                    <li class="list-group-item">
-                                        {{ $anyag->anyag->Nev }}({{ $anyag->anyag->Mertekegyseg }}):
-                                        {{ $anyag->Mennyiseg }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <p>Nincsenek felhasznált anyagok rögzítve.</p>
-                        @endif
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    {{-- ── Szerződés tárgya ─────────────────────────── --}}
+    <div class="section">
+        <div class="section-label">A szerződés tárgya és helyszíne</div>
+        <table class="info">
+            <tr>
+                <td class="lbl">Megrendelés neve</td>
+                <td class="val">{{ $megrendeles->Megrendeles_Nev }}</td>
+                <td class="lbl">Státusz</td>
+                <td class="val">
+                    @if($megrendeles->Alairt_e)
+                        <span class="badge b-active">Folyamatban</span>
+                    @else
+                        <span class="badge b-done">Befejezve</span>
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td class="lbl">Munkavégzés helye</td>
+                <td class="val" colspan="3">
+                    {{ ($megrendeles->varos->Irny_szam ?? '') . ' ' . ($megrendeles->varos->Nev ?? '') }},
+                    {{ $megrendeles->Utca_Hazszam }}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    {{-- ── Elvégzett munkák ─────────────────────────── --}}
+    @foreach ($megrendeles->munkak as $munkaIdx => $munka)
+    <div class="section">
+        <div class="section-label">Elvégzett munka{{ $megrendeles->munkak->count() > 1 ? ' #' . ($munkaIdx + 1) : '' }} részletezése</div>
+        <table class="info">
+            <tr>
+                <td class="lbl">Szolgáltatás típusa</td>
+                <td class="val">{{ $munka->szolgaltatas->Tipus ?? '-' }}</td>
+                <td class="lbl">Technikus neve</td>
+                <td class="val">{{ $munka->szerelo->Nev ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="lbl">Technikus telefonja</td>
+                <td class="val">{{ $munka->szerelo->Telefonszam ?? '-' }}</td>
+                <td class="lbl">Munkakezdés</td>
+                <td class="val">{{ $munka->Munkakezdes_Idopontja }}</td>
+            </tr>
+            <tr>
+                <td class="lbl">Munkabefejezés</td>
+                <td class="val">{{ $munka->Munkabefejezes_Idopontja }}</td>
+                <td class="lbl">Munkaidő</td>
+                <td class="val">
+                    @php
+                        try {
+                            $k = \Carbon\Carbon::parse($munka->Munkakezdes_Idopontja);
+                            $b = \Carbon\Carbon::parse($munka->Munkabefejezes_Idopontja);
+                            $d = $k->diff($b);
+                            echo ($d->days > 0 ? $d->days . ' nap ' : '') . $d->h . ' ó ' . $d->i . ' perc';
+                        } catch(\Exception $e) { echo '–'; }
+                    @endphp
+                </td>
+            </tr>
+            @if($munka->Leiras)
+            <tr>
+                <td class="lbl">Munka leírása</td>
+                <td class="val" colspan="3">{{ $munka->Leiras }}</td>
+            </tr>
+            @endif
+        </table>
+    </div>
+    @endforeach
+
+    {{-- ── Felhasznált anyagok ──────────────────────── --}}
+    <div class="section">
+        <div class="section-label">Felhasznált anyagok és eszközök</div>
+        @if ($megrendeles->felhasznaltAnyagok && count($megrendeles->felhasznaltAnyagok) > 0)
+        <table class="mat">
+            <thead>
+                <tr>
+                    <th style="width:55%;">Anyag / Eszköz neve</th>
+                    <th style="width:20%;">Mértékegység</th>
+                    <th style="width:25%;">Mennyiség</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($megrendeles->felhasznaltAnyagok as $anyag)
+                <tr>
+                    <td>{{ $anyag->anyag->Nev ?? '-' }}</td>
+                    <td>{{ $anyag->anyag->Mertekegyseg ?? '-' }}</td>
+                    <td>{{ $anyag->Mennyiseg }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        @else
+        <p style="color:#94a3b8; font-size:8.5px; font-style:italic; padding:5px 0;">
+            Nincsenek felhasznált anyagok rögzítve.
+        </p>
+        @endif
+    </div>
+
+    {{-- ── Jogi nyilatkozat ────────────────────────── --}}
+    <div class="section">
+        <div class="section-label">Nyilatkozat és elfogadás</div>
+        <div class="legal">
+            Jelen szerződés alapján a <strong>Megrendelő</strong> megrendeli, a <strong>Vállalkozó</strong> (Triton Security Kft.)
+            pedig elvállalja az I. pontban meghatározott biztonságtechnikai munkák elvégzését a rögzített helyszínen és feltételek szerint.
+            A Vállalkozó kijelenti, hogy a munkát szakszerűen, az érvényes műszaki előírásoknak, szabványoknak és
+            vonatkozó jogszabályoknak megfelelően végezte el. A Megrendelő a munkát – az aláírással – maradéktalanul átveszi,
+            a felhasznált anyagok mennyiségét és minőségét, valamint az elvégzett munkát ellenőrizte, és azokkal szemben
+            kifogást nem emel.
+            <br><br>
+            Jelen munkalap mindkét fél által aláírva jogilag kötelező érvényű vállalkozási szerződésnek minősül a Polgári
+            Törvénykönyv (2013. évi V. törvény) 6:238–6:264. §§ alapján. Az aláírással a Megrendelő tudomásul veszi, hogy
+            a jelen dokumentumban foglalt munkákat teljesítettnek fogadja el, és a Vállalkozóval szemben ezzel kapcsolatban
+            semmilyen további követelése nincs.
+        </div>
+    </div>
+
+    {{-- ── Aláírások ────────────────────────────────── --}}
+    <div class="section">
+        <div class="section-label">Aláírások és hitelesítés</div>
+        <table class="sign-table">
+            <tr>
+                {{-- Vállalkozó --}}
+                <td>
+                    <div class="sign-lbl">Vállalkozó aláírása (Triton Security Kft.)</div>
+                    @php
+                        $szPath = public_path('alaIrasokSzerelok/' . $imgPathSzerelo);
+                        $szB64  = file_exists($szPath)
+                            ? 'data:image/png;base64,' . base64_encode(file_get_contents($szPath))
+                            : null;
+                    @endphp
+                    <div class="sign-box">
+                        @if($szB64)<img src="{{ $szB64 }}" alt="Vállalkozó aláírása">@endif
                     </div>
-                </div>
-            </div>
-            <br>
-            <div class="sign">
-                <div class="imageContainer">
-                    <h5>Szerelo aláírása:</h5>
-                    <img src="http://127.0.0.1:8000/alaIrasokSzerelok/{{ $imgPathSzerelo }}" alt="alairasSzerelo">
+                    <div class="sign-name">{{ $megrendeles->munkak->first()?->szerelo?->Nev ?? 'Technikus' }}</div>
+                    <div class="sign-date">{{ now()->format('Y. m. d.') }}, {{ ($megrendeles->varos->Nev ?? 'Budapest') }}</div>
+                </td>
+                {{-- Megrendelő --}}
+                <td>
+                    <div class="sign-lbl">Megrendelő aláírása</div>
+                    @php
+                        $ugPath = public_path('alaIrasokUgyfel/alairas.png');
+                        $ugB64  = file_exists($ugPath)
+                            ? 'data:image/png;base64,' . base64_encode(file_get_contents($ugPath))
+                            : null;
+                    @endphp
+                    <div class="sign-box">
+                        @if($ugB64)<img src="{{ $ugB64 }}" alt="Megrendelő aláírása">@endif
+                    </div>
+                    <div class="sign-name">{{ $megrendeles->ugyfel->Nev }}</div>
+                    <div class="sign-date">{{ now()->format('Y. m. d.') }}, {{ ($megrendeles->varos->Nev ?? 'Budapest') }}</div>
+                </td>
+            </tr>
+        </table>
+    </div>
 
-                </div>
-                <div class="imageContainer">
-                    <h5>Ügyfél aláírása:</h5>
-                    <img src="http://127.0.0.1:8000/alaIrasokUgyfel/alairas.png" alt="alairasUgyfel">
+</div>{{-- /content --}}
 
-                </div>
+{{-- ══════════════════════════════════════════════════════
+     LÁBLÉC
+     ══════════════════════════════════════════════════════ --}}
+<div class="footer">
+    <table class="footer-row">
+        <tr>
+            <td style="width:60%; padding-right:16px;">
+                Jelen dokumentum a Triton Security Kft. által kiállított hivatalos vállalkozási szerződés és munkalap.
+                Mindkét fél aláírásával jogilag kötelező érvényűvé válik. Kérjük, megőrzési kötelezettség miatt
+                a szerződést biztonságos helyen tartsa.
+            </td>
+            <td style="width:40%; text-align:right; color:#94a3b8;">
+                Triton Security Kft.<br>
+                1234 Budapest, Minta utca 1.<br>
+                info@tritonsecurity.hu &nbsp;|&nbsp; +36 1 234 5678
+            </td>
+        </tr>
+    </table>
+    <div class="footer-copy">
+        Triton Security Kft.
+        &nbsp;&bull;&nbsp;
+        Szerz. szám: {{ str_pad($megrendeles->Megrendeles_ID, 6, '0', STR_PAD_LEFT) }}/{{ now()->format('Y') }}
+        &nbsp;&bull;&nbsp;
+        Kiállítva: {{ now()->format('Y. m. d.') }}
+        &nbsp;&bull;&nbsp;
+        &copy; {{ date('Y') }}
+    </div>
+</div>
 
-            </div>
-
-        </section>
-        <footer>
-            <div class="social-media">
-                <a href="#" class="fa fa-facebook"></a>
-                <a href="#" class="fa fa-twitter"></a>
-                <a href="#" class="fa fa-instagram"></a>
-                <a href="#" class="fa fa-rss"></a>
-            </div>
-            <div class="contact">
-                <p>Ezúton küldjük Önnek a Triton Security Kft. által küldött automatikus e-mailt. Mellékelten megtalálja
-                    a szerződés kötés online formátumában elkészített dokumentumot.<br>
-                    Kérjük, vegye figyelembe, hogy az e-mailre nem kell válaszolni.<br>
-                    Amennyiben bármilyen további kérdése merül fel, kérjük, lépjen kapcsolatba ügyfélszolgálatunkkal.
-                </p>
-            </div>
-            <hr>
-            <div class="coppyright">
-                <p>Triton Security Kft Copyright © 2023</p>
-            </div>
-        </footer>
-    </main>
 </body>
-
 </html>

@@ -1,41 +1,63 @@
 @extends('ujlayout')
 
 @section('content')
-
     @include('breadcrumbs')
+
     <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
 
-    <style>
-        .list-group li {
-            width: 100% !important;
-        }
-    </style>
     @if ($szerelo)
-        <h1>{{ $szerelo->Nev }} - Részletei</h1>
-        <hr class="showHr">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h3>Általános információk</h3>
-                    <ul class="list-group">
-                        <li class="list-group-item"><strong>Név:</strong> {{ $szerelo->Nev }}</li>
-                        <li class="list-group-item"><strong>Telefonszám:</strong> {{ $szerelo->Telefonszam }}</li>
-                        <li class="list-group-item"><strong>Szolgáltatások:</strong>
-                            <ul>
-                                @foreach ($szerelo->szolgaltatasok as $szolgaltatas)
-                                    <li>{{ $szolgaltatas->Tipus }}</li>
-                                @endforeach
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                <a href="{{ route('szerelok.edit', $szerelo->Szerelo_ID) }}"><button>
-                    Szerkesztés</button></a>
+        <div class="detail-header">
+            <h1><i class="fas fa-tools"></i> {{ $szerelo->Nev }}</h1>
+            <div class="detail-header-actions">
+                <a href="{{ route('szerelok.index') }}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Vissza
+                </a>
+                <a href="{{ route('szerelok.edit', $szerelo->Szerelo_ID) }}" class="btn-edit">
+                    <i class="fas fa-edit"></i> Szerkesztés
+                </a>
             </div>
+        </div>
 
+        <div class="detail-section">
+            <div class="detail-section-label">Általános információk</div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Szerelő ID</div>
+                    <div class="info-value">{{ $szerelo->Szerelo_ID }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Név</div>
+                    <div class="info-value">{{ $szerelo->Nev }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Telefonszám</div>
+                    <div class="info-value">{{ $szerelo->Telefonszam }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <div class="detail-section-label">Szakterületek</div>
+            @if($szerelo->szolgaltatasok && count($szerelo->szolgaltatasok) > 0)
+                <div class="info-grid">
+                    @foreach ($szerelo->szolgaltatasok as $szolgaltatas)
+                        <div class="info-item">
+                            <div class="info-label">Szolgáltatás</div>
+                            <div class="info-value">
+                                <i class="fas fa-wifi" style="color:#ed1b24;margin-right:6px;"></i>
+                                {{ $szolgaltatas->Tipus }}
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p style="color:#9ca3af;font-size:13px;">Nincs hozzárendelt szakterület.</p>
+            @endif
         </div>
     @else
-        <p>A szerelő nem található.</p>
+        <div class="empty-state">
+            <i class="fas fa-tools"></i>
+            <p>A szerelő nem található.</p>
+        </div>
     @endif
-
 @endsection

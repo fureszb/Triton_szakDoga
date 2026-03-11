@@ -1,10 +1,17 @@
 @extends('ujlayout')
 
 @section('content')
-
     @include('breadcrumbs')
 
-    <h1>Új Megrendelés</h1>
+    <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
+
+    <div class="page-header">
+        <h1><i class="fas fa-clipboard-plus"></i> Új megrendelés</h1>
+        <a href="{{ route('megrendeles.index') }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Vissza
+        </a>
+    </div>
+
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             <div class="alert alert-warning">{{ $error }}</div>
@@ -25,8 +32,8 @@
                     </option>
                 @endforeach
             </select>
-            <label>
-                <input type="checkbox" id="ugyfelAdatokMatch" />
+            <label style="margin-top:8px;font-size:12px;display:flex;align-items:center;gap:6px;">
+                <input type="checkbox" id="ugyfelAdatokMatch" style="width:auto;" />
                 Az ügyfél adatai megegyeznek a megrendelésnél is.
             </label>
         </fieldset>
@@ -46,7 +53,7 @@
                         utcaHazszamInput.value = selectedOption.getAttribute('data-utca');
                         varosSelect.value = selectedOption.getAttribute('data-varos-id');
                     } else {
-                       megrendelesNevInput.value = '';
+                        megrendelesNevInput.value = '';
                         utcaHazszamInput.value = '';
                         varosSelect.value = '';
                     }
@@ -56,8 +63,6 @@
                 ugyfelAdatokMatchCheckbox.addEventListener('change', fillCustomerData);
             });
         </script>
-
-
 
         <fieldset>
             <label for="Megrendeles_Nev">Megrendelő neve</label>
@@ -79,18 +84,15 @@
             <input type="text" name="Utca_Hazszam" id="Utca_Hazszam" value="{{ old('Utca_Hazszam') }}">
         </fieldset>
 
-
         <fieldset>
             <label for="Szolgaltatas_ID">Szolgáltatás</label>
             <select name="Szolgaltatas_ID" id="Szolgaltatas_ID">
                 <option value="">Válassz szolgáltatást</option>
-
                 @foreach ($szolgaltatasok as $szolgaltatas)
                     <option value="{{ $szolgaltatas->Szolgaltatas_ID }}">{{ $szolgaltatas->Tipus }}</option>
                 @endforeach
             </select>
         </fieldset>
-
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -109,11 +111,11 @@
                                     `<option value="${szerelo.Szerelo_ID}">${szerelo.Nev}</option>`;
                             });
                         })
-
                         .catch(error => console.error('Hiba történt a szerelők lekérdezésekor', error));
                 });
             });
         </script>
+
         <fieldset>
             <label for="Szerelo_ID">Szerelő</label>
             <select name="Szerelo_ID" id="Szerelo_ID">
@@ -121,9 +123,8 @@
             </select>
         </fieldset>
 
-
         <fieldset>
-            <label for="Leiras">Munka Leírása</label>
+            <label for="Leiras">Munka leírása</label>
             <textarea name="Leiras" id="Leiras">{{ old('Leiras') }}</textarea>
         </fieldset>
 
@@ -139,19 +140,23 @@
                 value="{{ old('Munkabefejezes_Idopontja') }}">
         </fieldset>
 
-        <div id="anyagokContainer">
-            <div class="anyagMennyisegPár">
-                <select name="Anyag_ID[]" class="anyagSelect">
+        <div id="anyagokContainer" style="width:100%;">
+            <div class="anyagMennyisegPár" style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+                <select name="Anyag_ID[]" class="anyagSelect" style="flex:2;min-width:160px;">
                     <option value="">Válassz anyagot</option>
                     @foreach ($anyagok as $anyag)
                         <option value="{{ $anyag->Anyag_ID }}">{{ $anyag->Nev }}({{ $anyag->Mertekegyseg }})</option>
                     @endforeach
                 </select>
-                <input type="number" name="Mennyiseg[]" placeholder="Mennyiség" min="1">
-                <button type="button" class="removeAnyag">Eltávolítás</button>
+                <input type="number" name="Mennyiseg[]" placeholder="Mennyiség" min="1" style="flex:1;min-width:80px;">
+                <button type="button" class="removeAnyag btn-back" style="margin:0;">
+                    <i class="fas fa-times"></i> Eltávolítás
+                </button>
             </div>
         </div>
-        <button type="button" id="addAnyag">Új anyag hozzáadása</button>
+        <button type="button" id="addAnyag" class="btn-back" style="margin-bottom:12px;">
+            <i class="fas fa-plus"></i> Anyag hozzáadása
+        </button>
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -163,11 +168,10 @@
                     container.appendChild(newPair);
                 });
 
-
                 document.getElementById('anyagokContainer').addEventListener('click', function(e) {
-                    if (e.target.classList.contains('removeAnyag')) {
+                    if (e.target.classList.contains('removeAnyag') || e.target.closest('.removeAnyag')) {
                         if (document.querySelectorAll('.anyagMennyisegPár').length > 1) {
-                            e.target.parentElement.remove();
+                            e.target.closest('.anyagMennyisegPár').remove();
                         } else {
                             alert('Legalább egy anyagot meg kell adni.');
                         }
@@ -178,9 +182,10 @@
 
         @include('signaturePad')
 
-        <div class="grid">
-            <button id="saveButton" type="submit" data-action="save-png" class="button save">Mentés új
-                megrendelésként</button>
+        <div style="width:100%;">
+            <button id="saveButton" type="submit" data-action="save-png" class="btn-save">
+                <i class="fas fa-save"></i> Mentés új megrendelésként
+            </button>
         </div>
     </form>
 @endsection

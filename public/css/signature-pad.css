@@ -1,165 +1,122 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-.hide{
-  display: none;
-}
-
 .signature-pad {
-  position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  font-size: 10px;
-  width: 100%;
-  height: 100%;
-  max-width: 700px;
-  max-height: 460px;
-  border: 1px solid #e8e8e8;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.08) inset;
-  border-radius: 4px;
-  padding: 16px;
-}
-
-.signature-pad::before,
-.signature-pad::after {
-  position: absolute;
-  z-index: -1;
-  content: "";
-  width: 40%;
-  height: 10px;
-  bottom: 10px;
-  background: transparent;
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
-}
-
-.signature-pad::before {
-  left: 20px;
-  -webkit-transform: skew(-3deg) rotate(-3deg);
-          transform: skew(-3deg) rotate(-3deg);
-}
-
-.signature-pad::after {
-  right: 20px;
-  -webkit-transform: skew(3deg) rotate(3deg);
-          transform: skew(3deg) rotate(3deg);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    font-size: 10px;
+    width: 100%;
+    height: 280px;
+    max-width: 680px;
+    border: 1.5px solid #e2e8f0;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 .signature-pad--body {
-  position: relative;
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  border: 1px solid #f4f4f4;
+    position: relative;
+    flex: 1;
+    background: #fff;
+    cursor: crosshair;
 }
 
-.signature-pad--body
-canvas {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.02) inset;
+.signature-pad--body canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    border-radius: 8px 8px 0 0;
+}
+
+.signature-pad--body::after {
+    content: "Aláírás helye";
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #cbd5e1;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    pointer-events: none;
+    white-space: nowrap;
 }
 
 .signature-pad--footer {
-  color: #C3C3C3;
-  text-align: center;
-  font-size: 1.2em;
-  margin-top: 8px;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    flex-shrink: 0;
 }
 
 .signature-pad--actions {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  margin-top: 8px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
 }
 
 .signature-pad--actions .column {
-  padding: .1em;
+    display: flex;
+    gap: 8px;
 }
 
 .signature-pad--actions .button {
-  margin: .2em;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    color: #fff;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
 }
 
-#github img {
-  border: 0;
+.signature-pad--actions .clear {
+    background-color: #ed1b24;
 }
 
-@media (max-width: 940px) {
-  #github img {
-    width: 90px;
-    height: 90px;
-  }
+.signature-pad--actions .clear:hover {
+    background-color: #c81820;
+    transform: translateY(-1px);
+}
+
+.signature-pad--actions .undo {
+    background-color: #6b7280;
+}
+
+.signature-pad--actions .undo:hover {
+    background-color: #4b5563;
+    transform: translateY(-1px);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .signature-pad {
+        height: 220px;
+    }
+
+    .signature-pad--actions .button {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .signature-pad--actions .column {
+        width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
-  .signature-pad--actions .button {
-    display: block;
-    width: 100%;
-    min-height: 2em;
-  }
+    .signature-pad {
+        height: 190px;
+    }
+
+    .signature-pad--actions .column {
+        flex-direction: column;
+    }
 }
-
-
-/* Gombok */
-.signature-pad--actions > .column > button {
-    border: none;
-    color: #fff;
-    padding: 12px 24px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: background-color 0.3s;
-  }
-
-
-  .signature-pad--actions button:active {
-    background-color: #005cbf;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
-    transform: translateY(1px);
-  }
-
-  .signature-pad--actions .save {
-    background-color: green;
-  }
-
-  .signature-pad--actions .save:hover {
-    background-color: rgb(10, 174, 10);
-  }
-
-  /* Törlés gomb */
-  .signature-pad--actions .clear {
-    background-color: #dc3545;
-  }
-
-  .signature-pad--actions .clear:hover {
-    background-color: #c82333;
-  }
-
-  /* Visszavonás gomb */
-  .signature-pad--actions .undo {
-    background-color: #6c757d;
-  }
-
-  .signature-pad--actions .undo:hover {
-    background-color: #5a6268;
-  }
