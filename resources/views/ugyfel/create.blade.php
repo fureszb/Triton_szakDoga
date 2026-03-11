@@ -1,12 +1,17 @@
 @extends('ujlayout')
 
-
-
 @section('content')
     @include('breadcrumbs')
 
-    <h1>Új ügyfél</h1>
-    <hr class="showHr">
+    <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
+
+    <div class="page-header">
+        <h1><i class="fas fa-user-plus"></i> Új ügyfél</h1>
+        <a href="{{ route('ugyfel.index') }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Vissza
+        </a>
+    </div>
+
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             <div class="alert alert-warning">{{ $error }}</div>
@@ -35,7 +40,6 @@
             <label for="szamnev">Számlázási név</label>
             <input type="text" name="szamnev" id="szamnev" value="{{ old('szamnev') }}">
         </fieldset>
-
         <fieldset>
             <label for="Varos_ID">Város</label>
             <select name="Varos_ID" id="Varos_ID">
@@ -45,7 +49,6 @@
                 @endforeach
             </select>
         </fieldset>
-
         <fieldset>
             <label for="szamcim">Utca, házszám</label>
             <input type="text" name="szamcim" id="szamcim" value="{{ old('szamcim') }}">
@@ -55,10 +58,10 @@
             <input type="text" name="adoszam" id="adoszam" value="{{ old('adoszam') }}">
         </fieldset>
 
-        <div class="grid">
-            <button id="saveButton" type="submit">Mentés új ügyfélként</button>
+        <div style="width:100%;">
+            <button id="saveButton" type="submit" class="btn-save">
+                <i class="fas fa-save"></i> Mentés új ügyfélként
+            </button>
         </div>
-
-
     </form>
 @endsection

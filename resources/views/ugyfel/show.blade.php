@@ -1,33 +1,61 @@
 @extends('ujlayout')
 
 @section('content')
-@include('breadcrumbs')
+    @include('breadcrumbs')
 
-<h1>{{ $ugyfel->Nev }}</h1>
-<hr class="showHr">
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <h3>Általános információk</h3>
-            <ul class="list-group">
-                <li class="list-group-item"><strong>UgyfelID:</strong> {{ $ugyfel->Ugyfel_ID }}</li>
-                <li class="list-group-item"><strong>Név:</strong> {{ $ugyfel->Nev }}</li>
-                <li class="list-group-item"><strong>Email:</strong> {{ $ugyfel->Email }}</li>
-                <li class="list-group-item"><strong>Telefonszám:</strong> {{ $ugyfel->Telefonszam }}</li>
-                <li class="list-group-item"><strong>Számlázási név:</strong> {{ $ugyfel->Szamlazasi_Nev }}</li>
-                <li class="list-group-item"><strong>Számlázási cím:</strong> {{ $varos->Irny_szam }} {{ $varos->Nev }}, {{ $ugyfel->Szamlazasi_Cim }}</li>
-                @if (is_null($ugyfel->Adoszam))
-                <li class="list-group-item"><strong>Adószám:</strong> -</li>
-                @else
-                <li class="list-group-item"><strong>Adószám:</strong> {{ $ugyfel->Adoszam }}</li>
-                @endif
+    <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
 
-            </ul>
+    <div class="detail-header">
+        <h1><i class="fas fa-user-friends"></i> {{ $ugyfel->Nev }}</h1>
+        <div class="detail-header-actions">
+            <a href="{{ route('ugyfel.index') }}" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Vissza
+            </a>
+            <a href="{{ route('ugyfel.edit', ['ugyfel' => $ugyfel->Ugyfel_ID]) }}" class="btn-edit">
+                <i class="fas fa-edit"></i> Szerkesztés
+            </a>
         </div>
-
     </div>
-</div>
-<a href="{{ route('ugyfel.edit', ['ugyfel' => $ugyfel->Ugyfel_ID]) }}"><button>Szerkesztés</button></a>
 
+    <div class="detail-section">
+        <div class="detail-section-label">Általános információk</div>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Ügyfél ID</div>
+                <div class="info-value">{{ $ugyfel->Ugyfel_ID }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Név</div>
+                <div class="info-value">{{ $ugyfel->Nev }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ $ugyfel->Email ?? '-' }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Telefonszám</div>
+                <div class="info-value">{{ $ugyfel->Telefonszam ?? '-' }}</div>
+            </div>
+        </div>
+    </div>
 
+    <div class="detail-section">
+        <div class="detail-section-label">Számlázási adatok</div>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Számlázási név</div>
+                <div class="info-value">{{ $ugyfel->Szamlazasi_Nev ?? '-' }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Számlázási cím</div>
+                <div class="info-value">
+                    {{ $varos->Irny_szam }} {{ $varos->Nev }}, {{ $ugyfel->Szamlazasi_Cim }}
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Adószám</div>
+                <div class="info-value">{{ $ugyfel->Adoszam ?? '-' }}</div>
+            </div>
+        </div>
+    </div>
 @endsection

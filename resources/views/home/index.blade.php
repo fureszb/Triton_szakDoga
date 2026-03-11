@@ -2,77 +2,62 @@
 
 @section('content')
     <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
+
     <style>
         .chart-container {
             display: flex;
             justify-content: center;
             align-items: center;
             margin: auto;
-
+            flex-wrap: wrap;
+            gap: 20px;
         }
-
         .chart {
             flex: 1;
             max-width: 450px;
             height: 500px;
         }
-
-        h4 {
-            font-size: 0.8rem !important;
+        h4.section-label {
+            font-size: 11px;
             letter-spacing: 3px;
-            color: #9e9e9e !important;
+            color: #9e9e9e;
             text-transform: uppercase;
-            margin-top: 15px !important;
-            margin-bottom: 15px !important;
+            margin-top: 28px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-
-        .statisztika {
-            margin: 40px;
-            font-size: 0.9rem !important;
+        h4.section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #f3f4f6;
         }
-        .dashboard a{
-            text-decoration: none;
-        }
-
         @media screen and (max-width: 1100px) {
-            .chart-container {
-                flex-wrap: wrap;
-                justify-content: flex-end;
-            }
-
-            h4 {
-                padding-top: 10px;
-            }
-
-            .chart {
-                max-width: 400px;
-            }
-
-
-
-        }
-
-        @media screen and (max-width: 700px) {
-            .statisztika {
-                margin: 10px;
-            }
+            .chart-container { flex-wrap: wrap; }
+            .chart { max-width: 400px; }
         }
     </style>
 
-    <h1>Kezdőlap</h1>
-    <hr class="showHr">
+    <div class="page-header">
+        <h1><i class="fas fa-tachometer-alt"></i> Kezdőlap</h1>
+    </div>
+
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <h4>Útmutató lépései</h4>
+    <h4 class="section-label">Útmutató lépései</h4>
     @include('home.guide')
+
     @include('diagrammok.varosStatisztika')
     @include('diagrammok.szolgaltatasStatisztika')
 
-    <h4>Statisztika</h4>
+    <h4 class="section-label">Statisztika</h4>
     <div class="chart-container">
-        <div id="bar_chart" class="chart" style="width: 100%;"></div>
-        <div id="pie_chart" class="chart" style="width: 100%;"></div>
+        <div id="bar_chart" class="chart" style="width:100%;"></div>
+        <div id="pie_chart" class="chart" style="width:100%;"></div>
     </div>
 @endsection
