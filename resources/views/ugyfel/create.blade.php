@@ -1,67 +1,101 @@
 @extends('ujlayout')
 
 @section('content')
-    @include('breadcrumbs')
+@include('breadcrumbs')
 
-    <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
+<div class="page-header">
+    <h1><i class="fas fa-user-plus"></i> Új ügyfél</h1>
+    <a href="{{ route('ugyfel.index') }}" class="btn-back">
+        <i class="fas fa-arrow-left"></i> Vissza
+    </a>
+</div>
 
-    <div class="page-header">
-        <h1><i class="fas fa-user-plus"></i> Új ügyfél</h1>
-        <a href="{{ route('ugyfel.index') }}" class="btn-back">
-            <i class="fas fa-arrow-left"></i> Vissza
-        </a>
+@if ($errors->any())
+    <div style="margin-bottom:16px;">
+        @foreach ($errors->all() as $error)
+            <div class="alert alert-warning" style="margin-bottom:6px;">
+                <i class="fas fa-exclamation-triangle"></i> {{ $error }}
+            </div>
+        @endforeach
+    </div>
+@endif
+
+<form action="{{ route('ugyfel.store') }}" method="POST">
+@csrf
+
+<div class="fc-grid">
+
+    {{-- Személyes adatok --}}
+    <div class="fc-card">
+        <div class="fc-header">
+            <div class="fc-hicon"><i class="fas fa-user"></i></div>
+            <div class="fc-htitle">Személyes adatok</div>
+        </div>
+        <div class="fc-body">
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-hashtag"></i> Ügyfél ID <span class="req">*</span></div>
+                <input type="text" name="Ugyfel_ID" class="f-input" value="{{ old('Ugyfel_ID') }}" placeholder="pl. U001">
+                <div class="f-hint">Egyedi azonosító (pl. U001, K123).</div>
+            </div>
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-user"></i> Teljes név <span class="req">*</span></div>
+                <input type="text" name="nev" class="f-input" value="{{ old('nev') }}" placeholder="Kovács János">
+            </div>
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-envelope"></i> Email cím <span class="req">*</span></div>
+                <input type="email" name="email" class="f-input" value="{{ old('email') }}" placeholder="pelda@email.hu">
+            </div>
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-phone"></i> Telefonszám <span class="req">*</span></div>
+                <input type="text" name="telefon" class="f-input" value="{{ old('telefon') }}" placeholder="+36301234567">
+            </div>
+        </div>
     </div>
 
-    @if ($errors->any())
-        @foreach ($errors->all() as $error)
-            <div class="alert alert-warning">{{ $error }}</div>
-        @endforeach
-    @endif
-
-    <form id="createForm" action="{{ route('ugyfel.store') }}" method="POST">
-        @csrf
-        <fieldset>
-            <label for="Ugyfel_ID">ID</label>
-            <input type="text" name="Ugyfel_ID" id="Ugyfel_ID" value="{{ old('Ugyfel_ID') }}">
-        </fieldset>
-        <fieldset>
-            <label for="nev">Név</label>
-            <input type="text" name="nev" id="nev" value="{{ old('nev') }}">
-        </fieldset>
-        <fieldset>
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" value="{{ old('email') }}">
-        </fieldset>
-        <fieldset>
-            <label for="telefon">Telefonszám</label>
-            <input type="text" name="telefon" id="telefon" value="{{ old('telefon') }}">
-        </fieldset>
-        <fieldset>
-            <label for="szamnev">Számlázási név</label>
-            <input type="text" name="szamnev" id="szamnev" value="{{ old('szamnev') }}">
-        </fieldset>
-        <fieldset>
-            <label for="Varos_ID">Város</label>
-            <select name="Varos_ID" id="Varos_ID">
-                <option value="">Válassz várost</option>
-                @foreach ($varosok as $varos)
-                    <option value="{{ $varos->Varos_ID }}">{{ $varos->Irny_szam }} {{ $varos->Nev }}</option>
-                @endforeach
-            </select>
-        </fieldset>
-        <fieldset>
-            <label for="szamcim">Utca, házszám</label>
-            <input type="text" name="szamcim" id="szamcim" value="{{ old('szamcim') }}">
-        </fieldset>
-        <fieldset>
-            <label for="adoszam">Adószám</label>
-            <input type="text" name="adoszam" id="adoszam" value="{{ old('adoszam') }}">
-        </fieldset>
-
-        <div style="width:100%;">
-            <button id="saveButton" type="submit" class="btn-save">
-                <i class="fas fa-save"></i> Mentés új ügyfélként
-            </button>
+    {{-- Számlázási adatok --}}
+    <div class="fc-card">
+        <div class="fc-header">
+            <div class="fc-hicon"><i class="fas fa-file-invoice"></i></div>
+            <div class="fc-htitle">Számlázási adatok</div>
         </div>
-    </form>
+        <div class="fc-body">
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-building"></i> Számlázási név <span class="req">*</span></div>
+                <input type="text" name="szamnev" class="f-input" value="{{ old('szamnev') }}" placeholder="Kovács János / Kovács Kft.">
+            </div>
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-city"></i> Város <span class="req">*</span></div>
+                <select name="Varos_ID" class="f-select">
+                    <option value="">— Válassz várost —</option>
+                    @foreach ($varosok as $varos)
+                        <option value="{{ $varos->Varos_ID }}" {{ old('Varos_ID') == $varos->Varos_ID ? 'selected' : '' }}>
+                            {{ $varos->Irny_szam }} {{ $varos->Nev }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-road"></i> Utca, házszám <span class="req">*</span></div>
+                <input type="text" name="szamcim" class="f-input" value="{{ old('szamcim') }}" placeholder="Kossuth utca 12.">
+            </div>
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-receipt"></i> Adószám</div>
+                <input type="text" name="adoszam" class="f-input" value="{{ old('adoszam') }}" placeholder="12345678-1-42">
+                <div class="f-hint">Opcionális — magánszemélyeknél elhagyható.</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="fc-submit">
+    <button type="submit" class="btn-save" style="margin-top:0;">
+        <i class="fas fa-save"></i> Mentés új ügyfélként
+    </button>
+    <a href="{{ route('ugyfel.index') }}" class="btn-back">
+        <i class="fas fa-times"></i> Mégsem
+    </a>
+</div>
+
+</form>
 @endsection

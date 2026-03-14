@@ -1,33 +1,57 @@
 @extends('ujlayout')
 
 @section('content')
-    @include('breadcrumbs')
+@include('breadcrumbs')
 
-    <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
+<div class="page-header">
+    <h1><i class="fas fa-tools"></i> Szerelő szerkesztése</h1>
+    <a href="{{ route('szerelok.show', $szerelo->Szerelo_ID) }}" class="btn-back">
+        <i class="fas fa-arrow-left"></i> Vissza
+    </a>
+</div>
 
-    <div class="page-header">
-        <h1><i class="fas fa-tools"></i> {{ $szerelo->Nev }} — Szerkesztése</h1>
-        <a href="{{ route('szerelok.show', $szerelo->Szerelo_ID) }}" class="btn-back">
-            <i class="fas fa-arrow-left"></i> Vissza
-        </a>
-    </div>
+{{-- ID sáv --}}
+<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.2);border-radius:10px;font-size:12px;color:#64748b;margin-bottom:20px;">
+    <i class="fas fa-hashtag" style="color:#c9a97a;"></i>
+    Szerelő azonosítója: <strong style="color:#a07848;">#{{ $szerelo->Szerelo_ID }}</strong>
+    &nbsp;|&nbsp;
+    <i class="fas fa-hard-hat" style="color:#c9a97a;"></i>
+    <strong style="color:#a07848;">{{ $szerelo->Nev }}</strong>
+</div>
 
-    <form action="{{ route('szerelok.update', $szerelo->Szerelo_ID) }}" method="POST">
-        @csrf
-        @method('PUT')
-        <fieldset>
-            <label for="Nev">Név</label>
-            <input type="text" name="Nev" id="Nev" value="{{ $szerelo->Nev }}" required>
-        </fieldset>
-        <fieldset>
-            <label for="Telefonszam">Telefonszám</label>
-            <input type="text" name="Telefonszam" id="Telefonszam" value="{{ $szerelo->Telefonszam }}" required>
-        </fieldset>
+<form action="{{ route('szerelok.update', $szerelo->Szerelo_ID) }}" method="POST">
+@csrf
+@method('PUT')
 
-        <div style="width:100%;">
-            <button type="submit" class="btn-save">
-                <i class="fas fa-save"></i> Frissítés
-            </button>
+<div class="fc-grid">
+    <div class="fc-card fc-full">
+        <div class="fc-header">
+            <div class="fc-hicon"><i class="fas fa-hard-hat"></i></div>
+            <div class="fc-htitle">Szerelő adatai</div>
         </div>
-    </form>
+        <div class="fc-body">
+            <div class="fc-row">
+                <div class="f-group">
+                    <div class="f-label"><i class="fas fa-user"></i> Teljes név <span class="req">*</span></div>
+                    <input type="text" name="Nev" class="f-input" value="{{ old('Nev', $szerelo->Nev) }}" required>
+                </div>
+                <div class="f-group">
+                    <div class="f-label"><i class="fas fa-phone"></i> Telefonszám <span class="req">*</span></div>
+                    <input type="text" name="Telefonszam" class="f-input" value="{{ old('Telefonszam', $szerelo->Telefonszam) }}" required>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fc-submit">
+    <button type="submit" class="btn-save" style="margin-top:0;">
+        <i class="fas fa-save"></i> Mentés
+    </button>
+    <a href="{{ route('szerelok.show', $szerelo->Szerelo_ID) }}" class="btn-back">
+        <i class="fas fa-times"></i> Mégsem
+    </a>
+</div>
+
+</form>
 @endsection

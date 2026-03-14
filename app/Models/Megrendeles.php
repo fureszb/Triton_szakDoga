@@ -12,7 +12,9 @@ class Megrendeles extends Model
 
     protected $table = 'megrendeles';
     protected $primaryKey = 'Megrendeles_ID';
-    protected $fillable = ['Ugyfel_ID', 'Varos_ID', 'Megrendeles_Nev', 'Utca_Hazszam', 'Alairt_e', 'Pdf_EleresiUt'];
+    protected $fillable = [
+        'Ugyfel_ID', 'Varos_ID', 'Megrendeles_Nev', 'Utca_Hazszam', 'Statusz', 'Pdf_EleresiUt',
+    ];
 
 
 
@@ -76,5 +78,52 @@ class Megrendeles extends Model
             $query->where('Megrendeles_Nev', 'LIKE', '%' . $keyword . '%')
                 ->orWhere('Megrendeles_ID', $keyword);
         });
+    }
+
+    // ─── Számlázás & fizetés kapcsolatok ──────────────────────────────────────
+
+    /** A megrendeléshez tartozó számla (1:1) */
+    public function szamla()
+    {
+        return $this->hasOne(Szamla::class, 'megrendeles_id', 'Megrendeles_ID')
+                    ->where('szamla_tipus', 'szamla');
+    }
+
+    /** Díjbekérő (ha van) */
+    public function dijbekero()
+    {
+        return $this->hasOne(Szamla::class, 'megrendeles_id', 'Megrendeles_ID')
+                    ->where('szamla_tipus', 'dijbekero');
+    }
+
+    /** Összes számla típus (számla + díjbekérő + stornó) */
+    public function osszesSzamla()
+    {
+        return $this->hasMany(Szamla::class, 'megrendeles_id', 'Megrendeles_ID');
+    }
+
+    /** Fizetési tranzakciók */
+    public function fizetesek()
+    {
+        return $this->hasMany(Fizetes::class, 'megrendeles_id', 'Megrendeles_ID');
+    }
+
+    /** Audit log */
+    public function auditLog()
+    {
+        return $this->hasMany(FizetesAuditLog::class, 'megrendeles_id', 'Megrendeles_ID')
+                    ->latest('created_at');
+    }
+
+    /** Emlékeztetők */
+    public function emlekeztetok()
+    {
+        return $this->hasMany(FizetesEmlekeztetok::class, 'megrendeles_id', 'Megrendeles_ID');
+    }
+
+    // ─── Kényelmi accessor – fizetve van-e? ───────────────────────────────────
+    public function getFizetveAttribute(): bool
+    {
+        return optional($this->szamla)->statusz === 'fizetve';
     }
 }

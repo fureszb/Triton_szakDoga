@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 
 class HomeController extends Controller
 {
     public function index()
     {
-
         $szolgaltatasokKereslete = DB::table('szolgaltatas as S')
             ->join('munka as M', 'S.Szolgaltatas_ID', '=', 'M.Szolgaltatas_ID')
             ->select('S.Szolgaltatas_ID', 'S.Tipus', DB::raw('COUNT(M.Szolgaltatas_ID) AS Kereslet'))
@@ -24,9 +22,20 @@ class HomeController extends Controller
             ->groupBy('V.Varos_ID', 'V.Nev')
             ->get();
 
+        $ugyfelekSzama        = DB::table('ugyfel')->count();
+        $aktivMegrendelesek   = DB::table('megrendeles')->where('Statusz', false)->count();
+        $alairtvaMegrendelesek = DB::table('megrendeles')->where('Statusz', true)->count();
+        $szerelokSzama        = DB::table('szerelo')->count();
+        $anyagokSzama         = DB::table('anyag')->count();
+
         return view('home.index', [
-            'szolgaltatasokKereslete' => $szolgaltatasokKereslete,
-            'statistics' => $results
+            'szolgaltatasokKereslete'  => $szolgaltatasokKereslete,
+            'statistics'               => $results,
+            'ugyfelekSzama'            => $ugyfelekSzama,
+            'aktivMegrendelesek'       => $aktivMegrendelesek,
+            'alairtvaMegrendelesek'    => $alairtvaMegrendelesek,
+            'szerelokSzama'            => $szerelokSzama,
+            'anyagokSzama'             => $anyagokSzama,
         ]);
     }
 }

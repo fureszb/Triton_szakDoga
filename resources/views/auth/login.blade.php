@@ -39,7 +39,7 @@
                 </a>
             @endif
 
-            <x-primary-button class="ml-3" style="background-color: red !important;">
+            <x-primary-button class="ml-3" style="background-color: #c9a97a !important; border-color: #c9a97a !important;">
                 {{ __('Bejelentkezés') }}
             </x-primary-button>
         </div>

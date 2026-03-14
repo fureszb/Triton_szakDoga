@@ -13,7 +13,143 @@
     <link rel="stylesheet" href="{{ asset('/css/layoutStyle.css') }}">
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
     <script src="{{ asset('/js/layoutScript.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btn = document.querySelector('.topbar-notif-btn');
+            const dropdown = document.getElementById('notifDropdown');
+            if (btn && dropdown) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    dropdown.classList.toggle('open');
+                });
+                document.addEventListener('click', function (e) {
+                    if (!e.target.closest('#notifWrap')) {
+                        dropdown.classList.remove('open');
+                    }
+                });
+            }
+        });
+    </script>
     <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <style>
+        /* ── Értesítési csengő (Ügyfél topbar) ── */
+        .topbar-notif-wrap {
+            position: relative;
+            margin-right: 12px;
+        }
+        .topbar-notif-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            color: #94a3b8;
+            font-size: 16px;
+            text-decoration: none;
+            position: relative;
+            transition: background 0.2s, color 0.2s;
+            cursor: pointer;
+        }
+        .topbar-notif-btn:hover,
+        .topbar-notif-btn.has-notif {
+            background: rgba(201,169,122,0.15);
+            color: #c9a97a;
+        }
+        .topbar-notif-btn.has-notif {
+            animation: bellRing 2.5s ease-in-out infinite;
+        }
+        @keyframes bellRing {
+            0%,100% { transform: rotate(0deg); }
+            10%      { transform: rotate(14deg); }
+            20%      { transform: rotate(-10deg); }
+            30%      { transform: rotate(8deg); }
+            40%      { transform: rotate(-5deg); }
+            50%      { transform: rotate(3deg); }
+            60%      { transform: rotate(0deg); }
+        }
+        .notif-badge {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            background: #dc2626;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 3px;
+            border: 2px solid #1e293b;
+            line-height: 1;
+        }
+        /* Dropdown panel */
+        .notif-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 300px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            border: 1px solid #e2e8f0;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        .notif-dropdown.open { display: block; }
+        .notif-dropdown-header {
+            background: #1e293b;
+            color: #c9a97a;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            letter-spacing: 0.5px;
+        }
+        .notif-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            text-decoration: none;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.15s;
+        }
+        .notif-item:hover { background: #fdf6ee; }
+        .notif-item-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        .notif-item-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .notif-item-sub {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+        .notif-dropdown-footer {
+            padding: 9px 14px;
+            text-align: right;
+            background: #f8fafc;
+        }
+        .notif-dropdown-footer a {
+            font-size: 12px;
+            color: #c9a97a;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .notif-dropdown-footer a:hover { text-decoration: underline; }
+    </style>
 </head>
 
 <body>
@@ -57,13 +193,21 @@
 
                 @switch($user->role)
                     @case('Ugyfel')
-                        <a href="{{ route('profile.edit') }}"
-                           class="dashboard-nav-item {{ str_starts_with($route, 'profile') ? 'nav-active' : '' }}">
-                            <i class="fas fa-user-circle"></i> Fiókom
-                        </a>
                         <a href="{{ route('ugyfel.megrendelesek') }}"
                            class="dashboard-nav-item {{ $route === 'ugyfel.megrendelesek' ? 'nav-active' : '' }}">
-                            <i class="fas fa-clipboard-check"></i> Megrendeléseim
+                            <i class="fas fa-th-large"></i> Megrendeléseim
+                        </a>
+                        <a href="{{ route('ugyfel.szamlak') }}"
+                           class="dashboard-nav-item {{ $route === 'ugyfel.szamlak' ? 'nav-active' : '' }}">
+                            <i class="fas fa-file-invoice"></i> Számlák
+                        </a>
+                        <a href="{{ route('ugyfel.adataim') }}"
+                           class="dashboard-nav-item {{ $route === 'ugyfel.adataim' ? 'nav-active' : '' }}">
+                            <i class="fas fa-user"></i> Adataim
+                        </a>
+                        <a href="{{ route('profile.edit') }}"
+                           class="dashboard-nav-item {{ str_starts_with($route, 'profile') ? 'nav-active' : '' }}">
+                            <i class="fas fa-shield-alt"></i> Fiókom
                         </a>
                     @break
 
@@ -79,6 +223,18 @@
                         <a href="{{ route('megrendeles.index') }}"
                            class="dashboard-nav-item {{ str_starts_with($route, 'megrendeles') ? 'nav-active' : '' }}">
                             <i class="fas fa-clipboard-list"></i> Megrendelések
+                        </a>
+                        <a href="{{ route('szamlak.index') }}"
+                           class="dashboard-nav-item {{ str_starts_with($route, 'szamlak') ? 'nav-active' : '' }}">
+                            <i class="fas fa-file-invoice-dollar"></i> Számlák
+                        </a>
+                        <a href="{{ route('fizetes.index') }}"
+                           class="dashboard-nav-item {{ $route === 'fizetes.index' ? 'nav-active' : '' }}">
+                            <i class="fas fa-coins"></i> Fizetések
+                        </a>
+                        <a href="{{ route('emlekeztetok.index') }}"
+                           class="dashboard-nav-item {{ str_starts_with($route, 'emlekeztetok') ? 'nav-active' : '' }}">
+                            <i class="fas fa-bell"></i> Emlékeztetők
                         </a>
                         <a href="{{ route('profile.edit') }}"
                            class="dashboard-nav-item {{ str_starts_with($route, 'profile') ? 'nav-active' : '' }}">
@@ -99,6 +255,18 @@
                            class="dashboard-nav-item {{ str_starts_with($route, 'megrendeles') ? 'nav-active' : '' }}">
                             <i class="fas fa-clipboard-list"></i> Megrendelések
                         </a>
+                        <a href="{{ route('szamlak.index') }}"
+                           class="dashboard-nav-item {{ str_starts_with($route, 'szamlak') ? 'nav-active' : '' }}">
+                            <i class="fas fa-file-invoice-dollar"></i> Számlák
+                        </a>
+                        <a href="{{ route('fizetes.index') }}"
+                           class="dashboard-nav-item {{ $route === 'fizetes.index' ? 'nav-active' : '' }}">
+                            <i class="fas fa-coins"></i> Fizetések
+                        </a>
+                        <a href="{{ route('emlekeztetok.index') }}"
+                           class="dashboard-nav-item {{ str_starts_with($route, 'emlekeztetok') ? 'nav-active' : '' }}">
+                            <i class="fas fa-bell"></i> Emlékeztetők
+                        </a>
                         <a href="{{ route('anyagok.index') }}"
                            class="dashboard-nav-item {{ str_starts_with($route, 'anyagok') ? 'nav-active' : '' }}">
                             <i class="fas fa-boxes"></i> Anyagok
@@ -115,6 +283,10 @@
                            class="dashboard-nav-item {{ str_starts_with($route, 'cegadatok') ? 'nav-active' : '' }}">
                             <i class="fas fa-building"></i> Cégadatok
                         </a>
+                        <a href="{{ route('beallitasok.index') }}"
+                           class="dashboard-nav-item {{ $route === 'beallitasok.index' ? 'nav-active' : '' }}">
+                            <i class="fas fa-sliders-h"></i> Beállítások
+                        </a>
                         <a href="{{ route('profile.edit') }}"
                            class="dashboard-nav-item {{ str_starts_with($route, 'profile') ? 'nav-active' : '' }}">
                             <i class="fas fa-user-circle"></i> Fiókom
@@ -123,34 +295,106 @@
                 @endswitch
 
                 <div class="nav-item-divider"></div>
-                <form action="{{ route('logout') }}" method="post" class="form-delete" style="margin:2px 10px;">
+                <form action="{{ route('logout') }}" method="post" class="form-delete" style="margin:2px 8px;">
                     @csrf
                     <button type="submit" class="dashboard-nav-item"
                         style="width:calc(100% - 0px);">
-                        <i class="fas fa-sign-out-alt"></i> Kijelentkezés
+                        <i class="fas fa-sign-out-alt"></i> Kilépés
                     </button>
                 </form>
             </nav>
-
-            <div class="sidebar-user">
-                <div class="sidebar-user-avatar">{{ $userInitial }}</div>
-                <div class="sidebar-user-info">
-                    <div class="sidebar-user-name">{{ $user->name ?? 'Felhasználó' }}</div>
-                    <div class="sidebar-user-role">{{ $roleLabel }}</div>
-                </div>
-            </div>
         </div>
 
         <div class='dashboard-app'>
             <header class='dashboard-toolbar'>
                 <a href="#!" class="menu-toggle-dashboard"><i class="fas fa-bars"></i></a>
-                <a style="display:none;" href="#" class="notification">
-                    <i class="fa-solid fa-bell"><span class="badge">3</span></i>
-                </a>
-                <span class="toolbar-date">
-                    {{ now()->locale('hu')->isoFormat('YYYY. MMMM D., dddd') }}
-                </span>
+
+                {{-- Értesítési csengő – csak Ügyfél szerepkörnél --}}
+                @if($user->role === 'Ugyfel')
+                    @php
+                        $notifUgyfel = Auth::user()->ugyfel;
+                        $dijbekeroDb = $notifUgyfel
+                            ? \App\Models\Szamla::where('ugyfel_id', $notifUgyfel->Ugyfel_ID)
+                                ->where('szamla_tipus', 'dijbekero')
+                                ->whereIn('statusz', ['fuggoben', 'kesedelmes'])
+                                ->count()
+                            : 0;
+                    @endphp
+                    <div class="topbar-notif-wrap" id="notifWrap">
+                        <a href="{{ route('ugyfel.szamlak') }}#dijbekero-section"
+                           class="topbar-notif-btn {{ $dijbekeroDb > 0 ? 'has-notif' : '' }}"
+                           title="{{ $dijbekeroDb > 0 ? $dijbekeroDb . ' függőben lévő díjbekérő' : 'Nincs új értesítés' }}">
+                            <i class="fas fa-bell"></i>
+                            @if($dijbekeroDb > 0)
+                                <span class="notif-badge">{{ $dijbekeroDb > 9 ? '9+' : $dijbekeroDb }}</span>
+                            @endif
+                        </a>
+                        {{-- Tooltip panel --}}
+                        @if($dijbekeroDb > 0)
+                        <div class="notif-dropdown" id="notifDropdown">
+                            <div class="notif-dropdown-header">
+                                <i class="fas fa-bell"></i> Fizetési értesítések
+                            </div>
+                            <a href="{{ route('ugyfel.szamlak') }}#dijbekero-section" class="notif-item">
+                                <div class="notif-item-icon">💳</div>
+                                <div class="notif-item-body">
+                                    <div class="notif-item-title">{{ $dijbekeroDb }} függőben lévő díjbekérő</div>
+                                    <div class="notif-item-sub">Kattintson a megtekintéshez és fizetéshez</div>
+                                </div>
+                            </a>
+                            <div class="notif-dropdown-footer">
+                                <a href="{{ route('ugyfel.szamlak') }}">Összes megtekintése →</a>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                @endif
+
+                <div class="topbar-user">
+                    <div class="topbar-user-info">
+                        <div class="topbar-user-name">{{ $user->name ?? 'Felhasználó' }}</div>
+                        <div class="topbar-user-role">{{ $roleLabel }}</div>
+                    </div>
+                    <div class="topbar-user-avatar">{{ $userInitial }}</div>
+                </div>
             </header>
+
+            {{-- Ugyfel profil banner (Netfone stílusú) --}}
+            @if($user->role === 'Ugyfel')
+                @php
+                    $ugyfelProfil = Auth::user()->ugyfel;
+                    $osszesMegr  = $ugyfelProfil ? $ugyfelProfil->megrendelesek->count() : 0;
+                    $aktivMegr   = $ugyfelProfil ? $ugyfelProfil->megrendelesek->where('Statusz', 1)->count() : 0;
+                    $befejMegr   = $ugyfelProfil ? $ugyfelProfil->megrendelesek->where('Statusz', 0)->count() : 0;
+                @endphp
+                <div class="profile-banner">
+                    <div class="profile-banner-hero"></div>
+                    <div class="profile-banner-body">
+                        <div class="profile-banner-avatar">{{ $userInitial }}</div>
+                        <div class="profile-banner-info">
+                            <div class="profile-banner-name">{{ $ugyfelProfil->Nev ?? $user->name }}</div>
+                            <div class="profile-banner-sub">Ügyfelszám: {{ $ugyfelProfil->Ugyfel_ID ?? '—' }}</div>
+                        </div>
+                        <div class="profile-banner-stats">
+                            <div class="profile-stat">
+                                <div class="profile-stat-val">{{ $osszesMegr }}</div>
+                                <div class="profile-stat-lbl">Összes</div>
+                            </div>
+                            <div class="profile-banner-divider"></div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-val">{{ $aktivMegr }}</div>
+                                <div class="profile-stat-lbl">Aktív</div>
+                            </div>
+                            <div class="profile-banner-divider"></div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-val">{{ $befejMegr }}</div>
+                                <div class="profile-stat-lbl">Befejezett</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class='dashboard-content'>
                 <div>
                     <div class='card'>

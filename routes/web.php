@@ -14,6 +14,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SzereloController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CegadatController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SzamlaController;
+use App\Http\Controllers\FizetesController;
+use App\Http\Controllers\EmlekeztetoController;
+use App\Http\Controllers\BeallitasokController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -29,8 +34,8 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('landing');
+})->name('landing');
 
 Route::get('/dashboard', function () {
     $user = Auth::user();
@@ -53,6 +58,9 @@ Route::middleware('auth')->group(function () {
     Route::middleware('can:access-ugyfel')->group(function () {
 
         Route::get('/ugyfel/megrendelesek', [UgyfelController::class, 'megrendelesek'])->name('ugyfel.megrendelesek');
+        Route::get('/ugyfel/szamlak', [UgyfelController::class, 'szamlak'])->name('ugyfel.szamlak');
+        Route::get('/ugyfel/adataim', [UgyfelController::class, 'adataim'])->name('ugyfel.adataim');
+        Route::put('/ugyfel/adataim', [UgyfelController::class, 'updateAdataim'])->name('ugyfel.adataim.update');
     });
 
     Route::middleware('can:access-admin-or-uzletkoto')->group(function () {
@@ -63,6 +71,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/megrendeles/{megrendeles}', [MegrendelesController::class, 'update'])->name('megrendeles.update');
         Route::delete('/megrendeles/{megrendeles}', [MegrendelesController::class, 'destroy'])->name('megrendeles.destroy');
         Route::get('/megrendeles/{megrendeles}/edit', [MegrendelesController::class, 'edit'])->name('megrendeles.edit');
+        Route::get('/megrendeles/{id}', [MegrendelesController::class, 'show'])->name('megrendeles.show');
+        Route::post('/megrendeles/{megrendeles}/email-ujra', [MailController::class, 'resendMail'])->name('megrendeles.resend-email');
 
         Route::get('/send-mail', [MailController::class, 'sendMailWithPdf']);
         Route::get('/preview-pdf', [MailController::class, 'previewPdf']);
@@ -94,6 +104,48 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('/megrendeles/{id}', [MegrendelesController::class, 'show'])->name('megrendeles.show');
+
+    // ── Fizetés (minden bejelentkezett felhasználó) ──────────────────────────
+    Route::get('/megrendeles/{megrendeles}/fizet',        [PaymentController::class, 'checkout'])->name('payment.checkout');
+    Route::get('/megrendeles/{megrendeles}/fizet/siker',  [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/megrendeles/{megrendeles}/fizet/megsem', [PaymentController::class, 'cancel'])->name('payment.cancel');
+    Route::post('/megrendeles/{megrendeles}/fizetve',     [PaymentController::class, 'manualMarkPaid'])->name('payment.manual')->middleware('can:access-admin-or-uzletkoto');
+
+    // ── Számlázás (legacy – megrendelés-alapú) ───────────────────────────────
+    Route::post('/megrendeles/{megrendeles}/szamla',         [SzamlaController::class, 'legacyBillingoCreate'])->name('szamla.create')->middleware('can:access-admin-or-uzletkoto');
+    Route::get('/megrendeles/{megrendeles}/szamla/letoltes', [SzamlaController::class, 'legacyDownload'])->name('szamla.download');
+
+    // ── Számlák CRUD ─────────────────────────────────────────────────────────
+    Route::middleware('can:access-admin-or-uzletkoto')->group(function () {
+        Route::get('/szamlak',                          [SzamlaController::class, 'index'])->name('szamlak.index');
+        Route::get('/szamlak/create',                   [SzamlaController::class, 'createForm'])->name('szamlak.create');
+        Route::post('/szamlak',                         [SzamlaController::class, 'store'])->name('szamlak.store');
+        Route::get('/szamlak/{szamla}',                 [SzamlaController::class, 'show'])->name('szamlak.show');
+        Route::get('/szamlak/{szamla}/edit',            [SzamlaController::class, 'edit'])->name('szamlak.edit');
+        Route::put('/szamlak/{szamla}',                 [SzamlaController::class, 'update'])->name('szamlak.update');
+        Route::post('/szamlak/{szamla}/fizetve',        [SzamlaController::class, 'markAsPaid'])->name('szamlak.markAsPaid');
+        Route::post('/szamlak/{szamla}/storno',         [SzamlaController::class, 'storno'])->name('szamlak.storno');
+        Route::post('/szamlak/{szamla}/billingo',        [SzamlaController::class, 'billingoKiallitas'])->name('szamlak.billingo');
+        Route::post('/szamlak/{szamla}/sajat',           [SzamlaController::class, 'sajatKiallitas'])->name('szamlak.sajat');
+        Route::get('/szamlak/{szamla}/teszt',            [SzamlaController::class, 'tesztLetoltes'])->name('szamlak.teszt');
+    });
+
+    // ── Számla letöltés (minden bejelentkezett felhasználó – ellenőrzés controllerben) ──
+    Route::get('/szamlak/{szamla}/letoltes',       [SzamlaController::class, 'download'])->name('szamlak.download');
+    Route::get('/szamlak/{szamla}/sajat/letoltes', [SzamlaController::class, 'sajatLetoltes'])->name('szamlak.sajat.letoltes');
+
+    // ── Fizetések áttekintés ─────────────────────────────────────────────────
+    Route::get('/fizetesek', [FizetesController::class, 'index'])->name('fizetes.index')->middleware('can:access-admin-or-uzletkoto');
+
+    // ── Fizetési emlékeztetők GUI ──────────────────────────────────────────────
+    Route::middleware('can:access-admin-or-uzletkoto')->group(function () {
+        Route::get('/emlekeztetok', [EmlekeztetoController::class, 'index'])->name('emlekeztetok.index');
+        Route::post('/emlekeztetok/{szamla}/kuldes', [EmlekeztetoController::class, 'kuldes'])->name('emlekeztetok.kuldes');
+    });
+
+    // ── Beállítások ──────────────────────────────────────────────────────────
+    Route::get('/beallitasok', [BeallitasokController::class, 'index'])->name('beallitasok.index')->middleware('can:access-admin');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

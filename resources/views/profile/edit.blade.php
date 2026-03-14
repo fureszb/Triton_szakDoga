@@ -1,44 +1,19 @@
 @extends('ujlayout')
 
 @section('content')
-    <style>
-        .card-body {
-            padding: 0;
-        }
 
-        @media (min-width: 1024px) {
-            .lg\:px-8 {
-                padding: 1rem !important;
-            }
-        }
+<div class="page-header">
+    <div>
+        <h1 style="margin:0;font-size:20px;font-weight:700;color:#1e293b;">
+            <i class="fas fa-user-circle" style="color:#c9a97a;margin-right:8px;"></i>Fiókom
+        </h1>
+        <p style="margin:4px 0 0;font-size:13px;color:#64748b;">Profiladatok és jelszókezelés</p>
+    </div>
+</div>
 
-        @media (min-width: 640px) {
-            .sm\:p-8 {
-                padding: 2rem !important;
-            }
-        }
-    </style>
-    <x-app-layout>
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                    <div class="max-w-xl">
-                        @include('profile.partials.update-profile-information-form')
-                    </div>
-                </div>
+<div style="max-width:680px;display:flex;flex-direction:column;gap:20px;">
+    @include('profile.partials.update-profile-information-form')
+    @include('profile.partials.update-password-form')
+</div>
 
-                <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                    <div class="max-w-xl">
-                        @include('profile.partials.update-password-form')
-                    </div>
-                </div>
-
-                <div style="display: none" class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                    <div class="max-w-xl">
-                        @include('profile.partials.delete-user-form')
-                    </div>
-                </div>
-            </div>
-        </div>
-    </x-app-layout>
 @endsection

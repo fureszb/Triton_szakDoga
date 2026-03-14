@@ -9,6 +9,7 @@ use App\Models\Munka;
 use App\Models\Munkanaplo;
 use App\Models\Szerelo;
 use App\Models\Szolgaltatas;
+use App\Models\Szamla;
 use App\Models\Ugyfel;
 use App\Models\User;
 use App\Models\Varos;
@@ -221,10 +222,82 @@ class UgyfelController extends Controller
     }
     public function megrendelesek()
     {
+        $ugyfelId = Auth::user()->ugyfel->Ugyfel_ID;
+        $megrendelesek = Megrendeles::where('Ugyfel_ID', $ugyfelId)
+            ->with([
+                'munkak.szolgaltatas',
+                'munkak.szerelo',
+                'munkak.felhasznalt_anyagok.anyag',
+                'varos',
+                'ugyfel',
+            ])
+            ->get();
+        return view('ugyfel.megrendelesek', compact('megrendelesek'));
+    }
 
+    public function szamlak()
+    {
         $ugyfelId = Auth::user()->ugyfel->Ugyfel_ID;
 
-        $megrendelesek = Megrendeles::where('Ugyfel_ID', $ugyfelId)->get();
-        return view('ugyfel.megrendelesek', compact('megrendelesek'));
+        // Stornózott kivételével mindent mutatunk: számlák ÉS díjbekérők
+        $szamlak = Szamla::where('ugyfel_id', $ugyfelId)
+            ->whereIn('szamla_tipus', ['szamla', 'dijbekero'])
+            ->whereIn('statusz', ['fizetve', 'fuggoben', 'kesedelmes'])
+            ->with(['megrendeles.varos', 'fizetesek'])
+            ->orderBy('kiallitas_datum', 'desc')
+            ->get();
+
+        return view('ugyfel.szamlak', compact('szamlak'));
+    }
+
+    public function adataim()
+    {
+        $ugyfel = Auth::user()->ugyfel()->with('varos')->first();
+        $varosok = Varos::all();
+        return view('ugyfel.adataim', compact('ugyfel', 'varosok'));
+    }
+
+    public function updateAdataim(Request $request)
+    {
+        $section = $request->input('section');
+        $ugyfel  = Auth::user()->ugyfel;
+
+        if ($section === 'szemelyes') {
+            $request->validate([
+                'Nev'            => ['required', 'regex:/^[\p{L} \-]+$/u', 'min:3'],
+                'Szamlazasi_Nev' => ['required', 'min:3'],
+                'Szamlazasi_Cim' => ['required', 'min:3'],
+                'Adoszam'        => ['nullable', 'min:8', 'max:11'],
+                'Varos_ID'       => ['required', 'exists:varos,Varos_ID'],
+            ], [
+                'Nev.required'            => 'A név megadása kötelező.',
+                'Nev.min'                 => 'A név legalább 3 karakter.',
+                'Szamlazasi_Nev.required' => 'A számlázási név megadása kötelező.',
+                'Szamlazasi_Cim.required' => 'A számlázási cím megadása kötelező.',
+                'Varos_ID.required'       => 'A város kiválasztása kötelező.',
+            ]);
+
+            $ugyfel->Nev            = $request->Nev;
+            $ugyfel->Szamlazasi_Nev = $request->Szamlazasi_Nev;
+            $ugyfel->Szamlazasi_Cim = $request->Szamlazasi_Cim;
+            $ugyfel->Adoszam        = $request->Adoszam;
+            $ugyfel->Varos_ID       = $request->Varos_ID;
+            $ugyfel->save();
+
+            $ugyfel->user->update(['nev' => $request->Nev]);
+
+        } elseif ($section === 'kapcsolat') {
+            $request->validate([
+                'Telefonszam' => ['required', 'regex:/^(\+36|06)?[0-9]{9}$/'],
+            ], [
+                'Telefonszam.required' => 'A telefonszám megadása kötelező.',
+                'Telefonszam.regex'    => 'A telefonszám formátuma érvénytelen (pl. +36301234567).',
+            ]);
+
+            $ugyfel->Telefonszam = $request->Telefonszam;
+            $ugyfel->save();
+        }
+
+        return redirect()->route('ugyfel.adataim')->with('success', 'Adataid sikeresen frissítve!');
     }
 }

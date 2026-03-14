@@ -1,61 +1,71 @@
 @extends('ujlayout')
 
 @section('content')
-    @include('breadcrumbs')
+@include('breadcrumbs')
 
-    <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
-
-    <div class="detail-header">
+<div class="sc-page-header">
+    <div class="sc-page-header-left">
         <h1><i class="fas fa-user-friends"></i> {{ $ugyfel->Nev }}</h1>
-        <div class="detail-header-actions">
-            <a href="{{ route('ugyfel.index') }}" class="btn-back">
-                <i class="fas fa-arrow-left"></i> Vissza
-            </a>
-            <a href="{{ route('ugyfel.edit', ['ugyfel' => $ugyfel->Ugyfel_ID]) }}" class="btn-edit">
-                <i class="fas fa-edit"></i> Szerkesztés
-            </a>
+        <span class="sc-id-badge">#{{ $ugyfel->Ugyfel_ID }}</span>
+    </div>
+    <div class="sc-page-header-actions">
+        <a href="{{ route('ugyfel.index') }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Vissza
+        </a>
+        <a href="{{ route('ugyfel.edit', ['ugyfel' => $ugyfel->Ugyfel_ID]) }}" class="btn-edit">
+            <i class="fas fa-edit"></i> Szerkesztés
+        </a>
+    </div>
+</div>
+
+<div class="sc-grid">
+
+    {{-- Személyes adatok --}}
+    <div class="sc-card">
+        <div class="sc-card-header">
+            <div class="sc-hicon"><i class="fas fa-user"></i></div>
+            <div class="sc-htitle">Személyes adatok</div>
+        </div>
+        <div class="sc-rows">
+            <div class="sc-row">
+                <div class="sc-lbl"><i class="fas fa-user"></i> Név</div>
+                <div class="sc-val">{{ $ugyfel->Nev }}</div>
+            </div>
+            <div class="sc-row">
+                <div class="sc-lbl"><i class="fas fa-envelope"></i> Email</div>
+                <div class="sc-val">{{ $ugyfel->Email ?? '—' }}</div>
+            </div>
+            <div class="sc-row">
+                <div class="sc-lbl"><i class="fas fa-phone"></i> Telefon</div>
+                <div class="sc-val">{{ $ugyfel->Telefonszam ?? '—' }}</div>
+            </div>
         </div>
     </div>
 
-    <div class="detail-section">
-        <div class="detail-section-label">Általános információk</div>
-        <div class="info-grid">
-            <div class="info-item">
-                <div class="info-label">Ügyfél ID</div>
-                <div class="info-value">{{ $ugyfel->Ugyfel_ID }}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Név</div>
-                <div class="info-value">{{ $ugyfel->Nev }}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Email</div>
-                <div class="info-value">{{ $ugyfel->Email ?? '-' }}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Telefonszám</div>
-                <div class="info-value">{{ $ugyfel->Telefonszam ?? '-' }}</div>
-            </div>
+    {{-- Számlázási adatok --}}
+    <div class="sc-card">
+        <div class="sc-card-header">
+            <div class="sc-hicon"><i class="fas fa-file-invoice"></i></div>
+            <div class="sc-htitle">Számlázási adatok</div>
         </div>
-    </div>
-
-    <div class="detail-section">
-        <div class="detail-section-label">Számlázási adatok</div>
-        <div class="info-grid">
-            <div class="info-item">
-                <div class="info-label">Számlázási név</div>
-                <div class="info-value">{{ $ugyfel->Szamlazasi_Nev ?? '-' }}</div>
+        <div class="sc-rows">
+            <div class="sc-row">
+                <div class="sc-lbl"><i class="fas fa-building"></i> Száml. név</div>
+                <div class="sc-val">{{ $ugyfel->Szamlazasi_Nev ?? '—' }}</div>
             </div>
-            <div class="info-item">
-                <div class="info-label">Számlázási cím</div>
-                <div class="info-value">
-                    {{ $varos->Irny_szam }} {{ $varos->Nev }}, {{ $ugyfel->Szamlazasi_Cim }}
+            <div class="sc-row">
+                <div class="sc-lbl"><i class="fas fa-map-marker-alt"></i> Cím</div>
+                <div class="sc-val">
+                    {{ $varos->Irny_szam ?? '' }} {{ $varos->Nev ?? '' }},
+                    {{ $ugyfel->Szamlazasi_Cim }}
                 </div>
             </div>
-            <div class="info-item">
-                <div class="info-label">Adószám</div>
-                <div class="info-value">{{ $ugyfel->Adoszam ?? '-' }}</div>
+            <div class="sc-row">
+                <div class="sc-lbl"><i class="fas fa-receipt"></i> Adószám</div>
+                <div class="sc-val">{{ $ugyfel->Adoszam ?? '—' }}</div>
             </div>
         </div>
     </div>
+
+</div>
 @endsection

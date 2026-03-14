@@ -9,6 +9,16 @@ Breadcrumbs::for('home.index', function (BreadcrumbTrail $trail) {
     $trail->push('Kezdőlap', route('home.index'));
 });
 
+// Ugyfel > Adataim
+Breadcrumbs::for('ugyfel.adataim', function (BreadcrumbTrail $trail) {
+    $trail->push('Adataim', route('ugyfel.adataim'));
+});
+
+// Ugyfel > Számlák
+Breadcrumbs::for('ugyfel.szamlak', function (BreadcrumbTrail $trail) {
+    $trail->push('Számlák', route('ugyfel.szamlak'));
+});
+
 // Home > Cégadatok
 Breadcrumbs::for('cegadatok.edit', function (BreadcrumbTrail $trail) {
     $trail->parent('home.index');
@@ -120,5 +130,47 @@ Breadcrumbs::for('anyagok.create', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('anyagok.show', function (BreadcrumbTrail $trail, $user) {
     $trail->parent('anyagok.index');
     $trail->push('Megtekintés', route('anyagok.show', $user));
+});
+
+// Home > Fizetések
+Breadcrumbs::for('fizetes.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Fizetések', route('fizetes.index'));
+});
+
+// Home > Emlékeztetők
+Breadcrumbs::for('emlekeztetok.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Fizetési emlékeztetők', route('emlekeztetok.index'));
+});
+
+// Home > Számlák
+Breadcrumbs::for('szamlak.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Számlák', route('szamlak.index'));
+});
+
+// Home > Számlák > Létrehozás
+Breadcrumbs::for('szamlak.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('szamlak.index');
+    $trail->push('Új számla', route('szamlak.create'));
+});
+
+// Home > Számlák > Megtekintés
+Breadcrumbs::for('szamlak.show', function (BreadcrumbTrail $trail, $szamla) {
+    $trail->parent('szamlak.index');
+    $trail->push('Számla #' . str_pad($szamla->szamla_id, 5, '0', STR_PAD_LEFT), route('szamlak.show', $szamla));
+});
+
+// Home > Számlák > Szerkesztés
+Breadcrumbs::for('szamlak.edit', function (BreadcrumbTrail $trail, $szamla) {
+    $trail->parent('szamlak.show', $szamla);
+    $trail->push('Szerkesztés', route('szamlak.edit', $szamla));
+});
+
+// Home > Beállítások
+Breadcrumbs::for('beallitasok.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Beállítások', route('beallitasok.index'));
 });
 

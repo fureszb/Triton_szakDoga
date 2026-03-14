@@ -1,64 +1,84 @@
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Fiókom adatai') }}
-        </h2>
+<form id="send-verification" method="post" action="{{ route('verification.send') }}">
+    @csrf
+</form>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Frissítse fiókja profiladatait és e-mail címét.") }}
-        </p>
-    </header>
+<form method="post" action="{{ route('profile.update') }}">
+    @csrf
+    @method('patch')
 
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-        @csrf
-    </form>
+    {{-- Hidden name field (not used in UI) --}}
+    <input type="hidden" name="name" value="{{ old('name', $user->name) }}">
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
-        @csrf
-        @method('patch')
-
-        <div style="display: none">
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+    <div class="fc-card">
+        <div class="fc-header">
+            <div class="fc-hicon"><i class="fas fa-id-card"></i></div>
+            <span class="fc-htitle">Fiókom adatai</span>
         </div>
+        <div class="fc-body">
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            {{-- Bejelentkezett felhasználó neve (csak olvasható) --}}
+            <div class="f-group">
+                <label class="f-label"><i class="fas fa-user"></i> Megjelenített név</label>
+                <input type="text" class="f-input" value="{{ $user->nev ?? $user->name }}" disabled
+                       style="background:#f8fafc;color:#94a3b8;cursor:not-allowed;">
+                <span style="font-size:11px;color:#94a3b8;margin-top:2px;">A nevet az admin tudja módosítani.</span>
+            </div>
 
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div>
-                    <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                        {{ __('Az Ön e-mail címe nincs ellenőrizve.') }}
+            {{-- Email --}}
+            <div class="f-group">
+                <label class="f-label"><i class="fas fa-at"></i> Email cím</label>
+                <input type="email" name="email" class="f-input"
+                       value="{{ old('email', $user->email) }}"
+                       required autocomplete="username">
+                @error('email')
+                    <span style="color:#ef4444;font-size:12px;margin-top:2px;">{{ $message }}</span>
+                @enderror
 
-                        <button form="send-verification" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            {{ __('Kattintson ide az ellenőrző e-mail újbóli elküldéséhez.') }}
-                        </button>
-                    </p>
+                @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
+                    <div style="margin-top:8px;padding:10px 14px;background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;font-size:12px;color:#92400e;display:flex;align-items:center;gap:8px;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>
+                            Az e-mail cím nincs megerősítve.
+                            <button form="send-verification"
+                                    style="background:none;border:none;color:#92400e;text-decoration:underline;cursor:pointer;font-size:12px;padding:0;font-family:inherit;">
+                                Ellenőrző e-mail újraküldése
+                            </button>
+                        </span>
+                    </div>
 
                     @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
-                            {{ __('Új ellenőrző linket küldtünk az e-mail címére.') }}
-                        </p>
+                        <div style="margin-top:6px;font-size:12px;color:#16a34a;display:flex;align-items:center;gap:5px;">
+                            <i class="fas fa-check-circle"></i> Ellenőrző e-mailt elküldtük.
+                        </div>
+                    @endif
+                @endif
+            </div>
+
+            {{-- Szerepkör (csak olvasható) --}}
+            <div class="f-group">
+                <label class="f-label"><i class="fas fa-shield-alt"></i> Szerepkör</label>
+                <div style="padding-top:4px;">
+                    @php $role = auth()->user()->role; @endphp
+                    @if($role === 'Admin')
+                        <span class="role-admin"><i class="fas fa-crown"></i> Admin</span>
+                    @elseif($role === 'Uzletkoto')
+                        <span class="role-uzlet"><i class="fas fa-briefcase"></i> Üzletkötő</span>
+                    @else
+                        <span class="role-ugyfel"><i class="fas fa-user"></i> Ügyfél</span>
                     @endif
                 </div>
-            @endif
+            </div>
+
         </div>
-
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Mentés') }}</x-primary-button>
-
+        <div class="fc-submit">
+            <button type="submit" class="btn-save">
+                <i class="fas fa-save"></i> Adatok mentése
+            </button>
             @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600 dark:text-gray-400"
-                >{{ __('Saved.') }}</p>
+                <span style="display:inline-flex;align-items:center;gap:5px;font-size:13px;color:#16a34a;">
+                    <i class="fas fa-check-circle"></i> Sikeresen mentve!
+                </span>
             @endif
         </div>
-    </form>
-</section>
+    </div>
+</form>

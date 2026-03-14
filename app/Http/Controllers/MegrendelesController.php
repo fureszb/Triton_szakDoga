@@ -28,13 +28,12 @@ class MegrendelesController extends Controller
         $sort_dir = request()->query('sort_dir', 'asc');
         $keyword = request()->input('search');
 
-        $query = Megrendeles::orderBy($sort_by, $sort_dir);
+        $query = Megrendeles::with(['ugyfel', 'varos'])->orderBy($sort_by, $sort_dir);
 
         if ($keyword) {
             $query->where('Megrendeles_Nev', 'like', "%$keyword%")
                 ->orWhere('Megrendeles_ID', 'like', "%$keyword%");
         }
-
 
         $megrendelesek = $query->paginate(9);
 
@@ -58,7 +57,7 @@ class MegrendelesController extends Controller
     public function show($id)
     {
 
-        $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag'])->find($id);
+        $megrendeles = Megrendeles::with(['ugyfel', 'szolgaltatas', 'szerelo', 'felhasznaltAnyagok', 'felhasznaltAnyagok.anyag', 'szamla.fizetesek'])->find($id);
 
 
         if (!$megrendeles) {
@@ -121,7 +120,7 @@ class MegrendelesController extends Controller
             'Munkakezdes_Idopontja' => 'required|date',
             'Munkabefejezes_Idopontja' => 'required|date|after:Munkakezdes_Idopontja',
             'Anyag_ID' => 'required|exists:anyag,Anyag_ID',
-            'Mennyiseg' => 'required|min:1'
+            'Mennyiseg' => 'required|min:1',
         ], [
             'Megrendeles_Nev.required' => 'A megrendelés nevének megadása kötelező.',
             'Varos_ID.required' => 'A város kiválasztása kötelező.',
@@ -146,10 +145,11 @@ class MegrendelesController extends Controller
 
         $megrendeles = new Megrendeles([
             'Megrendeles_Nev' => $request->input('Megrendeles_Nev'),
-            'Ugyfel_ID' => $request->Ugyfel_ID,
-            'Utca_Hazszam' => $request->input('Utca_Hazszam'),
+            'Ugyfel_ID'       => $request->Ugyfel_ID,
+            'Utca_Hazszam'    => $request->input('Utca_Hazszam'),
             'Szolgaltatas_ID' => $request->input('Szolgaltatas_ID'),
-            'Varos_ID' => $request->input('Varos_ID'),
+            'Varos_ID'        => $request->input('Varos_ID'),
+            'Statusz'         => $request->input('Statusz', 1),
         ]);
         $megrendeles->save();
 
@@ -216,7 +216,7 @@ class MegrendelesController extends Controller
             'Leiras' => 'nullable',
             'Munkakezdes_Idopontja' => 'required|date',
             'Munkabefejezes_Idopontja' => 'required|date|after_or_equal:Munkakezdes_Idopontja',
-            'Alairt_e' => 'required|boolean',
+            'Statusz' => 'required|boolean',
             'Pdf_EleresiUt' => 'nullable',
             'Anyag_ID' => 'required|exists:anyag,Anyag_ID',
             'Mennyiseg' => 'required|min:1',
@@ -243,7 +243,7 @@ class MegrendelesController extends Controller
         ]);
 
         $megrendeles = Megrendeles::findOrFail($id);
-        $megrendeles->update($request->only(['Megrendeles_Nev', 'Ugyfel_ID', 'Varos_ID', 'Utca_Hazszam', 'Alairt_e', 'Pdf_EleresiUt']));
+        $megrendeles->update($request->only(['Megrendeles_Nev', 'Ugyfel_ID', 'Varos_ID', 'Utca_Hazszam', 'Statusz', 'Pdf_EleresiUt']));
 
        $munka = Munka::findOrFail($request->input('Munka_ID'));
         $munka->update($request->only(['Szerelo_ID', 'Szolgaltatas_ID', 'Leiras', 'Munkakezdes_Idopontja', 'Munkabefejezes_Idopontja']));

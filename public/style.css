@@ -2,10 +2,10 @@
 
 :root {
     --font: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-    --red: #ed1b24;
-    --red-dark: #c81820;
-    --red-light: #fef2f2;
-    --red-shadow: rgba(237, 27, 36, 0.22);
+    --red: #c9a97a;
+    --red-dark: #a07848;
+    --red-light: #fdf6ee;
+    --red-shadow: rgba(201, 169, 122, 0.28);
     --navy: #0f172a;
     --slate-800: #1e293b;
     --slate-700: #334155;
@@ -62,17 +62,17 @@ input, button, select, textarea { font-family: var(--font); }
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
-    padding: 18px 20px;
+    padding: 16px 20px;
     background: var(--white);
     border-radius: var(--radius-lg);
-    border-left: 4px solid var(--red);
+    border: 1px solid var(--slate-200);
     box-shadow: var(--shadow-sm);
     flex-wrap: wrap;
     gap: 10px;
 }
 
 .page-header h1 {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
     color: var(--navy);
     display: flex;
@@ -84,15 +84,15 @@ input, button, select, textarea { font-family: var(--font); }
 }
 
 .page-header h1 i {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     background: var(--red-light);
     color: var(--red);
     border-radius: var(--radius-sm);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 15px;
+    font-size: 14px;
     flex-shrink: 0;
 }
 
@@ -322,9 +322,9 @@ input, button, select, textarea { font-family: var(--font); }
    ============================================================ */
 .detail-header {
     display: flex; align-items: flex-start; justify-content: space-between;
-    margin-bottom: 22px; padding: 18px 20px;
+    margin-bottom: 22px; padding: 16px 20px;
     background: var(--white); border-radius: var(--radius-lg);
-    border-left: 4px solid var(--red); box-shadow: var(--shadow-sm);
+    border: 1px solid var(--slate-200); box-shadow: var(--shadow-sm);
     flex-wrap: wrap; gap: 12px;
 }
 .detail-header h1 {
@@ -381,7 +381,8 @@ input, button, select, textarea { font-family: var(--font); }
 /* ============================================================
    FORMS
    ============================================================ */
-form { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 0; }
+form { display: block; margin-top: 0; }
+form:has(fieldset) { display: flex; flex-wrap: wrap; gap: 14px; }
 
 .form-card {
     background: var(--white); border-radius: var(--radius-lg); padding: 24px;
@@ -437,6 +438,697 @@ select { cursor: pointer; }
 .error-code { font-size: 7rem; font-weight: 800; color: var(--red); line-height: 1; margin-bottom: 8px; letter-spacing: -6px; font-family: var(--font); }
 .error-title { font-size: 1.4rem; color: var(--navy); font-weight: 700; margin-bottom: 8px; }
 .error-desc { font-size: 13px; color: var(--slate-400); margin-bottom: 32px; }
+
+/* ============================================================
+   UGYFEL PORTAL — section label
+   ============================================================ */
+.ugyfel-section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+}
+
+.ugyfel-section-label i {
+    color: var(--red);
+    font-size: 15px;
+}
+
+.ugyfel-section-count {
+    margin-left: 4px;
+    background: var(--slate-100);
+    color: var(--slate-500);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    border: 1px solid var(--slate-200);
+}
+
+.ugyfel-section-desc {
+    font-size: 13px;
+    color: var(--slate-500);
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
+/* ============================================================
+   UGYFEL PORTAL — service block (Netfone-style)
+   ============================================================ */
+.service-block {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.service-block-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--slate-100);
+    flex-wrap: wrap;
+}
+
+.service-block-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    flex: 1;
+}
+
+.service-block-desc {
+    font-size: 12px;
+    color: var(--slate-500);
+    flex-basis: 100%;
+    order: 10;
+    margin-top: -6px;
+}
+
+.service-block-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    background: var(--green-light);
+    color: #065f46;
+    white-space: nowrap;
+}
+
+.service-block-badge.befejezett {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+/* Toggle pill (purely decorative, like Netfone) */
+.service-block-toggle {
+    width: 36px;
+    height: 20px;
+    border-radius: 9999px;
+    background: var(--green);
+    position: relative;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    padding: 2px;
+}
+.service-block-toggle.inactive { background: var(--slate-300); }
+.toggle-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+.service-block-toggle.inactive .toggle-dot { margin-left: 0; }
+
+/* Service rows */
+.service-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.service-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--slate-100);
+    text-decoration: none;
+    transition: background 0.12s;
+    cursor: pointer;
+}
+
+.service-row:last-child { border-bottom: none; }
+.service-row:hover { background: #f8fafc; }
+
+.service-row-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--red-light);
+    color: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.service-row-icon.befejezett {
+    background: #dbeafe;
+    color: var(--blue);
+}
+
+.service-row-body { flex: 1; min-width: 0; }
+
+.service-row-id {
+    font-size: 11px;
+    color: var(--slate-400);
+    font-family: monospace;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.service-row-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.service-row-sub {
+    font-size: 12px;
+    color: var(--slate-500);
+    margin-top: 2px;
+}
+
+.service-row-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.service-row-arrow {
+    color: var(--slate-400);
+    font-size: 11px;
+}
+
+/* ============================================================
+   UGYFEL PORTAL — Számlaim / Megrendelések lista (Netfone-style)
+   ============================================================ */
+.szamla-block {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.szamla-block-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    border-bottom: 2px solid var(--slate-100);
+}
+
+.szamla-block-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+}
+.szamla-block-icon.aktiv    { color: var(--green); }
+.szamla-block-icon.befejezett { color: var(--blue); }
+
+.szamla-block-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.szamla-block-desc {
+    font-size: 12px;
+    color: var(--slate-500);
+    margin-top: 2px;
+}
+
+.szamla-block-badge {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    white-space: nowrap;
+}
+.szamla-block-badge.aktiv     { background: var(--green-light); color: #065f46; }
+.szamla-block-badge.befejezett { background: #dbeafe; color: #1e40af; }
+
+/* List of rows */
+.szamla-list { display: flex; flex-direction: column; gap: 0; }
+
+.szamla-row {
+    border-top: 3px solid var(--slate-200);
+    padding: 18px 22px 20px;
+    background: var(--white);
+}
+.szamla-row:first-child { border-top: none; }
+
+/* Collapsible befejezett sor */
+.szamla-row-collapsible { padding-bottom: 0; }
+
+.szamla-row-toggle {
+    cursor: pointer;
+    user-select: none;
+    padding-bottom: 18px;
+    transition: background 0.15s;
+    border-radius: 4px;
+    margin: 0 -4px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.szamla-row-toggle:hover { background: var(--slate-50, #f8fafc); }
+
+/* Collapse panel */
+.szamla-collapse {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.32s ease;
+}
+.szamla-collapse.open {
+    /* max-height set via JS */
+}
+
+/* Chevron toggle icon */
+.szamla-chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--slate-100);
+    color: var(--slate-400);
+    font-size: 12px;
+    transition: transform 0.28s ease, background 0.15s, color 0.15s;
+    flex-shrink: 0;
+}
+.szamla-chevron.open {
+    transform: rotate(180deg);
+    background: rgba(237,27,36,0.1);
+    color: var(--red);
+}
+
+/* Top line: number + name | pdf btn + badge */
+.szamla-row-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.szamla-row-left { min-width: 0; }
+
+.szamla-row-num {
+    font-size: 11px;
+    font-family: monospace;
+    font-weight: 700;
+    color: var(--slate-400);
+    margin-bottom: 2px;
+    letter-spacing: 0.5px;
+}
+
+.szamla-row-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.szamla-row-meta-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--slate-400);
+    font-weight: 400;
+}
+.szamla-row-meta-inline i {
+    margin-right: 4px;
+    font-size: 11px;
+}
+
+.szamla-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* PDF button — like Netfone green PDF tag */
+.szamla-pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    background: #d1fae5;
+    color: #065f46 !important;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+    text-decoration: none;
+    border: 1px solid #6ee7b7;
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+}
+.szamla-pdf-btn:hover {
+    background: var(--green);
+    color: #fff !important;
+    border-color: var(--green);
+}
+.szamla-pdf-btn i { font-size: 12px; }
+
+/* Megrendelés szintű helyszín info */
+.szamla-megr-info {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 8px 0 10px;
+    border-top: 1px solid var(--slate-100);
+    margin-top: 4px;
+}
+.szamla-megr-info .szamla-meta-label { flex-shrink: 0; }
+
+/* Munka blokk — egy-egy munka elkülönítve */
+.munka-block {
+    border-top: 2px solid var(--slate-100);
+    margin-top: 8px;
+    padding-top: 10px;
+}
+
+.munka-block:first-of-type {
+    margin-top: 4px;
+}
+
+.munka-block-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--slate-600);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.munka-block-label i {
+    color: var(--red);
+    font-size: 11px;
+}
+
+.munka-sorszam {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--slate-100);
+    color: var(--slate-500);
+    padding: 2px 8px;
+    border-radius: 9999px;
+    border: 1px solid var(--slate-200);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+/* Meta grid */
+.szamla-row-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 0;
+    border-top: 1px solid var(--slate-100);
+    padding-top: 12px;
+}
+
+.szamla-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 160px;
+    flex: 1;
+    padding: 6px 14px 6px 0;
+    border-right: 1px solid var(--slate-100);
+}
+.szamla-meta-item:last-child { border-right: none; }
+.szamla-meta-item.szamla-meta-wide {
+    flex-basis: 100%;
+    min-width: 100%;
+    border-right: none;
+    border-top: 1px solid var(--slate-100);
+    padding-top: 10px;
+}
+
+.szamla-meta-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--slate-400);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.szamla-meta-label i { font-size: 10px; }
+
+.szamla-meta-val {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--navy);
+    word-break: break-word;
+}
+
+/* ============================================================
+   UGYFEL PORTAL — Adataim kártya
+   ============================================================ */
+.adat-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    max-width: 640px;
+}
+
+.adat-group-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--slate-400);
+    padding: 14px 20px 4px;
+}
+
+.adat-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--slate-100);
+}
+
+.adat-row:last-child { border-bottom: none; }
+
+.adat-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    background: var(--slate-100);
+    color: var(--slate-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.adat-label {
+    font-size: 12px;
+    color: var(--slate-500);
+    min-width: 130px;
+    flex-shrink: 0;
+}
+
+.adat-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--navy);
+    word-break: break-word;
+}
+
+.adat-divider {
+    height: 1px;
+    background: var(--slate-200);
+    margin: 4px 20px;
+}
+
+/* ============================================================
+   UGYFEL PORTAL — Adataim (Netfone-style, tabs + edit)
+   ============================================================ */
+
+/* Tab navigation */
+.adat-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 18px;
+    border-bottom: 2px solid var(--slate-200);
+    padding-bottom: 0;
+}
+.adat-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--slate-400);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.15s, border-color 0.15s;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+.adat-tab:hover { color: var(--navy); }
+.adat-tab.active {
+    color: var(--red);
+    border-bottom-color: var(--red);
+}
+.adat-tab i { font-size: 13px; }
+
+/* Panel */
+.adat-panel { max-width: 640px; }
+
+/* Netfone-style card */
+.adat-netfone-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+.adat-netfone-header {
+    padding: 22px 26px 16px;
+}
+.adat-netfone-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+}
+.adat-netfone-desc {
+    font-size: 13px;
+    color: var(--slate-400);
+    line-height: 1.5;
+}
+.adat-netfone-divider {
+    height: 1px;
+    background: var(--slate-200);
+    margin: 0 26px;
+}
+.adat-netfone-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 26px;
+    font-size: 14px;
+    color: var(--navy);
+    border-bottom: 1px solid var(--slate-100);
+}
+.adat-netfone-row:last-of-type { border-bottom: none; }
+.adat-netfone-icon {
+    width: 30px;
+    text-align: center;
+    color: var(--slate-400);
+    font-size: 14px;
+    flex-shrink: 0;
+}
+.adat-netfone-row strong {
+    font-weight: 600;
+}
+.adat-netfone-actions {
+    padding: 18px 26px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--slate-100);
+}
+
+/* Módosítom button */
+.btn-modositom {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 9px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    box-shadow: 0 2px 6px var(--red-shadow);
+}
+.btn-modositom:hover { background: var(--red-dark); transform: translateY(-1px); }
+
+/* Mégse button */
+.btn-megse {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--slate-100);
+    color: var(--slate-500);
+    border: none;
+    border-radius: var(--radius);
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.btn-megse:hover { background: var(--slate-200); }
+
+/* Edit form fields */
+.adat-edit-group {
+    padding: 14px 26px 0;
+}
+.adat-edit-group:last-of-type { padding-bottom: 4px; }
+.adat-edit-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--slate-400);
+    margin-bottom: 6px;
+}
+.adat-edit-input {
+    width: 100%;
+    padding: 9px 13px;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius);
+    font-size: 14px;
+    color: var(--navy);
+    background: var(--white);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-sizing: border-box;
+}
+.adat-edit-input:focus {
+    outline: none;
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(237,27,36,0.1);
+}
+.adat-edit-disabled {
+    background: var(--slate-50, #f8fafc);
+    color: var(--slate-400);
+    cursor: not-allowed;
+}
+.adat-edit-hint {
+    display: block;
+    font-size: 11px;
+    color: var(--slate-400);
+    margin-top: 5px;
+}
 
 /* ============================================================
    PDF BUTTON
@@ -577,4 +1269,263 @@ h4.section-label::after { content:''; flex:1; height:1px; background: var(--slat
     .anyagMennyisegPár { flex-direction: column; align-items: stretch; }
     .anyagMennyisegPár select,
     .anyagMennyisegPár input { width: 100%; }
+}
+
+/* ============================================================
+   FORM CARD SYSTEM (fc-*)
+   ============================================================ */
+.fc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.fc-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8edf2;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+.fc-full { grid-column: 1 / -1; }
+.fc-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    background: linear-gradient(90deg, rgba(201,169,122,0.07) 0%, rgba(201,169,122,0.01) 100%);
+}
+.fc-hicon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(201,169,122,0.15);
+    color: #a07848;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+.fc-htitle { font-size: 13px; font-weight: 700; color: #1e293b; }
+.fc-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.fc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.f-group { display: flex; flex-direction: column; gap: 5px; }
+.f-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.f-label i { color: #c9a97a; font-size: 10px; }
+.f-label .req { color: #ef4444; }
+.f-input, .f-select, .f-textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #334155;
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+}
+.f-input:focus, .f-select:focus, .f-textarea:focus {
+    border-color: #c9a97a;
+    box-shadow: 0 0 0 3px rgba(201,169,122,0.15);
+}
+.f-textarea { resize: vertical; min-height: 80px; }
+.f-hint { font-size: 11px; color: #94a3b8; margin-top: 1px; }
+.fc-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    background: rgba(201,169,122,0.06);
+    border: 1px solid rgba(201,169,122,0.2);
+    border-radius: 8px;
+    cursor: pointer;
+}
+.fc-checkbox-row input[type="checkbox"] {
+    width: 15px; height: 15px;
+    accent-color: #c9a97a;
+    cursor: pointer; flex-shrink: 0;
+}
+.fc-checkbox-row label {
+    font-size: 12px; color: #475569;
+    cursor: pointer; font-weight: 500; margin: 0;
+}
+.fc-submit {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8edf2;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+.fc-tag-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1.5px dashed #c9a97a;
+    background: rgba(201,169,122,0.05);
+    color: #a07848;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 4px;
+}
+.fc-tag-add:hover { background: rgba(201,169,122,0.12); }
+.fc-tag-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px; height: 34px;
+    border-radius: 7px;
+    border: 1.5px solid #fecaca;
+    background: #fff5f5;
+    color: #dc2626;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+.fc-tag-remove:hover { background: #fee2e2; }
+
+/* ============================================================
+   SHOW CARD SYSTEM (sc-*)
+   ============================================================ */
+.sc-page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+.sc-page-header-left h1 {
+    font-size: 20px; font-weight: 700; color: #1e293b;
+    margin: 0 0 6px; display: flex; align-items: center; gap: 10px;
+}
+.sc-page-header-left h1 i { color: #c9a97a; }
+.sc-id-badge {
+    display: inline-block;
+    font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 6px;
+    background: rgba(201,169,122,0.12);
+    border: 1px solid rgba(201,169,122,0.3);
+    color: #a07848; letter-spacing: 0.3px;
+}
+.sc-page-header-actions {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+}
+.sc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.sc-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8edf2;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+.sc-full { grid-column: 1 / -1; }
+.sc-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 18px;
+    border-bottom: 1px solid #f1f5f9;
+    background: linear-gradient(90deg, rgba(201,169,122,0.07) 0%, rgba(201,169,122,0.01) 100%);
+}
+.sc-hicon {
+    width: 30px; height: 30px; border-radius: 7px;
+    background: rgba(201,169,122,0.15); color: #a07848;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0;
+}
+.sc-htitle { font-size: 12px; font-weight: 700; color: #1e293b; }
+.sc-rows { padding: 6px 0; }
+.sc-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 11px 18px; border-bottom: 1px solid #f8fafc;
+}
+.sc-row:last-child { border-bottom: none; }
+.sc-lbl {
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    color: #94a3b8; min-width: 130px; flex-shrink: 0;
+    display: flex; align-items: center; gap: 5px; padding-top: 1px;
+}
+.sc-lbl i { color: #c9a97a; font-size: 10px; }
+.sc-val { font-size: 13px; font-weight: 500; color: #334155; flex: 1; }
+.sc-tag-list {
+    display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 18px;
+}
+.sc-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 8px;
+    background: rgba(201,169,122,0.1); border: 1px solid rgba(201,169,122,0.25);
+    color: #a07848; font-size: 12px; font-weight: 500;
+}
+.sc-tag i { font-size: 11px; }
+
+/* ============================================================
+   ROLE BADGES
+   ============================================================ */
+.role-admin {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; border-radius: 5px;
+    padding: 3px 9px; background: #fee2e2; color: #991b1b;
+}
+.role-uzlet {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; border-radius: 5px;
+    padding: 3px 9px; background: #fef3c7; color: #92400e;
+}
+.role-ugyfel {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; border-radius: 5px;
+    padding: 3px 9px; background: #e0e7ff; color: #3730a3;
+}
+
+/* ============================================================
+   FC/SC RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    .fc-grid { grid-template-columns: 1fr; }
+    .fc-full { grid-column: 1; }
+    .fc-row { grid-template-columns: 1fr; }
+    .sc-grid { grid-template-columns: 1fr; }
+    .sc-full { grid-column: 1; }
+    .sc-page-header { flex-direction: column; }
+    .sc-row { flex-direction: column; gap: 3px; }
+    .sc-lbl { min-width: auto; }
+    .fc-submit { flex-direction: column; align-items: stretch; }
+}
+@media (max-width: 480px) {
+    .fc-body { padding: 14px; }
+    .sc-card-header { padding: 11px 14px; }
+    .sc-row { padding: 9px 14px; }
 }

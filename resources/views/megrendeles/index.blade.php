@@ -1,7 +1,4 @@
 @extends('ujLayout')
-@error('error')
-    <div class="alert alert-warning">{{ $message }}</div>
-@enderror
 @section('content')
     @include('breadcrumbs')
 
@@ -34,6 +31,22 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    @if (session('error'))
+        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:flex-start;gap:12px;">
+            <i class="fas fa-exclamation-triangle" style="color:#dc2626;margin-top:2px;flex-shrink:0;"></i>
+            <div style="flex:1;">
+                <div style="font-weight:600;color:#991b1b;font-size:13px;margin-bottom:4px;">Email küldési hiba</div>
+                <div style="color:#7f1d1d;font-size:13px;">{{ session('error') }}</div>
+                @if (session('email_hiba'))
+                    <a href="{{ route('megrendeles.show', ['id' => session('email_hiba')]) }}"
+                       style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:6px 14px;border-radius:7px;background:#dc2626;color:#fff;font-size:12px;font-weight:600;text-decoration:none;">
+                        <i class="fas fa-paper-plane"></i> Megrendelés megnyitása → Email újraküldéséhez
+                    </a>
+                @endif
+            </div>
+        </div>
+    @endif
+
     <div class="table-wrapper">
     <table class="data-table">
         <thead>
@@ -60,7 +73,7 @@
                         @endif
                     </td>
                     <td>
-                        @if($megrendeles->Alairt_e)
+                        @if($megrendeles->Statusz)
                             <span class="badge badge-active">Folyamatban</span>
                         @else
                             <span class="badge badge-done">Befejezve</span>

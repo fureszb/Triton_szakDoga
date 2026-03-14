@@ -1,88 +1,129 @@
 @extends('ujlayout')
 
 @section('content')
-    @include('breadcrumbs')
+@include('breadcrumbs')
 
-    <script src="https://kit.fontawesome.com/86a7bd8db7.js" crossorigin="anonymous"></script>
+<div class="page-header">
+    <h1><i class="fas fa-building"></i> Cégadatok szerkesztése</h1>
+</div>
 
-    <div class="page-header">
-        <h1><i class="fas fa-building"></i> Cégadatok szerkesztése</h1>
+@if(session('success'))
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:#d1fae5;border:1px solid #6ee7b7;border-radius:10px;margin-bottom:20px;font-size:13px;color:#065f46;">
+        <i class="fas fa-check-circle"></i> {{ session('success') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div style="margin-bottom:16px;">
+        @foreach ($errors->all() as $error)
+            <div class="alert alert-warning" style="margin-bottom:6px;">
+                <i class="fas fa-exclamation-triangle"></i> {{ $error }}
+            </div>
+        @endforeach
+    </div>
+@endif
+
+<form action="{{ route('cegadatok.update') }}" method="POST">
+@csrf
+@method('PUT')
+
+<div class="fc-grid">
+
+    {{-- Alapadatok --}}
+    <div class="fc-card">
+        <div class="fc-header">
+            <div class="fc-hicon"><i class="fas fa-building"></i></div>
+            <div class="fc-htitle">Alapadatok</div>
+        </div>
+        <div class="fc-body">
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-signature"></i> Cégnév <span class="req">*</span></div>
+                <input type="text" name="nev" class="f-input"
+                       value="{{ old('nev', $cegadat->nev) }}" required
+                       placeholder="pl. Triton Security Kft.">
+                @error('nev')<div class="f-hint" style="color:#ef4444;">{{ $message }}</div>@enderror
+            </div>
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-map-marker-alt"></i> Székhely és cím <span class="req">*</span></div>
+                <input type="text" name="szekhelycim" class="f-input"
+                       value="{{ old('szekhelycim', $cegadat->szekhelycim) }}" required
+                       placeholder="pl. 1234 Budapest, Minta utca 1.">
+                @error('szekhelycim')<div class="f-hint" style="color:#ef4444;">{{ $message }}</div>@enderror
+            </div>
+            <div class="fc-row">
+                <div class="f-group">
+                    <div class="f-label"><i class="fas fa-receipt"></i> Adószám <span class="req">*</span></div>
+                    <input type="text" name="adoszam" class="f-input"
+                           value="{{ old('adoszam', $cegadat->adoszam) }}" required
+                           placeholder="12345678-2-42">
+                    @error('adoszam')<div class="f-hint" style="color:#ef4444;">{{ $message }}</div>@enderror
+                </div>
+                <div class="f-group">
+                    <div class="f-label"><i class="fas fa-file-alt"></i> Cégjegyzékszám <span class="req">*</span></div>
+                    <input type="text" name="cegjegyzekszam" class="f-input"
+                           value="{{ old('cegjegyzekszam', $cegadat->cegjegyzekszam) }}" required
+                           placeholder="01-09-123456">
+                    @error('cegjegyzekszam')<div class="f-hint" style="color:#ef4444;">{{ $message }}</div>@enderror
+                </div>
+            </div>
+        </div>
     </div>
 
-    @if(session('success'))
-        <div class="alert-success" style="
-            background:#d1fae5; color:#065f46; border:1px solid #6ee7b7;
-            border-radius:8px; padding:12px 16px; margin-bottom:16px;
-            font-size:13px; display:flex; align-items:center; gap:8px;">
-            <i class="fas fa-check-circle"></i> {{ session('success') }}
+    {{-- Elérhetőségek --}}
+    <div class="fc-card">
+        <div class="fc-header">
+            <div class="fc-hicon"><i class="fas fa-address-book"></i></div>
+            <div class="fc-htitle">Elérhetőségek</div>
         </div>
-    @endif
-
-    <form action="{{ route('cegadatok.update') }}" method="POST">
-        @csrf
-        @method('PUT')
-
-        <fieldset>
-            <legend>Alapadatok</legend>
-
-            <label for="nev">Cégnév</label>
-            <input type="text" name="nev" id="nev"
-                   value="{{ old('nev', $cegadat->nev) }}" required>
-            @error('nev')<span class="field-error">{{ $message }}</span>@enderror
-
-            <label for="szekhelycim">Székhely és cím</label>
-            <input type="text" name="szekhelycim" id="szekhelycim"
-                   value="{{ old('szekhelycim', $cegadat->szekhelycim) }}" required>
-            @error('szekhelycim')<span class="field-error">{{ $message }}</span>@enderror
-
-            <label for="adoszam">Adószám</label>
-            <input type="text" name="adoszam" id="adoszam"
-                   value="{{ old('adoszam', $cegadat->adoszam) }}" required
-                   placeholder="pl. 12345678-2-42">
-            @error('adoszam')<span class="field-error">{{ $message }}</span>@enderror
-
-            <label for="cegjegyzekszam">Cégjegyzékszám</label>
-            <input type="text" name="cegjegyzekszam" id="cegjegyzekszam"
-                   value="{{ old('cegjegyzekszam', $cegadat->cegjegyzekszam) }}" required
-                   placeholder="pl. 01-09-123456">
-            @error('cegjegyzekszam')<span class="field-error">{{ $message }}</span>@enderror
-        </fieldset>
-
-        <fieldset>
-            <legend>Elérhetőségek</legend>
-
-            <label for="telefon">Telefonszám</label>
-            <input type="text" name="telefon" id="telefon"
-                   value="{{ old('telefon', $cegadat->telefon) }}" required
-                   placeholder="pl. +36 1 234 5678">
-            @error('telefon')<span class="field-error">{{ $message }}</span>@enderror
-
-            <label for="email">E-mail cím</label>
-            <input type="email" name="email" id="email"
-                   value="{{ old('email', $cegadat->email) }}" required>
-            @error('email')<span class="field-error">{{ $message }}</span>@enderror
-
-            <label for="web">Weboldal <small style="color:#9ca3af;">(opcionális)</small></label>
-            <input type="text" name="web" id="web"
-                   value="{{ old('web', $cegadat->web) }}"
-                   placeholder="pl. www.tritonsecurity.hu">
-            @error('web')<span class="field-error">{{ $message }}</span>@enderror
-        </fieldset>
-
-        <fieldset>
-            <legend>Pénzügyi adatok</legend>
-
-            <label for="bankszamlaszam">Bankszámlaszám <small style="color:#9ca3af;">(opcionális)</small></label>
-            <input type="text" name="bankszamlaszam" id="bankszamlaszam"
-                   value="{{ old('bankszamlaszam', $cegadat->bankszamlaszam) }}"
-                   placeholder="pl. 12345678-12345678-12345678">
-            @error('bankszamlaszam')<span class="field-error">{{ $message }}</span>@enderror
-        </fieldset>
-
-        <div style="width:100%;">
-            <button type="submit" class="btn-save">
-                <i class="fas fa-save"></i> Mentés
-            </button>
+        <div class="fc-body">
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-phone"></i> Telefonszám <span class="req">*</span></div>
+                <input type="text" name="telefon" class="f-input"
+                       value="{{ old('telefon', $cegadat->telefon) }}" required
+                       placeholder="+36 1 234 5678">
+                @error('telefon')<div class="f-hint" style="color:#ef4444;">{{ $message }}</div>@enderror
+            </div>
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-envelope"></i> E-mail cím <span class="req">*</span></div>
+                <input type="email" name="email" class="f-input"
+                       value="{{ old('email', $cegadat->email) }}" required
+                       placeholder="info@tritonsecurity.hu">
+                @error('email')<div class="f-hint" style="color:#ef4444;">{{ $message }}</div>@enderror
+            </div>
+            <div class="f-group">
+                <div class="f-label"><i class="fas fa-globe"></i> Weboldal <span style="font-weight:400;color:#94a3b8;">(opcionális)</span></div>
+                <input type="text" name="web" class="f-input"
+                       value="{{ old('web', $cegadat->web) }}"
+                       placeholder="www.tritonsecurity.hu">
+                @error('web')<div class="f-hint" style="color:#ef4444;">{{ $message }}</div>@enderror
+            </div>
         </div>
-    </form>
+    </div>
+
+    {{-- Pénzügyi adatok --}}
+    <div class="fc-card fc-full">
+        <div class="fc-header">
+            <div class="fc-hicon"><i class="fas fa-university"></i></div>
+            <div class="fc-htitle">Pénzügyi adatok</div>
+        </div>
+        <div class="fc-body">
+            <div class="f-group" style="max-width:480px;">
+                <div class="f-label"><i class="fas fa-credit-card"></i> Bankszámlaszám <span style="font-weight:400;color:#94a3b8;">(opcionális)</span></div>
+                <input type="text" name="bankszamlaszam" class="f-input"
+                       value="{{ old('bankszamlaszam', $cegadat->bankszamlaszam) }}"
+                       placeholder="12345678-12345678-12345678">
+                @error('bankszamlaszam')<div class="f-hint" style="color:#ef4444;">{{ $message }}</div>@enderror
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="fc-submit">
+    <button type="submit" class="btn-save" style="margin-top:0;">
+        <i class="fas fa-save"></i> Mentés
+    </button>
+</div>
+
+</form>
 @endsection

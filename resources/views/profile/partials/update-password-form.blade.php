@@ -1,48 +1,58 @@
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Jelszó frissítése') }}
-        </h2>
+<form method="post" action="{{ route('password.update') }}">
+    @csrf
+    @method('put')
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('Győződjön meg róla, hogy fiókja hosszú, véletlenszerű jelszót használ a biztonság megőrzése érdekében.') }}
-        </p>
-    </header>
-
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
-        @csrf
-        @method('put')
-
-        <div>
-            <x-input-label for="current_password" :value="__('Jelenlegi jelszó')" />
-            <x-text-input id="current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" />
-            <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
+    <div class="fc-card">
+        <div class="fc-header">
+            <div class="fc-hicon"><i class="fas fa-lock"></i></div>
+            <span class="fc-htitle">Jelszó frissítése</span>
         </div>
+        <div class="fc-body">
 
-        <div>
-            <x-input-label for="password" :value="__('Új jelszó')" />
-            <x-text-input id="password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
+            <div class="f-group">
+                <label class="f-label"><i class="fas fa-key"></i> Jelenlegi jelszó</label>
+                <input type="password" name="current_password" class="f-input"
+                       autocomplete="current-password" placeholder="••••••••">
+                @error('current_password', 'updatePassword')
+                    <span style="color:#ef4444;font-size:12px;margin-top:2px;">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="fc-row">
+                <div class="f-group">
+                    <label class="f-label"><i class="fas fa-lock"></i> Új jelszó</label>
+                    <input type="password" name="password" class="f-input"
+                           autocomplete="new-password" placeholder="••••••••">
+                    @error('password', 'updatePassword')
+                        <span style="color:#ef4444;font-size:12px;margin-top:2px;">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="f-group">
+                    <label class="f-label"><i class="fas fa-lock"></i> Új jelszó megerősítése</label>
+                    <input type="password" name="password_confirmation" class="f-input"
+                           autocomplete="new-password" placeholder="••••••••">
+                    @error('password_confirmation', 'updatePassword')
+                        <span style="color:#ef4444;font-size:12px;margin-top:2px;">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+
+            <div style="padding:10px 14px;background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.2);border-radius:8px;font-size:12px;color:#64748b;display:flex;align-items:flex-start;gap:8px;">
+                <i class="fas fa-info-circle" style="color:#c9a97a;margin-top:1px;flex-shrink:0;"></i>
+                <span>Használj legalább 8 karakter hosszú, véletlenszerű jelszót a biztonság érdekében.</span>
+            </div>
+
         </div>
-
-        <div>
-            <x-input-label for="password_confirmation" :value="__('Új jelszó megint')" />
-            <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Mentés') }}</x-primary-button>
-
+        <div class="fc-submit">
+            <button type="submit" class="btn-save">
+                <i class="fas fa-lock"></i> Jelszó frissítése
+            </button>
             @if (session('status') === 'password-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600 dark:text-gray-400"
-                >{{ __('Saved.') }}</p>
+                <span style="display:inline-flex;align-items:center;gap:5px;font-size:13px;color:#16a34a;">
+                    <i class="fas fa-check-circle"></i> Jelszó sikeresen frissítve!
+                </span>
             @endif
         </div>
-    </form>
-</section>
+    </div>
+</form>

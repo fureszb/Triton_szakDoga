@@ -5,7 +5,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Triton Security – Szerződés</title>
     <style>
-        /* DejaVu Sans – teljes UTF-8/Unicode támogatás dompdf-ben */
         body {
             font-family: 'DejaVu Sans', sans-serif;
             font-size: 9px;
@@ -17,29 +16,35 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         /* ── Fejléc ───────────────────────────────── */
-        .header { background: #0f172a; padding: 14px 24px; width: 100%; }
+        .header {
+            background: #1e293b;
+            padding: 0;
+            width: 100%;
+            border-bottom: 4px solid #c9a97a;
+        }
+        .header-inner { padding: 14px 24px; }
         .header-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         .header-logo { width: 58px; vertical-align: middle; }
         .header-brand { width: 56%; vertical-align: middle; padding-left: 10px; overflow: hidden; }
-        .brand-name  { font-size: 15px; font-weight: bold; color: #ffffff; letter-spacing: 2px; }
+        .brand-name  { font-size: 15px; font-weight: bold; color: #c9a97a; letter-spacing: 2px; }
         .brand-sub   { font-size: 7px; color: #94a3b8; letter-spacing: 2px; margin-top: 1px; }
         .brand-info  { font-size: 7.5px; color: #64748b; line-height: 1.7; margin-top: 4px; word-break: break-word; }
         .header-doc  { width: 40%; vertical-align: middle; text-align: right; padding-left: 6px; word-break: break-word; overflow-wrap: break-word; }
-        .doc-title-big { font-size: 18px; font-weight: bold; color: #ed1b24; letter-spacing: 4px; }
+        .doc-title-big { font-size: 18px; font-weight: bold; color: #c9a97a; letter-spacing: 4px; }
         .doc-meta { font-size: 7.5px; color: #94a3b8; line-height: 1.8; margin-top: 3px; word-break: break-word; }
 
-        /* ── Piros csík ──────────────────────────── */
-        .stripe { background: #ed1b24; height: 3px; font-size: 0; line-height: 0; }
+        /* ── Bézs akcentcsík ─────────────────────── */
+        .stripe { background: linear-gradient(90deg, #c9a97a 0%, #a07848 100%); height: 2px; font-size: 0; line-height: 0; }
 
         /* ── Dokumentum cím ──────────────────────── */
         .doc-heading {
             text-align: center;
-            border-bottom: 1.5px solid #ed1b24;
+            border-bottom: 1.5px solid #c9a97a;
             padding: 12px 0 8px;
             margin-bottom: 4px;
         }
         .doc-heading-main {
-            font-size: 14px; font-weight: bold; color: #0f172a;
+            font-size: 14px; font-weight: bold; color: #1e293b;
             letter-spacing: 5px; text-transform: uppercase;
         }
         .doc-heading-sub {
@@ -54,7 +59,7 @@
         .section-label {
             font-size: 7.5px; font-weight: bold; color: #64748b;
             text-transform: uppercase; letter-spacing: 2px;
-            border-bottom: 1.5px solid #ed1b24;
+            border-bottom: 1.5px solid #c9a97a;
             padding-bottom: 3px; margin-bottom: 7px;
         }
 
@@ -66,7 +71,7 @@
 
         .party-box { border: 1px solid #e2e8f0; border-radius: 4px; overflow: hidden; }
         .party-head {
-            background: #1e293b; color: #ffffff; padding: 5px 10px;
+            background: #1e293b; color: #c9a97a; padding: 5px 10px;
             font-size: 8px; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase;
         }
         .party-body { padding: 7px 10px; background: #f8fafc; }
@@ -88,7 +93,7 @@
         /* ── Anyag táblázat ──────────────────────── */
         .mat { width: 100%; border-collapse: collapse; }
         .mat th {
-            background: #1e293b; color: #fff;
+            background: #1e293b; color: #c9a97a;
             padding: 6px 10px; font-size: 7.5px;
             text-transform: uppercase; letter-spacing: 1px; text-align: left;
         }
@@ -97,13 +102,13 @@
 
         /* ── Státusz ─────────────────────────────── */
         .badge { padding: 2px 8px; border-radius: 9px; font-size: 7.5px; font-weight: bold; }
-        .b-active { background: #d1fae5; color: #065f46; }
-        .b-done   { background: #dbeafe; color: #1e40af; }
+        .b-active { background: #fdf6ee; color: #a07848; border: 1px solid rgba(201,169,122,0.4); }
+        .b-done   { background: #d1fae5; color: #065f46; }
 
         /* ── Jogi doboz ──────────────────────────── */
         .legal {
-            border: 1px solid #e2e8f0; border-left: 3px solid #ed1b24;
-            padding: 9px 12px; background: #fafafa;
+            border: 1px solid #e2e8f0; border-left: 3px solid #c9a97a;
+            padding: 9px 12px; background: #fdf6ee;
             font-size: 8.5px; line-height: 1.75; color: #475569;
         }
 
@@ -113,22 +118,23 @@
         .sign-lbl { font-size: 7.5px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         .sign-box {
             width: 200px; height: 88px;
-            border: 1.5px solid #cbd5e1; border-radius: 5px;
+            border: 1.5px solid #c9a97a; border-radius: 5px;
             background: #fff; padding: 3px; display: inline-block;
         }
         .sign-box img { max-width: 194px; max-height: 82px; }
-        .sign-name { border-top: 1.5px solid #334155; margin-top: 6px; padding-top: 4px; font-size: 9px; font-weight: bold; color: #1e293b; }
+        .sign-name { border-top: 1.5px solid #c9a97a; margin-top: 6px; padding-top: 4px; font-size: 9px; font-weight: bold; color: #1e293b; }
         .sign-date { font-size: 7.5px; color: #64748b; margin-top: 2px; }
 
         /* ── Lábléc ──────────────────────────────── */
-        .footer { background: #0f172a; padding: 12px 24px; font-size: 7.5px; color: #64748b; line-height: 1.7; }
+        .footer { background: #1e293b; border-top: 3px solid #c9a97a; padding: 12px 24px; font-size: 7.5px; color: #64748b; line-height: 1.7; }
         .footer-row { width: 100%; border-collapse: collapse; }
         .footer-row td { vertical-align: top; font-size: 7.5px; color: #64748b; }
         .footer-copy {
             text-align: center; margin-top: 8px;
-            font-size: 7px; color: #475569; letter-spacing: 2px; text-transform: uppercase;
-            border-top: 1px solid #1e293b; padding-top: 7px;
+            font-size: 7px; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase;
+            border-top: 1px solid #334155; padding-top: 7px;
         }
+        .footer-accent { color: #c9a97a; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -143,12 +149,13 @@
             ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath))
             : null;
     @endphp
+    <div class="header-inner">
     <table class="header-table">
         <tr>
             <td class="header-logo">
                 @if($logoB64)
                     <img src="{{ $logoB64 }}" width="48" height="48"
-                         alt="logo" style="border-radius:6px; display:block;">
+                         alt="logo" style="border-radius:8px; display:block; border:2px solid rgba(201,169,122,0.4);">
                 @endif
             </td>
             <td class="header-brand">
@@ -170,6 +177,7 @@
             </td>
         </tr>
     </table>
+    </div>
 </div>
 <div class="stripe">&nbsp;</div>
 
@@ -211,12 +219,12 @@
                     <div class="party-box">
                         <div class="party-head">Vállalkozó (2. fél)</div>
                         <div class="party-body">
-                            <div class="pr"><div class="pl">Cégnév</div><div class="pv">Triton Security Kft.</div></div>
-                            <div class="pr"><div class="pl">Székhely</div><div class="pv">1234 Budapest, Minta utca 1.</div></div>
-                            <div class="pr"><div class="pl">Adószám</div><div class="pv">12345678-2-42</div></div>
-                            <div class="pr"><div class="pl">Cégjegyzékszám</div><div class="pv">01-09-123456</div></div>
+                            <div class="pr"><div class="pl">Cégnév</div><div class="pv">{{ $cegadat->nev }}</div></div>
+                            <div class="pr"><div class="pl">Székhely</div><div class="pv">{{ $cegadat->szekhelycim }}</div></div>
+                            <div class="pr"><div class="pl">Adószám</div><div class="pv">{{ $cegadat->adoszam }}</div></div>
+                            <div class="pr"><div class="pl">Cégjegyzékszám</div><div class="pv">{{ $cegadat->cegjegyzekszam }}</div></div>
                             <div class="pr"><div class="pl">Képviseli</div><div class="pv">{{ $megrendeles->munkak->first()?->szerelo?->Nev ?? '–' }}</div></div>
-                            <div class="pr"><div class="pl">Telefonszám</div><div class="pv">+36 1 234 5678</div></div>
+                            <div class="pr"><div class="pl">Telefonszám</div><div class="pv">{{ $cegadat->telefon }}</div></div>
                         </div>
                     </div>
                 </td>
@@ -233,7 +241,7 @@
                 <td class="val">{{ $megrendeles->Megrendeles_Nev }}</td>
                 <td class="lbl">Státusz</td>
                 <td class="val">
-                    @if($megrendeles->Alairt_e)
+                    @if($megrendeles->Statusz)
                         <span class="badge b-active">Folyamatban</span>
                     @else
                         <span class="badge b-done">Befejezve</span>
@@ -325,7 +333,7 @@
     <div class="section">
         <div class="section-label">Nyilatkozat és elfogadás</div>
         <div class="legal">
-            Jelen szerződés alapján a <strong>Megrendelő</strong> megrendeli, a <strong>Vállalkozó</strong> (Triton Security Kft.)
+            Jelen szerződés alapján a <strong>Megrendelő</strong> megrendeli, a <strong>Vállalkozó</strong> ({{ $cegadat->nev }})
             pedig elvállalja az I. pontban meghatározott biztonságtechnikai munkák elvégzését a rögzített helyszínen és feltételek szerint.
             A Vállalkozó kijelenti, hogy a munkát szakszerűen, az érvényes műszaki előírásoknak, szabványoknak és
             vonatkozó jogszabályoknak megfelelően végezte el. A Megrendelő a munkát – az aláírással – maradéktalanul átveszi,
@@ -333,9 +341,7 @@
             kifogást nem emel.
             <br><br>
             Jelen munkalap mindkét fél által aláírva jogilag kötelező érvényű vállalkozási szerződésnek minősül a Polgári
-            Törvénykönyv (2013. évi V. törvény) 6:238–6:264. §§ alapján. Az aláírással a Megrendelő tudomásul veszi, hogy
-            a jelen dokumentumban foglalt munkákat teljesítettnek fogadja el, és a Vállalkozóval szemben ezzel kapcsolatban
-            semmilyen további követelése nincs.
+            Törvénykönyv (2013. évi V. törvény) 6:238–6:264. §§ alapján.
         </div>
     </div>
 
@@ -346,7 +352,7 @@
             <tr>
                 {{-- Vállalkozó --}}
                 <td>
-                    <div class="sign-lbl">Vállalkozó aláírása (Triton Security Kft.)</div>
+                    <div class="sign-lbl">Vállalkozó aláírása ({{ $cegadat->nev }})</div>
                     @php
                         $szPath = public_path('alaIrasokSzerelok/' . $imgPathSzerelo);
                         $szB64  = file_exists($szPath)
@@ -387,19 +393,18 @@
     <table class="footer-row">
         <tr>
             <td style="width:60%; padding-right:16px;">
-                Jelen dokumentum a Triton Security Kft. által kiállított hivatalos vállalkozási szerződés és munkalap.
-                Mindkét fél aláírásával jogilag kötelező érvényűvé válik. Kérjük, megőrzési kötelezettség miatt
-                a szerződést biztonságos helyen tartsa.
+                Jelen dokumentum a <span class="footer-accent">{{ $cegadat->nev }}</span> által kiállított hivatalos vállalkozási szerződés és munkalap.
+                Mindkét fél aláírásával jogilag kötelező érvényűvé válik.
             </td>
             <td style="width:40%; text-align:right; color:#94a3b8;">
-                Triton Security Kft.<br>
-                1234 Budapest, Minta utca 1.<br>
-                info@tritonsecurity.hu &nbsp;|&nbsp; +36 1 234 5678
+                <span class="footer-accent">{{ $cegadat->nev }}</span><br>
+                {{ $cegadat->szekhelycim }}<br>
+                {{ $cegadat->email }} &nbsp;|&nbsp; {{ $cegadat->telefon }}
             </td>
         </tr>
     </table>
     <div class="footer-copy">
-        Triton Security Kft.
+        {{ $cegadat->nev }}
         &nbsp;&bull;&nbsp;
         Szerz. szám: {{ str_pad($megrendeles->Megrendeles_ID, 6, '0', STR_PAD_LEFT) }}/{{ now()->format('Y') }}
         &nbsp;&bull;&nbsp;
