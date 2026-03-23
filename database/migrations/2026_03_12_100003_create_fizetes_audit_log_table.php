@@ -42,6 +42,7 @@ return new class extends Migration
                 'billingo_szinkron',
                 'emlekeztetokuldve',
                 'manualis_fizetes',
+                'atutalas_bejelentve',
             ]);
 
             // ─── Változás adatai (JSON) ────────────────────────────────────────
@@ -60,20 +61,20 @@ return new class extends Migration
 
             // ─── Foreign keys (nullable-ek, restrict helyett cascade – ha törlünk, log marad) ─
             $table->foreign('szamla_id')
-                  ->references('szamla_id')->on('szamlak')
-                  ->onDelete('set null');
+                ->references('szamla_id')->on('szamlak')
+                ->onDelete('set null');
 
             $table->foreign('fizetes_id')
-                  ->references('fizetes_id')->on('fizetesek')
-                  ->onDelete('set null');
+                ->references('fizetes_id')->on('fizetesek')
+                ->onDelete('set null');
 
             $table->foreign('megrendeles_id')
-                  ->references('Megrendeles_ID')->on('megrendeles')
-                  ->onDelete('set null');
+                ->references('Megrendeles_ID')->on('megrendeles')
+                ->onDelete('set null');
 
             $table->foreign('user_id')
-                  ->references('User_ID')->on('users')
-                  ->onDelete('set null');
+                ->references('User_ID')->on('users')
+                ->onDelete('set null');
 
             // ─── Indexek ───────────────────────────────────────────────────────
             $table->index('esemeny');

@@ -6,13 +6,13 @@
 <div class="sc-page-header">
     <div class="sc-page-header-left">
         <h1><i class="fas fa-user-cog"></i> {{ $user->nev }}</h1>
-        <span class="sc-id-badge">#{{ $user->User_ID }}</span>
+        <span class="sc-id-badge">#{{ $user->id }}</span>
     </div>
     <div class="sc-page-header-actions">
         <a href="{{ route('users.index') }}" class="btn-back">
             <i class="fas fa-arrow-left"></i> Vissza
         </a>
-        <a href="{{ route('users.edit', $user->User_ID) }}" class="btn-edit">
+        <a href="{{ route('users.edit', $user->id) }}" class="btn-edit">
             <i class="fas fa-edit"></i> Szerkesztés
         </a>
     </div>
@@ -48,7 +48,7 @@
             </div>
             <div class="sc-row">
                 <div class="sc-lbl"><i class="fas fa-link"></i> Ügyfél</div>
-                <div class="sc-val">{{ $user->ugyfel->Nev ?? 'Nincs hozzárendelve' }}</div>
+                <div class="sc-val">{{ $user->ugyfel->nev ?? 'Nincs hozzárendelve' }}</div>
             </div>
         </div>
     </div>

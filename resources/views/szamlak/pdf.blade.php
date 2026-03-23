@@ -1,8 +1,30 @@
+@php
+    $fontDir = str_replace('\\', '/', base_path('vendor/dompdf/dompdf/lib/fonts'));
+@endphp
 <!DOCTYPE html>
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <style>
+    @font-face {
+        font-family: 'DejaVu Sans';
+        font-style: normal;
+        font-weight: normal;
+        src: url('file:///{{ $fontDir }}/DejaVuSans.ttf') format('truetype');
+    }
+    @font-face {
+        font-family: 'DejaVu Sans';
+        font-style: normal;
+        font-weight: bold;
+        src: url('file:///{{ $fontDir }}/DejaVuSans-Bold.ttf') format('truetype');
+    }
+    @font-face {
+        font-family: 'DejaVu Sans';
+        font-style: normal;
+        font-weight: 900;
+        src: url('file:///{{ $fontDir }}/DejaVuSans-Bold.ttf') format('truetype');
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     @page {
@@ -409,7 +431,7 @@
     <div class="header-inner">
         <div class="header-left">
             <div class="logo-row">
-                <div class="logo-icon">&#9650;</div>
+                <div class="logo-icon">T</div>
                 <div class="logo-text">
                     <div class="logo-name">TRITON <span>SECURITY</span></div>
                     <div class="logo-tagline">Okos otthon automatizáció &amp; AI biztonsági rendszerek</div>
@@ -428,9 +450,6 @@
     </div>
 </div>
 <div class="accent-bar"></div>
-
-{{-- Állapot bélyegző --}}
-<div class="stamp {{ $szamla->statusz }}">{{ $szamla->statusz }}</div>
 
 {{-- ─── TARTALOM ────────────────────────── --}}
 <div class="content">
@@ -460,7 +479,7 @@
     {{-- Kiállító + Vevő --}}
     <div class="parties-row">
         <div class="party-col">
-            <div class="party-role">&#9650; Kiállító</div>
+            <div class="party-role">Kiállító</div>
             <div class="party-name">TRITON SECURITY KFT.</div>
             <div class="party-line"><span>Cím:</span> 1234 Budapest, Minta utca 1.</div>
             <div class="party-line"><span>Adószám:</span> 12345678-2-42</div>
@@ -470,27 +489,27 @@
             <div class="party-line"><span>Tel.:</span> +36 1 234 5678</div>
         </div>
         <div class="party-col">
-            <div class="party-role">&#128100; Vevő</div>
+            <div class="party-role">Vevő</div>
             <div class="party-name">
-                {{ $ugyfel?->Szamlazasi_Nev ?: ($ugyfel?->Nev ?? 'Ismeretlen ügyfél') }}
+                {{ $ugyfel?->szamlazasi_nev ?: ($ugyfel?->nev ?? 'Ismeretlen ügyfél') }}
             </div>
-            @if($ugyfel?->Szamlazasi_Cim)
-            <div class="party-line"><span>Számlázási cím:</span> {{ $ugyfel->Szamlazasi_Cim }}</div>
+            @if($ugyfel?->szamlazasi_cim)
+            <div class="party-line"><span>Számlázási cím:</span> {{ $ugyfel->szamlazasi_cim }}</div>
             @endif
             @if($megrendeles?->varos)
-            <div class="party-line"><span>Város:</span> {{ $megrendeles->varos->Varosnev ?? '' }}</div>
+            <div class="party-line"><span>Város:</span> {{ $megrendeles->varos->Irny_szam }} {{ $megrendeles->varos->nev }}</div>
             @endif
-            @if($megrendeles?->Utca_Hazszam)
-            <div class="party-line"><span>Utca/hsz.:</span> {{ $megrendeles->Utca_Hazszam }}</div>
+            @if($megrendeles?->utca_hazszam)
+            <div class="party-line"><span>Utca/hsz.:</span> {{ $megrendeles->utca_hazszam }}</div>
             @endif
-            @if($ugyfel?->Adoszam)
-            <div class="party-line"><span>Adószám:</span> {{ $ugyfel->Adoszam }}</div>
+            @if($ugyfel?->adoszam)
+            <div class="party-line"><span>Adószám:</span> {{ $ugyfel->adoszam }}</div>
             @endif
-            @if($ugyfel?->Email)
-            <div class="party-line"><span>Email:</span> {{ $ugyfel->Email }}</div>
+            @if($ugyfel?->email)
+            <div class="party-line"><span>Email:</span> {{ $ugyfel->email }}</div>
             @endif
-            @if($ugyfel?->Telefonszam)
-            <div class="party-line"><span>Tel.:</span> {{ $ugyfel->Telefonszam }}</div>
+            @if($ugyfel?->telefonszam)
+            <div class="party-line"><span>Tel.:</span> {{ $ugyfel->telefonszam }}</div>
             @endif
         </div>
     </div>
@@ -565,13 +584,7 @@
         @else
         <div class="fizetes-col">
             <div class="fizetes-label">Megrendelés</div>
-            <div class="fizetes-value">{{ $megrendeles?->Megrendeles_Nev ?? '#' . $szamla->megrendeles_id }}</div>
-        </div>
-        <div class="fizetes-col">
-            <div class="fizetes-label">Státusz</div>
-            <div class="fizetes-value highlight">
-                {{ match($szamla->statusz) { 'fizetve' => 'Fizetve', 'fuggoben' => 'Függőben', 'kesedelmes' => 'Késedelmes', default => $szamla->statusz } }}
-            </div>
+            <div class="fizetes-value">{{ $megrendeles?->megrendeles_nev ?? '#' . $szamla->megrendeles_id }}</div>
         </div>
         @endif
     </div>
@@ -586,7 +599,7 @@
 
     @if($teszt ?? false)
     <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:6px;padding:10px 14px;font-size:8pt;color:#b45309;text-align:center;margin-bottom:8px;">
-        &#9888; Ez egy TESZT példány – könyvelési célra nem érvényes.
+        [!] Ez egy TESZT példány – könyvelési célra nem érvényes.
     </div>
     @endif
 

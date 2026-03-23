@@ -4,54 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Ugyfel;
 
 class Megrendeles extends Model
 {
     use HasFactory;
 
     protected $table = 'megrendeles';
-    protected $primaryKey = 'Megrendeles_ID';
+
+    // $primaryKey alapértelmezetten 'id'
     protected $fillable = [
-        'Ugyfel_ID', 'Varos_ID', 'Megrendeles_Nev', 'Utca_Hazszam', 'Statusz', 'Pdf_EleresiUt',
+        'ugyfel_id', 'varos_id', 'megrendeles_nev', 'utca_hazszam', 'statusz', 'pdf_eleresi_ut',
     ];
-
-
-
 
     public function ugyfel()
     {
-        return $this->belongsTo(Ugyfel::class, 'Ugyfel_ID');
+        return $this->belongsTo(Ugyfel::class, 'ugyfel_id');
     }
 
     public function varos()
     {
-        return $this->belongsTo(Varos::class, 'Varos_ID');
-    }
-
-    public function szolgaltatas()
-    {
-        return $this->belongsTo(Szolgaltatas::class, 'Szolgaltatas_ID');
-    }
-
-    public function szerelo()
-    {
-        return $this->belongsTo(Szerelo::class, 'Szerelo_ID');
-    }
-
-    public function anyag()
-    {
-        return $this->hasManyThrough(
-            Anyag::class,
-            FelhasznaltAnyag::class,
-            'Anyag_ID',
-            'Anyag_ID',
-        );
+        return $this->belongsTo(Varos::class, 'varos_id');
     }
 
     public function munkak()
     {
-        return $this->hasMany(Munka::class, 'Megrendeles_ID', 'Megrendeles_ID');
+        return $this->hasMany(Munka::class, 'megrendeles_id', 'id');
     }
 
     public function felhasznaltAnyagok()
@@ -59,24 +36,25 @@ class Megrendeles extends Model
         return $this->hasManyThrough(
             FelhasznaltAnyag::class,
             Munka::class,
-            'Megrendeles_ID',
-            'Munka_ID',
-            'Megrendeles_ID',
-            'Munka_ID'
+            'megrendeles_id',
+            'munka_id',
+            'id',
+            'id'
         );
     }
 
     public function create()
     {
         $ugyfelek = Ugyfel::all();
+
         return view('megrendeles.create', compact('ugyfelek'));
     }
 
     public function scopeSearch($query, $keyword)
     {
         return $query->where(function ($query) use ($keyword) {
-            $query->where('Megrendeles_Nev', 'LIKE', '%' . $keyword . '%')
-                ->orWhere('Megrendeles_ID', $keyword);
+            $query->where('megrendeles_nev', 'LIKE', '%'.$keyword.'%')
+                ->orWhere('id', $keyword);
         });
     }
 
@@ -85,45 +63,72 @@ class Megrendeles extends Model
     /** A megrendeléshez tartozó számla (1:1) */
     public function szamla()
     {
-        return $this->hasOne(Szamla::class, 'megrendeles_id', 'Megrendeles_ID')
-                    ->where('szamla_tipus', 'szamla');
+        return $this->hasOne(Szamla::class, 'megrendeles_id', 'id')
+            ->where('szamla_tipus', 'szamla');
     }
 
     /** Díjbekérő (ha van) */
     public function dijbekero()
     {
-        return $this->hasOne(Szamla::class, 'megrendeles_id', 'Megrendeles_ID')
-                    ->where('szamla_tipus', 'dijbekero');
+        return $this->hasOne(Szamla::class, 'megrendeles_id', 'id')
+            ->where('szamla_tipus', 'dijbekero');
     }
 
     /** Összes számla típus (számla + díjbekérő + stornó) */
     public function osszesSzamla()
     {
-        return $this->hasMany(Szamla::class, 'megrendeles_id', 'Megrendeles_ID');
+        return $this->hasMany(Szamla::class, 'megrendeles_id', 'id');
+    }
+
+    /** Összes szamla tipusu dokumentum (hasMany) */
+    public function tobbSzamla()
+    {
+        return $this->hasMany(Szamla::class, 'megrendeles_id', 'id')
+            ->where('szamla_tipus', 'szamla');
+    }
+
+    /** Összes dijbekero tipusu dokumentum (hasMany) */
+    public function tobbDijbekero()
+    {
+        return $this->hasMany(Szamla::class, 'megrendeles_id', 'id')
+            ->where('szamla_tipus', 'dijbekero');
     }
 
     /** Fizetési tranzakciók */
     public function fizetesek()
     {
-        return $this->hasMany(Fizetes::class, 'megrendeles_id', 'Megrendeles_ID');
+        return $this->hasMany(Fizetes::class, 'megrendeles_id', 'id');
     }
 
     /** Audit log */
     public function auditLog()
     {
-        return $this->hasMany(FizetesAuditLog::class, 'megrendeles_id', 'Megrendeles_ID')
-                    ->latest('created_at');
+        return $this->hasMany(FizetesAuditLog::class, 'megrendeles_id', 'id')
+            ->latest('created_at');
     }
 
     /** Emlékeztetők */
     public function emlekeztetok()
     {
-        return $this->hasMany(FizetesEmlekeztetok::class, 'megrendeles_id', 'Megrendeles_ID');
+        return $this->hasMany(FizetesEmlekeztetok::class, 'megrendeles_id', 'id');
     }
 
     // ─── Kényelmi accessor – fizetve van-e? ───────────────────────────────────
+    // Csak akkor igaz, ha MINDEN nem-stornó számla/díjbekérő fizetve van (és van legalább egy)
     public function getFizetveAttribute(): bool
     {
-        return optional($this->szamla)->statusz === 'fizetve';
+        $aktivak = $this->osszesSzamla->where('szamla_tipus', '!=', 'storno');
+        return $aktivak->isNotEmpty() && $aktivak->every(fn($sz) => $sz->statusz === 'fizetve');
+    }
+
+    // ─── Kényelmi accessor – van-e függőben lévő (bejelentett) fizetés? ───────
+    public function getFuggobenFizetesAttribute(): bool
+    {
+        foreach ($this->osszesSzamla as $szamla) {
+            if ($szamla->statusz !== 'fizetve' && $szamla->fizetesek->where('statusz', 'fuggoben')->isNotEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

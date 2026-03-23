@@ -170,9 +170,9 @@
             <td class="header-doc">
                 <div class="doc-title-big">SZERZŐDÉS</div>
                 <div class="doc-meta">
-                    Sz. szám:&nbsp;{{ str_pad($megrendeles->Megrendeles_ID, 6, '0', STR_PAD_LEFT) }}/{{ now()->format('Y') }}<br>
+                    Sz. szám:&nbsp;{{ str_pad($megrendeles->id, 6, '0', STR_PAD_LEFT) }}/{{ now()->format('Y') }}<br>
                     Kelt:&nbsp;{{ now()->format('Y. m. d.') }}<br>
-                    Helyszín:&nbsp;{{ ($megrendeles->varos->Irny_szam ?? '') . ' ' . ($megrendeles->varos->Nev ?? '') }}
+                    Helyszín:&nbsp;{{ ($megrendeles->varos->Irny_szam ?? '') . ' ' . ($megrendeles->varos->nev ?? '') }}
                 </div>
             </td>
         </tr>
@@ -203,15 +203,15 @@
                     <div class="party-box">
                         <div class="party-head">Megrendelő (1. fél)</div>
                         <div class="party-body">
-                            <div class="pr"><div class="pl">Megrendelő neve</div><div class="pv">{{ $megrendeles->ugyfel->Nev ?? '-' }}</div></div>
-                            <div class="pr"><div class="pl">Számlázási név</div><div class="pv">{{ $megrendeles->ugyfel->Szamlazasi_Nev ?? '-' }}</div></div>
+                            <div class="pr"><div class="pl">Megrendelő neve</div><div class="pv">{{ $megrendeles->ugyfel->nev ?? '-' }}</div></div>
+                            <div class="pr"><div class="pl">Számlázási név</div><div class="pv">{{ $megrendeles->ugyfel->szamlazasi_nev ?? '-' }}</div></div>
                             <div class="pr">
                                 <div class="pl">Számlázási cím</div>
-                                <div class="pv">{{ ($megrendeles->ugyfel->varos->Irny_szam ?? '') . ' ' . ($megrendeles->ugyfel->varos->Nev ?? '') }}, {{ $megrendeles->ugyfel->Szamlazasi_Cim ?? '-' }}</div>
+                                <div class="pv">{{ ($megrendeles->ugyfel->varos->Irny_szam ?? '') . ' ' . ($megrendeles->ugyfel->varos->nev ?? '') }}, {{ $megrendeles->ugyfel->szamlazasi_cim ?? '-' }}</div>
                             </div>
-                            <div class="pr"><div class="pl">Adószám</div><div class="pv">{{ $megrendeles->ugyfel->Adoszam ?? '–' }}</div></div>
-                            <div class="pr"><div class="pl">Telefonszám</div><div class="pv">{{ $megrendeles->ugyfel->Telefonszam ?? '-' }}</div></div>
-                            <div class="pr"><div class="pl">E-mail cím</div><div class="pv">{{ $megrendeles->ugyfel->Email ?? '-' }}</div></div>
+                            <div class="pr"><div class="pl">Adószám</div><div class="pv">{{ $megrendeles->ugyfel->adoszam ?? '–' }}</div></div>
+                            <div class="pr"><div class="pl">Telefonszám</div><div class="pv">{{ $megrendeles->ugyfel->telefonszam ?? '-' }}</div></div>
+                            <div class="pr"><div class="pl">E-mail cím</div><div class="pv">{{ $megrendeles->ugyfel->email ?? '-' }}</div></div>
                         </div>
                     </div>
                 </td>
@@ -223,7 +223,7 @@
                             <div class="pr"><div class="pl">Székhely</div><div class="pv">{{ $cegadat->szekhelycim }}</div></div>
                             <div class="pr"><div class="pl">Adószám</div><div class="pv">{{ $cegadat->adoszam }}</div></div>
                             <div class="pr"><div class="pl">Cégjegyzékszám</div><div class="pv">{{ $cegadat->cegjegyzekszam }}</div></div>
-                            <div class="pr"><div class="pl">Képviseli</div><div class="pv">{{ $megrendeles->munkak->first()?->szerelo?->Nev ?? '–' }}</div></div>
+                            <div class="pr"><div class="pl">Képviseli</div><div class="pv">{{ $megrendeles->munkak->first()?->szerelo?->nev ?? '–' }}</div></div>
                             <div class="pr"><div class="pl">Telefonszám</div><div class="pv">{{ $cegadat->telefon }}</div></div>
                         </div>
                     </div>
@@ -238,10 +238,10 @@
         <table class="info">
             <tr>
                 <td class="lbl">Megrendelés neve</td>
-                <td class="val">{{ $megrendeles->Megrendeles_Nev }}</td>
+                <td class="val">{{ $megrendeles->megrendeles_nev }}</td>
                 <td class="lbl">Státusz</td>
                 <td class="val">
-                    @if($megrendeles->Statusz)
+                    @if($megrendeles->statusz)
                         <span class="badge b-active">Folyamatban</span>
                     @else
                         <span class="badge b-done">Befejezve</span>
@@ -251,8 +251,8 @@
             <tr>
                 <td class="lbl">Munkavégzés helye</td>
                 <td class="val" colspan="3">
-                    {{ ($megrendeles->varos->Irny_szam ?? '') . ' ' . ($megrendeles->varos->Nev ?? '') }},
-                    {{ $megrendeles->Utca_Hazszam }}
+                    {{ ($megrendeles->varos->Irny_szam ?? '') . ' ' . ($megrendeles->varos->nev ?? '') }},
+                    {{ $megrendeles->utca_hazszam }}
                 </td>
             </tr>
         </table>
@@ -265,35 +265,35 @@
         <table class="info">
             <tr>
                 <td class="lbl">Szolgáltatás típusa</td>
-                <td class="val">{{ $munka->szolgaltatas->Tipus ?? '-' }}</td>
+                <td class="val">{{ $munka->szolgaltatas->tipus ?? '-' }}</td>
                 <td class="lbl">Technikus neve</td>
-                <td class="val">{{ $munka->szerelo->Nev ?? '-' }}</td>
+                <td class="val">{{ $munka->szerelo->nev ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="lbl">Technikus telefonja</td>
-                <td class="val">{{ $munka->szerelo->Telefonszam ?? '-' }}</td>
+                <td class="val">{{ $munka->szerelo->telefonszam ?? '-' }}</td>
                 <td class="lbl">Munkakezdés</td>
-                <td class="val">{{ $munka->Munkakezdes_Idopontja }}</td>
+                <td class="val">{{ $munka->munkakezdes_idopontja }}</td>
             </tr>
             <tr>
                 <td class="lbl">Munkabefejezés</td>
-                <td class="val">{{ $munka->Munkabefejezes_Idopontja }}</td>
+                <td class="val">{{ $munka->munkabefejezes_idopontja }}</td>
                 <td class="lbl">Munkaidő</td>
                 <td class="val">
                     @php
                         try {
-                            $k = \Carbon\Carbon::parse($munka->Munkakezdes_Idopontja);
-                            $b = \Carbon\Carbon::parse($munka->Munkabefejezes_Idopontja);
+                            $k = \Carbon\Carbon::parse($munka->munkakezdes_idopontja);
+                            $b = \Carbon\Carbon::parse($munka->munkabefejezes_idopontja);
                             $d = $k->diff($b);
                             echo ($d->days > 0 ? $d->days . ' nap ' : '') . $d->h . ' ó ' . $d->i . ' perc';
                         } catch(\Exception $e) { echo '–'; }
                     @endphp
                 </td>
             </tr>
-            @if($munka->Leiras)
+            @if($munka->leiras)
             <tr>
                 <td class="lbl">Munka leírása</td>
-                <td class="val" colspan="3">{{ $munka->Leiras }}</td>
+                <td class="val" colspan="3">{{ $munka->leiras }}</td>
             </tr>
             @endif
         </table>
@@ -315,9 +315,9 @@
             <tbody>
                 @foreach ($megrendeles->felhasznaltAnyagok as $anyag)
                 <tr>
-                    <td>{{ $anyag->anyag->Nev ?? '-' }}</td>
-                    <td>{{ $anyag->anyag->Mertekegyseg ?? '-' }}</td>
-                    <td>{{ $anyag->Mennyiseg }}</td>
+                    <td>{{ $anyag->anyag->nev ?? '-' }}</td>
+                    <td>{{ $anyag->anyag->mertekegyseg ?? '-' }}</td>
+                    <td>{{ $anyag->mennyiseg }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -362,8 +362,8 @@
                     <div class="sign-box">
                         @if($szB64)<img src="{{ $szB64 }}" alt="Vállalkozó aláírása">@endif
                     </div>
-                    <div class="sign-name">{{ $megrendeles->munkak->first()?->szerelo?->Nev ?? 'Technikus' }}</div>
-                    <div class="sign-date">{{ now()->format('Y. m. d.') }}, {{ ($megrendeles->varos->Nev ?? 'Budapest') }}</div>
+                    <div class="sign-name">{{ $megrendeles->munkak->first()?->szerelo?->nev ?? 'Technikus' }}</div>
+                    <div class="sign-date">{{ now()->format('Y. m. d.') }}, {{ ($megrendeles->varos->nev ?? 'Budapest') }}</div>
                 </td>
                 {{-- Megrendelő --}}
                 <td>
@@ -377,8 +377,8 @@
                     <div class="sign-box">
                         @if($ugB64)<img src="{{ $ugB64 }}" alt="Megrendelő aláírása">@endif
                     </div>
-                    <div class="sign-name">{{ $megrendeles->ugyfel->Nev }}</div>
-                    <div class="sign-date">{{ now()->format('Y. m. d.') }}, {{ ($megrendeles->varos->Nev ?? 'Budapest') }}</div>
+                    <div class="sign-name">{{ $megrendeles->ugyfel->nev }}</div>
+                    <div class="sign-date">{{ now()->format('Y. m. d.') }}, {{ ($megrendeles->varos->nev ?? 'Budapest') }}</div>
                 </td>
             </tr>
         </table>
@@ -406,7 +406,7 @@
     <div class="footer-copy">
         {{ $cegadat->nev }}
         &nbsp;&bull;&nbsp;
-        Szerz. szám: {{ str_pad($megrendeles->Megrendeles_ID, 6, '0', STR_PAD_LEFT) }}/{{ now()->format('Y') }}
+        Szerz. szám: {{ str_pad($megrendeles->id, 6, '0', STR_PAD_LEFT) }}/{{ now()->format('Y') }}
         &nbsp;&bull;&nbsp;
         Kiállítva: {{ now()->format('Y. m. d.') }}
         &nbsp;&bull;&nbsp;

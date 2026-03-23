@@ -22,9 +22,9 @@ return new class extends Migration
         ];
 
         $existing = Schema::getColumnListing('megrendeles');
-        $toDrop   = array_values(array_intersect($toRemove, $existing));
+        $toDrop = array_values(array_intersect($toRemove, $existing));
 
-        if (!empty($toDrop)) {
+        if (! empty($toDrop)) {
             Schema::table('megrendeles', function (Blueprint $table) use ($toDrop) {
                 $table->dropColumn($toDrop);
             });

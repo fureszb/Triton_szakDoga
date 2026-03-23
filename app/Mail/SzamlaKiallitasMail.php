@@ -13,12 +13,14 @@ class SzamlaKiallitasMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Szamla $szamla) {}
+    public function __construct(public Szamla $szamla)
+    {
+    }
 
     public function envelope(): Envelope
     {
         $szamlaNum = $this->szamla->billingo_szam
-            ?? 'TRITON-' . str_pad($this->szamla->szamla_id, 6, '0', STR_PAD_LEFT);
+            ?? 'TRITON-'.str_pad($this->szamla->szamla_id, 6, '0', STR_PAD_LEFT);
 
         return new Envelope(
             subject: "Számla kiállítva – {$szamlaNum}",

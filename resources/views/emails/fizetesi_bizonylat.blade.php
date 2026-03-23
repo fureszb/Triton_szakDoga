@@ -52,12 +52,12 @@
         <tr>
           <td style="padding:11px 18px;font-size:12px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;width:40%;border-bottom:1px solid #f8fafc;">Megrendelés száma</td>
           <td style="padding:11px 18px;font-size:13px;color:#334155;font-weight:600;border-bottom:1px solid #f8fafc;">
-            #{{ str_pad($megrendeles->Megrendeles_ID, 5, '0', STR_PAD_LEFT) }}
+            #{{ str_pad($megrendeles->id, 5, '0', STR_PAD_LEFT) }}
           </td>
         </tr>
         <tr>
           <td style="padding:11px 18px;font-size:12px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #f8fafc;">Megrendelő neve</td>
-          <td style="padding:11px 18px;font-size:13px;color:#334155;border-bottom:1px solid #f8fafc;">{{ $megrendeles->Megrendeles_Nev }}</td>
+          <td style="padding:11px 18px;font-size:13px;color:#334155;border-bottom:1px solid #f8fafc;">{{ $megrendeles->megrendeles_nev }}</td>
         </tr>
         <tr>
           <td style="padding:11px 18px;font-size:12px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #f8fafc;">Fizetett összeg</td>

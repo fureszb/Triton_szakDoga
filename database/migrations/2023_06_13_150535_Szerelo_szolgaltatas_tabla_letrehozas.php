@@ -24,50 +24,50 @@ return new class extends Migration
                 'Szerelo_ID' => '1',
                 'Szolgaltatas_ID' => '1',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Szerelo_ID' => '1',
                 'Szolgaltatas_ID' => '2',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Szerelo_ID' => '1',
                 'Szolgaltatas_ID' => '3',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Szerelo_ID' => '1',
                 'Szolgaltatas_ID' => '4',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Szerelo_ID' => '2',
                 'Szolgaltatas_ID' => '2',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Szerelo_ID' => '2',
                 'Szolgaltatas_ID' => '1',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Szerelo_ID' => '2',
                 'Szolgaltatas_ID' => '3',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Szerelo_ID' => '2',
                 'Szolgaltatas_ID' => '4',
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
+                'updated_at' => now(),
+            ],
         ]);
     }
 
@@ -76,5 +76,3 @@ return new class extends Migration
         Schema::dropIfExists('szerelo_szolgaltatas');
     }
 };
-
-

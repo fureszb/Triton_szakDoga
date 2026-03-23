@@ -60,20 +60,20 @@ return new class extends Migration
 
             // ─── Foreign keys ─────────────────────────────────────────────────
             $table->foreign('megrendeles_id')
-                  ->references('Megrendeles_ID')->on('megrendeles')
-                  ->onDelete('restrict');   // megrendelés nem törölhető, ha van számlája
+                ->references('Megrendeles_ID')->on('megrendeles')
+                ->onDelete('restrict');   // megrendelés nem törölhető, ha van számlája
 
             $table->foreign('ugyfel_id')
-                  ->references('Ugyfel_ID')->on('ugyfel')
-                  ->onDelete('restrict');
+                ->references('Ugyfel_ID')->on('ugyfel')
+                ->onDelete('restrict');
 
             $table->foreign('storno_eredeti_id')
-                  ->references('szamla_id')->on('szamlak')
-                  ->onDelete('restrict');
+                ->references('szamla_id')->on('szamlak')
+                ->onDelete('restrict');
 
             $table->foreign('dijbekero_szamla_id')
-                  ->references('szamla_id')->on('szamlak')
-                  ->onDelete('set null');
+                ->references('szamla_id')->on('szamlak')
+                ->onDelete('set null');
 
             // ─── Indexek ──────────────────────────────────────────────────────
             $table->index('statusz');

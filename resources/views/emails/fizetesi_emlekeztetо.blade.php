@@ -44,7 +44,7 @@
         <tr>
           <td style="padding:11px 18px;font-size:12px;color:#94a3b8;font-weight:600;text-transform:uppercase;width:40%;border-bottom:1px solid #f8fafc;">Megrendelés</td>
           <td style="padding:11px 18px;font-size:13px;color:#334155;font-weight:600;border-bottom:1px solid #f8fafc;">
-            #{{ str_pad($megrendeles->Megrendeles_ID, 5, '0', STR_PAD_LEFT) }} – {{ $megrendeles->Megrendeles_Nev }}
+            #{{ str_pad($megrendeles->id, 5, '0', STR_PAD_LEFT) }} – {{ $megrendeles->megrendeles_nev }}
           </td>
         </tr>
         <tr>
@@ -68,7 +68,7 @@
   @if($megrendeles->Vegosszeg > 0)
   <tr>
     <td style="padding:0 36px 32px;text-align:center;">
-      <a href="{{ route('payment.checkout', $megrendeles->Megrendeles_ID) }}"
+      <a href="{{ route('payment.checkout', $megrendeles->id) }}"
          style="display:inline-block;background:linear-gradient(135deg,#c9a97a,#a07848);color:#fff;font-size:14px;font-weight:700;padding:14px 36px;border-radius:8px;text-decoration:none;letter-spacing:0.5px;">
         💳 Fizetek most
       </a>

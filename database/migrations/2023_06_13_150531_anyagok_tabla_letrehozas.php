@@ -9,7 +9,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('anyag', function (Blueprint $table){
+        Schema::create('anyag', function (Blueprint $table) {
             $table->id('Anyag_ID');
             $table->text('Nev');
             $table->text('Mertekegyseg');
@@ -21,19 +21,19 @@ return new class extends Migration
                 'Nev' => 'kamera',
                 'Mertekegyseg' => 'db',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Nev' => 'kábel',
                 'Mertekegyseg' => 'm',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Nev' => 'kábel csatorna',
                 'Mertekegyseg' => 'db',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
         ]);
 
@@ -44,5 +44,3 @@ return new class extends Migration
         Schema::dropIfExists('anyag');
     }
 };
-
-

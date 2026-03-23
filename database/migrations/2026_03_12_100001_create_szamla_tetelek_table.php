@@ -40,16 +40,16 @@ return new class extends Migration
 
             // ─── Foreign keys ──────────────────────────────────────────────────
             $table->foreign('szamla_id')
-                  ->references('szamla_id')->on('szamlak')
-                  ->onDelete('cascade');   // számla törlésével a tételek is törlődnek
+                ->references('szamla_id')->on('szamlak')
+                ->onDelete('cascade');   // számla törlésével a tételek is törlődnek
 
             $table->foreign('anyag_id')
-                  ->references('Anyag_ID')->on('anyag')
-                  ->onDelete('set null');  // anyag törölhető, a tétel marad (history)
+                ->references('Anyag_ID')->on('anyag')
+                ->onDelete('set null');  // anyag törölhető, a tétel marad (history)
 
             $table->foreign('munka_id')
-                  ->references('Munka_ID')->on('munka')
-                  ->onDelete('set null');
+                ->references('Munka_ID')->on('munka')
+                ->onDelete('set null');
 
             // ─── Indexek ───────────────────────────────────────────────────────
             $table->index(['szamla_id', 'sorrend']);

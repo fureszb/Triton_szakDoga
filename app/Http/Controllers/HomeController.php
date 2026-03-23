@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -10,32 +9,32 @@ class HomeController extends Controller
     public function index()
     {
         $szolgaltatasokKereslete = DB::table('szolgaltatas as S')
-            ->join('munka as M', 'S.Szolgaltatas_ID', '=', 'M.Szolgaltatas_ID')
-            ->select('S.Szolgaltatas_ID', 'S.Tipus', DB::raw('COUNT(M.Szolgaltatas_ID) AS Kereslet'))
-            ->groupBy('S.Szolgaltatas_ID', 'S.Tipus')
+            ->join('munka as M', 'S.id', '=', 'M.szolgaltatas_id')
+            ->select('S.id', 'S.tipus', DB::raw('COUNT(M.szolgaltatas_id) AS Kereslet'))
+            ->groupBy('S.id', 'S.tipus')
             ->orderBy('Kereslet', 'desc')
             ->get();
 
         $results = DB::table('varos as V')
-            ->join('megrendeles as M', 'V.Varos_ID', '=', 'M.Varos_ID')
-            ->select('V.Varos_ID', 'V.Nev', DB::raw('COUNT(M.Megrendeles_ID) as MegrendelesekSzama'))
-            ->groupBy('V.Varos_ID', 'V.Nev')
+            ->join('megrendeles as M', 'V.id', '=', 'M.varos_id')
+            ->select('V.id', 'V.nev', DB::raw('COUNT(M.id) as MegrendelesekSzama'))
+            ->groupBy('V.id', 'V.nev')
             ->get();
 
-        $ugyfelekSzama        = DB::table('ugyfel')->count();
-        $aktivMegrendelesek   = DB::table('megrendeles')->where('Statusz', false)->count();
-        $alairtvaMegrendelesek = DB::table('megrendeles')->where('Statusz', true)->count();
-        $szerelokSzama        = DB::table('szerelo')->count();
-        $anyagokSzama         = DB::table('anyag')->count();
+        $ugyfelekSzama = DB::table('ugyfel')->count();
+        $aktivMegrendelesek = DB::table('megrendeles')->where('statusz', false)->count();
+        $alairtvaMegrendelesek = DB::table('megrendeles')->where('statusz', true)->count();
+        $szerelokSzama = DB::table('szerelo')->count();
+        $anyagokSzama = DB::table('anyag')->count();
 
         return view('home.index', [
-            'szolgaltatasokKereslete'  => $szolgaltatasokKereslete,
-            'statistics'               => $results,
-            'ugyfelekSzama'            => $ugyfelekSzama,
-            'aktivMegrendelesek'       => $aktivMegrendelesek,
-            'alairtvaMegrendelesek'    => $alairtvaMegrendelesek,
-            'szerelokSzama'            => $szerelokSzama,
-            'anyagokSzama'             => $anyagokSzama,
+            'szolgaltatasokKereslete' => $szolgaltatasokKereslete,
+            'statistics' => $results,
+            'ugyfelekSzama' => $ugyfelekSzama,
+            'aktivMegrendelesek' => $aktivMegrendelesek,
+            'alairtvaMegrendelesek' => $alairtvaMegrendelesek,
+            'szerelokSzama' => $szerelokSzama,
+            'anyagokSzama' => $anyagokSzama,
         ]);
     }
 }

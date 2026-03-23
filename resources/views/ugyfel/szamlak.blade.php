@@ -213,10 +213,10 @@
             <div class="sz-card-top">
                 <div class="sz-num"><i class="fas fa-check"></i> {{ $szamla->billingo_szam ?? '#'.str_pad($szamla->szamla_id, 5, '0', STR_PAD_LEFT) }}</div>
                 <div class="sz-name">
-                    <div class="sz-name-title">{{ $mr->Megrendeles_Nev ?? '—' }}</div>
+                    <div class="sz-name-title">{{ $mr->megrendeles_nev ?? '—' }}</div>
                     <div class="sz-name-sub">
                         @if($mr?->varos)
-                            <span><i class="fas fa-map-marker-alt"></i> {{ $mr->varos->Nev ?? '' }}, {{ $mr->Utca_Hazszam }}</span>
+                            <span><i class="fas fa-map-marker-alt"></i> {{ $mr->varos->nev ?? '' }}, {{ $mr->utca_hazszam }}</span>
                         @endif
                         @if($sikerFiz)
                             <span><i class="fas fa-calendar-check"></i> Fizetve: {{ $fizDat }}</span>
@@ -275,9 +275,10 @@
                 'banki_atutalas' => 'Átutalással',
                 default          => 'Kézzel',
             };
-            $sikerFiz = $szamla->fizetesek->where('statusz', 'fizetve')->first();
-            $fizDat   = $sikerFiz?->fizetes_idopontja?->format('Y. m. d.') ?? '—';
-            $napok    = $szamla->fizetesi_hatarido ? now()->diffInDays($szamla->fizetesi_hatarido, false) : null;
+            $sikerFiz      = $szamla->fizetesek->where('statusz', 'fizetve')->first();
+            $fizDat        = $sikerFiz?->fizetes_idopontja?->format('Y. m. d.') ?? '—';
+            $napok         = $szamla->fizetesi_hatarido ? now()->diffInDays($szamla->fizetesi_hatarido, false) : null;
+            $fuggobenAtutalas = $szamla->fizetesek->where('statusz', 'fuggoben')->where('fizetes_mod', 'banki_atutalas')->isNotEmpty();
         @endphp
         <div class="sz-card" style="border-left: 4px solid #7c3aed;">
             <div class="sz-card-top">
@@ -285,10 +286,10 @@
                     <i class="fas fa-file-alt"></i> Díjbekérő
                 </div>
                 <div class="sz-name">
-                    <div class="sz-name-title">{{ $mr->Megrendeles_Nev ?? '—' }}</div>
+                    <div class="sz-name-title">{{ $mr->megrendeles_nev ?? '—' }}</div>
                     <div class="sz-name-sub">
                         @if($mr?->varos)
-                            <span><i class="fas fa-map-marker-alt"></i> {{ $mr->varos->Nev ?? '' }}, {{ $mr->Utca_Hazszam }}</span>
+                            <span><i class="fas fa-map-marker-alt"></i> {{ $mr->varos->nev ?? '' }}, {{ $mr->utca_hazszam }}</span>
                         @endif
                         @if($szamla->fizetesi_hatarido)
                             <span><i class="fas fa-clock"></i>
@@ -325,6 +326,8 @@
                     <div class="sz-detail-val">
                         @if($isPaid)
                             <span style="color:#16a34a;font-weight:600;"><i class="fas fa-check-circle"></i> Fizetve</span>
+                        @elseif($fuggobenAtutalas)
+                            <span style="color:#d97706;font-weight:600;"><i class="fas fa-clock"></i> Jóváhagyásra vár</span>
                         @else
                             <span style="color:#7c3aed;font-weight:600;"><i class="fas fa-hourglass-half"></i> Fizetésre vár</span>
                         @endif
@@ -337,7 +340,11 @@
                        style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">
                         <i class="fas fa-download"></i> Díjbekérő letöltése
                     </a>
-                    @if(!$isPaid && $szamla->megrendeles_id)
+                    @if(!$isPaid && $fuggobenAtutalas)
+                        <span style="font-size:11px;color:#d97706;background:#fffbeb;padding:5px 11px;border-radius:6px;display:flex;align-items:center;gap:5px;border:1px solid #fde68a;">
+                            <i class="fas fa-clock"></i> Átutalás jóváhagyásra vár
+                        </span>
+                    @elseif(!$isPaid && $szamla->megrendeles_id)
                         <a href="{{ route('payment.checkout', $szamla->megrendeles_id) }}"
                            style="display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:8px;font-size:12px;font-weight:700;color:#fff;background:linear-gradient(135deg,#16a34a,#15803d);text-decoration:none;">
                             <i class="fas fa-credit-card"></i> Fizetek
@@ -368,8 +375,9 @@
                 'banki_atutalas' => 'Átutalással',
                 default          => 'Kézzel',
             };
-            $fizDat = $sikerFiz?->fizetes_idopontja?->format('Y. m. d.') ?? '—';
-            $isPaid = $szamla->statusz === 'fizetve';
+            $fizDat           = $sikerFiz?->fizetes_idopontja?->format('Y. m. d.') ?? '—';
+            $isPaid           = $szamla->statusz === 'fizetve';
+            $fuggobenAtutalas = $szamla->fizetesek->where('statusz', 'fuggoben')->where('fizetes_mod', 'banki_atutalas')->isNotEmpty();
         @endphp
         <div class="sz-card">
             <div class="sz-card-top">
@@ -378,10 +386,10 @@
                     #{{ str_pad($szamla->szamla_id, 5, '0', STR_PAD_LEFT) }}
                 </div>
                 <div class="sz-name">
-                    <div class="sz-name-title">{{ $mr->Megrendeles_Nev ?? '—' }}</div>
+                    <div class="sz-name-title">{{ $mr->megrendeles_nev ?? '—' }}</div>
                     <div class="sz-name-sub">
                         @if($mr?->varos)
-                            <span><i class="fas fa-map-marker-alt"></i> {{ $mr->varos->Nev ?? '' }}, {{ $mr->Utca_Hazszam }}</span>
+                            <span><i class="fas fa-map-marker-alt"></i> {{ $mr->varos->nev ?? '' }}, {{ $mr->utca_hazszam }}</span>
                         @endif
                         @if($isPaid && $sikerFiz)
                             <span><i class="fas fa-calendar-check"></i> Fizetve: {{ $fizDat }}</span>
@@ -425,6 +433,10 @@
                     @elseif($isPaid)
                         <span style="font-size:11px;color:#64748b;background:#f1f5f9;padding:5px 11px;border-radius:6px;display:flex;align-items:center;gap:5px;">
                             <i class="fas fa-hourglass-half" style="color:#c9a97a;"></i> Számla készül
+                        </span>
+                    @elseif(!$isPaid && $fuggobenAtutalas)
+                        <span style="font-size:11px;color:#d97706;background:#fffbeb;padding:5px 11px;border-radius:6px;display:flex;align-items:center;gap:5px;border:1px solid #fde68a;">
+                            <i class="fas fa-clock"></i> Átutalás jóváhagyásra vár
                         </span>
                     @else
                         {{-- Online fizetési gomb --}}

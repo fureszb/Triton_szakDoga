@@ -13,7 +13,7 @@
             var pieDataArray = [
                 ['Típus', 'Mennyiség'],
                 @foreach ($szolgaltatasokKereslete as $szolgaltatas)
-                    ['{{ $szolgaltatas->Tipus }}', {{ $szolgaltatas->Kereslet }}],
+                    ['{{ $szolgaltatas->tipus }}', {{ $szolgaltatas->Kereslet }}],
                 @endforeach
             ];
 

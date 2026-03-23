@@ -221,8 +221,8 @@
         @php
             $hatarido   = $sz->fizetesi_hatarido;
             $napok      = $hatarido ? (int) now()->diffInDays($hatarido, false) : null;
-            $ugyfelNev  = $sz->ugyfel?->Nev ?? $sz->megrendeles?->ugyfel?->Nev ?? '—';
-            $ugyfelEmail= $sz->ugyfel?->Email ?? $sz->megrendeles?->ugyfel?->Email ?? null;
+            $ugyfelNev  = $sz->ugyfel?->nev ?? $sz->megrendeles?->ugyfel?->nev ?? '—';
+            $ugyfelEmail= $sz->ugyfel?->email ?? $sz->megrendeles?->ugyfel?->email ?? null;
             $szamlaNum  = $sz->billingo_szam ?? 'TRITON-' . str_pad($sz->szamla_id, 6, '0', STR_PAD_LEFT);
             $utolsoEm   = $sz->emlekeztetok->first();   // már desc sorrendben van
             $kuldve     = $sz->emlekeztetok->where('statusz','sikeres')->count();
@@ -255,7 +255,7 @@
                 @if($sz->megrendeles)
                     <div style="font-size:11px;color:#94a3b8;margin-top:2px;">
                         <i class="fas fa-file-contract" style="font-size:9px;"></i>
-                        {{ $sz->megrendeles->Megrendeles_Nev }}
+                        {{ $sz->megrendeles->megrendeles_nev }}
                     </div>
                 @endif
             </td>
@@ -376,7 +376,7 @@
             $szNev = $em->szamla
                 ? ('TRITON-' . str_pad($em->szamla->szamla_id, 6, '0', STR_PAD_LEFT))
                 : ('Számla #' . $em->szamla_id);
-            $uNev  = $em->ugyfel?->Nev ?? '—';
+            $uNev  = $em->ugyfel?->nev ?? '—';
             $tipus = match($em->tipus) {
                 'harom_napos' => '3 napos',
                 'egy_napos'   => '1 napos',

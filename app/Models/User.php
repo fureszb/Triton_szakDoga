@@ -17,7 +17,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $primaryKey = 'User_ID';
+    // $primaryKey alapértelmezetten 'id' – nincs szükség felülírásra
     protected $fillable = [
         'nev',
         'email',
@@ -27,9 +27,8 @@ class User extends Authenticatable
 
     public function ugyfel()
     {
-        return $this->hasOne(Ugyfel::class, 'User_ID', 'User_ID');
+        return $this->hasOne(Ugyfel::class, 'user_id', 'id');
     }
-
 
     /**
      * The attributes that should be hidden for serialization.

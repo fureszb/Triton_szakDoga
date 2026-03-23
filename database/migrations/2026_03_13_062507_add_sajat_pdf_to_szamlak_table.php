@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('szamlak', function (Blueprint $table) {
             $table->string('sajat_pdf_path', 255)->nullable()->after('billingo_pdf_url')
-                  ->comment('Saját sablon alapján generált PDF elérési útja (storage/app relatív)');
+                ->comment('Saját sablon alapján generált PDF elérési útja (storage/app relatív)');
         });
     }
 

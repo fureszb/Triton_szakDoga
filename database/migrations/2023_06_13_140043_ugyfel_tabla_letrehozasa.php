@@ -24,11 +24,8 @@ return new class extends Migration
             $table->foreign('Varos_ID')->references('Varos_ID')->on('varos');
             $table->foreign('User_ID')->references('User_ID')->on('users')->onDelete('set null');
 
-
             //$table->index('Ugyfel_ID');
         });
-
-
 
         DB::table('ugyfel')->insert([
             [
@@ -36,13 +33,13 @@ return new class extends Migration
                 'Varos_ID' => '1',
                 'User_ID' => '3',
                 'Nev' => 'Ügyfél Béla',
-                'Email' => "ugyfel@gmail.com",
+                'Email' => 'ugyfel@gmail.com',
                 'Telefonszam' => '06301234567',
                 'Szamlazasi_Nev' => 'Ügyfél Béla',
-                'Szamlazasi_Cim' => "Kossuth utca, 12",
+                'Szamlazasi_Cim' => 'Kossuth utca, 12',
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
+                'updated_at' => now(),
+            ],
         ]);
     }
 

@@ -389,6 +389,7 @@
     display: inline-flex; align-items: center; gap: 4px;
 }
 .m-pay-badge.fizetve  { background: rgba(34,197,94,0.1);   color: #16a34a; }
+.m-pay-badge.fuggoben { background: rgba(245,158,11,0.12); color: #b45309; border: 1px solid rgba(245,158,11,0.3); }
 .m-pay-badge.varakozik { background: rgba(59,130,246,0.1);  color: #2563eb; }
 .m-pay-badge.lejart   { background: rgba(239,68,68,0.1);   color: #dc2626; }
 .m-pay-badge.kozel    { background: rgba(249,115,22,0.1);  color: #ea580c; }
@@ -430,9 +431,9 @@
     $aktivMegr     = $megrendelesek->where('Statusz', 1)->count();
     $befejMegr     = $megrendelesek->where('Statusz', 0)->count();
     $osszesMunka   = $megrendelesek->flatMap->munkak;
-    $befejMunka    = $osszesMunka->filter(fn($m) => !is_null($m->Munkabefejezes_Idopontja))->count();
-    $folyMunka     = $osszesMunka->filter(fn($m) => !is_null($m->Munkakezdes_Idopontja) && is_null($m->Munkabefejezes_Idopontja))->count();
-    $varakozMunka  = $osszesMunka->filter(fn($m) => is_null($m->Munkakezdes_Idopontja))->count();
+    $befejMunka    = $osszesMunka->filter(fn($m) => !is_null($m->munkabefejezes_idopontja))->count();
+    $folyMunka     = $osszesMunka->filter(fn($m) => !is_null($m->munkakezdes_idopontja) && is_null($m->munkabefejezes_idopontja))->count();
+    $varakozMunka  = $osszesMunka->filter(fn($m) => is_null($m->munkakezdes_idopontja))->count();
     $fizetetlenMegr = $megrendelesek->filter(fn($mr) => !$mr->Fizetve && $mr->Vegosszeg)->count();
 @endphp
 
@@ -522,17 +523,19 @@
         @foreach ($aktivak as $megrendeles)
             @php
                 $elsoMunka = $megrendeles->munkak->first();
-                $ugyfelId  = $megrendeles->ugyfel->Ugyfel_ID ?? 0;
-                $ugyfelNev = rawurlencode($megrendeles->ugyfel->Nev ?? '');
-                $szoId     = $elsoMunka?->szolgaltatas?->Szolgaltatas_ID ?? 0;
-                $mId       = $megrendeles->Megrendeles_ID;
-                $szolgTipus = $megrendeles->munkak->map(fn($m) => $m->szolgaltatas?->Tipus)->filter()->unique()->implode(', ');
+                $ugyfelId  = $megrendeles->ugyfel->id ?? 0;
+                $ugyfelNev = rawurlencode($megrendeles->ugyfel->nev ?? '');
+                $szoId     = $elsoMunka?->szolgaltatas?->id ?? 0;
+                $mId       = $megrendeles->id;
+                $szolgTipus = $megrendeles->munkak->map(fn($m) => $m->szolgaltatas?->tipus)->filter()->unique()->implode(', ');
                 // Fizetés
                 $ma = \Carbon\Carbon::today();
                 $hatarido = $megrendeles->FizetesiHatarido ? \Carbon\Carbon::parse($megrendeles->FizetesiHatarido) : null;
                 $napokHatra = $hatarido ? $ma->diffInDays($hatarido, false) : null;
                 if ($megrendeles->Fizetve) {
                     $payBadgeClass = 'fizetve'; $payBadgeIcon = 'fa-check-circle'; $payBadgeLabel = 'Fizetve';
+                } elseif ($megrendeles->FuggobenFizetes) {
+                    $payBadgeClass = 'fuggoben'; $payBadgeIcon = 'fa-hourglass-half'; $payBadgeLabel = 'Fizetve, elfogadásra vár';
                 } elseif ($hatarido && $napokHatra < 0) {
                     $payBadgeClass = 'lejart'; $payBadgeIcon = 'fa-exclamation-circle'; $payBadgeLabel = 'Lejárt';
                 } elseif ($hatarido && $napokHatra <= 3) {
@@ -545,7 +548,7 @@
                 <div class="m-card-header">
                     <div class="m-order-num">#{{ str_pad($mId, 5, '0', STR_PAD_LEFT) }}</div>
                     <div class="m-card-title-wrap">
-                        <div class="m-card-name">{{ $megrendeles->Megrendeles_Nev }}</div>
+                        <div class="m-card-name">{{ $megrendeles->megrendeles_nev }}</div>
                         <div class="m-card-meta-inline">
                             @if($szolgTipus)
                                 <span><i class="fas fa-wrench"></i> {{ $szolgTipus }}</span>
@@ -553,8 +556,8 @@
                             @if($megrendeles->varos)
                                 <span><i class="fas fa-map-marker-alt"></i>
                                     {{ $megrendeles->varos->Irny_szam ?? '' }}
-                                    {{ $megrendeles->varos->Nev ?? '' }},
-                                    {{ $megrendeles->Utca_Hazszam }}
+                                    {{ $megrendeles->varos->nev ?? '' }},
+                                    {{ $megrendeles->utca_hazszam }}
                                 </span>
                             @endif
                         </div>
@@ -579,7 +582,7 @@
                         <div class="m-payment-due">
                             <i class="fas fa-calendar-alt"></i>
                             Határidő: {{ $hatarido->format('Y. m. d.') }}
-                            @if(!$megrendeles->Fizetve)
+                            @if(!$megrendeles->Fizetve && !$megrendeles->FuggobenFizetes)
                                 @if($napokHatra > 0)
                                     <span style="color:#ea580c;font-weight:600;">({{ $napokHatra }} nap)</span>
                                 @elseif($napokHatra == 0)
@@ -598,9 +601,14 @@
                                 <i class="fas fa-check" style="color:#16a34a;"></i>
                                 {{ \Carbon\Carbon::parse($megrendeles->Fizetve_Idopontja)->format('Y. m. d.') }}
                             </span>
+                        @elseif($megrendeles->FuggobenFizetes)
+                            <span style="font-size:11px;color:#b45309;">
+                                <i class="fas fa-info-circle"></i>
+                                Az átutalásod rögzítve — admin jóváhagyásra vár.
+                            </span>
                         @endif
                     </div>
-                    @if(!$megrendeles->Fizetve)
+                    @if(!$megrendeles->Fizetve && !$megrendeles->FuggobenFizetes)
                     <a href="{{ route('payment.checkout', $mId) }}" class="m-fizet-btn">
                         <i class="fas fa-credit-card"></i> Fizetek
                     </a>
@@ -611,11 +619,11 @@
                 <div class="m-munkak">
                     @foreach($megrendeles->munkak as $munka)
                         @php
-                            if (!is_null($munka->Munkabefejezes_Idopontja)) {
+                            if (!is_null($munka->munkabefejezes_idopontja)) {
                                 $munkaStatus = 'befejezett';
                                 $munkaStatusLabel = 'Befejezett';
                                 $munkaStatusIcon = 'fa-check';
-                            } elseif (!is_null($munka->Munkakezdes_Idopontja)) {
+                            } elseif (!is_null($munka->munkakezdes_idopontja)) {
                                 $munkaStatus = 'folyamatban';
                                 $munkaStatusLabel = 'Folyamatban';
                                 $munkaStatusIcon = 'fa-hard-hat';
@@ -629,7 +637,7 @@
                             <div class="m-munka-header">
                                 <div class="m-munka-icon"><i class="fas fa-wrench"></i></div>
                                 <div class="m-munka-title">
-                                    {{ $munka->szolgaltatas->Tipus ?? 'Elvégzett munka' }}
+                                    {{ $munka->szolgaltatas->tipus ?? 'Elvégzett munka' }}
                                     @if($megrendeles->munkak->count() > 1)
                                         <span class="m-munka-sorszam">{{ $loop->iteration }}. munka</span>
                                     @endif
@@ -639,22 +647,22 @@
                                 </span>
                             </div>
                             <div class="m-munka-body">
-                                @if($munka->Munkakezdes_Idopontja)
+                                @if($munka->munkakezdes_idopontja)
                                 <div class="m-detail-item">
                                     <div class="m-detail-label"><i class="fas fa-calendar-alt"></i> Munkakezdés</div>
-                                    <div class="m-detail-val">{{ \Carbon\Carbon::parse($munka->Munkakezdes_Idopontja)->format('Y. m. d.') }}</div>
+                                    <div class="m-detail-val">{{ \Carbon\Carbon::parse($munka->munkakezdes_idopontja)->format('Y. m. d.') }}</div>
                                 </div>
                                 @endif
-                                @if($munka->Munkabefejezes_Idopontja)
+                                @if($munka->munkabefejezes_idopontja)
                                 <div class="m-detail-item">
                                     <div class="m-detail-label"><i class="fas fa-calendar-check"></i> Befejezés</div>
-                                    <div class="m-detail-val">{{ \Carbon\Carbon::parse($munka->Munkabefejezes_Idopontja)->format('Y. m. d.') }}</div>
+                                    <div class="m-detail-val">{{ \Carbon\Carbon::parse($munka->munkabefejezes_idopontja)->format('Y. m. d.') }}</div>
                                 </div>
                                 @endif
                                 @if($munka->szerelo)
                                 <div class="m-detail-item">
                                     <div class="m-detail-label"><i class="fas fa-hard-hat"></i> Szerelő</div>
-                                    <div class="m-detail-val">{{ $munka->szerelo->Nev }}</div>
+                                    <div class="m-detail-val">{{ $munka->szerelo->nev }}</div>
                                 </div>
                                 @endif
                                 @if($munka->felhasznalt_anyagok->count())
@@ -662,15 +670,15 @@
                                     <div class="m-detail-label"><i class="fas fa-boxes"></i> Felhasznált anyagok</div>
                                     <div class="m-detail-val">
                                         @foreach($munka->felhasznalt_anyagok as $fa)
-                                            {{ $fa->anyag->Nev ?? '?' }} ({{ $fa->Mennyiseg }} {{ $fa->anyag->Mertekegyseg ?? '' }})@if(!$loop->last), @endif
+                                            {{ $fa->anyag->nev ?? '?' }} ({{ $fa->mennyiseg }} {{ $fa->anyag->mertekegyseg ?? '' }})@if(!$loop->last), @endif
                                         @endforeach
                                     </div>
                                 </div>
                                 @endif
-                                @if($munka->Leiras)
+                                @if($munka->leiras)
                                 <div class="m-detail-item wide">
                                     <div class="m-detail-label"><i class="fas fa-align-left"></i> Leírás</div>
-                                    <div class="m-detail-val">{{ $munka->Leiras }}</div>
+                                    <div class="m-detail-val">{{ $munka->leiras }}</div>
                                 </div>
                                 @endif
                             </div>
@@ -688,13 +696,13 @@
         @foreach ($befejezettek as $megrendeles)
             @php
                 $elsoMunka   = $megrendeles->munkak->first();
-                $ugyfelId    = $megrendeles->ugyfel->Ugyfel_ID ?? 0;
-                $ugyfelNev   = rawurlencode($megrendeles->ugyfel->Nev ?? '');
-                $szoId       = $elsoMunka?->szolgaltatas?->Szolgaltatas_ID ?? 0;
-                $mId         = $megrendeles->Megrendeles_ID;
+                $ugyfelId    = $megrendeles->ugyfel->id ?? 0;
+                $ugyfelNev   = rawurlencode($megrendeles->ugyfel->nev ?? '');
+                $szoId       = $elsoMunka?->szolgaltatas?->id ?? 0;
+                $mId         = $megrendeles->id;
                 $collapseId  = 'mc-' . $mId;
-                $szolgTipus  = $megrendeles->munkak->map(fn($m) => $m->szolgaltatas?->Tipus)->filter()->unique()->implode(', ');
-                $befDatum    = $megrendeles->munkak->map(fn($m) => $m->Munkabefejezes_Idopontja)->filter()->last();
+                $szolgTipus  = $megrendeles->munkak->map(fn($m) => $m->szolgaltatas?->tipus)->filter()->unique()->implode(', ');
+                $befDatum    = $megrendeles->munkak->map(fn($m) => $m->munkabefejezes_idopontja)->filter()->last();
                 $befDatumFmt = $befDatum ? \Carbon\Carbon::parse($befDatum)->format('Y. m. d.') : null;
                 // Fizetés
                 $ma2 = \Carbon\Carbon::today();
@@ -702,6 +710,8 @@
                 $napokHatra2 = $hatarido2 ? $ma2->diffInDays($hatarido2, false) : null;
                 if ($megrendeles->Fizetve) {
                     $payBadgeClass2 = 'fizetve'; $payBadgeIcon2 = 'fa-check-circle'; $payBadgeLabel2 = 'Fizetve';
+                } elseif ($megrendeles->FuggobenFizetes) {
+                    $payBadgeClass2 = 'fuggoben'; $payBadgeIcon2 = 'fa-hourglass-half'; $payBadgeLabel2 = 'Fizetve, elfogadásra vár';
                 } elseif ($hatarido2 && $napokHatra2 < 0) {
                     $payBadgeClass2 = 'lejart'; $payBadgeIcon2 = 'fa-exclamation-circle'; $payBadgeLabel2 = 'Lejárt';
                 } elseif ($hatarido2 && $napokHatra2 <= 3) {
@@ -718,7 +728,7 @@
                         #{{ str_pad($mId, 5, '0', STR_PAD_LEFT) }}
                     </div>
                     <div class="m-card-title-wrap">
-                        <div class="m-card-name">{{ $megrendeles->Megrendeles_Nev }}</div>
+                        <div class="m-card-name">{{ $megrendeles->megrendeles_nev }}</div>
                         <div class="m-card-meta-inline">
                             @if($szolgTipus)
                                 <span><i class="fas fa-wrench"></i> {{ $szolgTipus }}</span>
@@ -728,8 +738,8 @@
                             @endif
                             @if($megrendeles->varos)
                                 <span><i class="fas fa-map-marker-alt"></i>
-                                    {{ $megrendeles->varos->Nev ?? '' }},
-                                    {{ $megrendeles->Utca_Hazszam }}
+                                    {{ $megrendeles->varos->nev ?? '' }},
+                                    {{ $megrendeles->utca_hazszam }}
                                 </span>
                             @endif
                         </div>
@@ -756,7 +766,7 @@
                         <div class="m-payment-due">
                             <i class="fas fa-calendar-alt"></i>
                             Határidő: {{ $hatarido2->format('Y. m. d.') }}
-                            @if(!$megrendeles->Fizetve)
+                            @if(!$megrendeles->Fizetve && !$megrendeles->FuggobenFizetes)
                                 @if($napokHatra2 > 0)
                                     <span style="color:#ea580c;font-weight:600;">({{ $napokHatra2 }} nap)</span>
                                 @elseif($napokHatra2 == 0)
@@ -775,9 +785,14 @@
                                 <i class="fas fa-check" style="color:#16a34a;"></i>
                                 {{ \Carbon\Carbon::parse($megrendeles->Fizetve_Idopontja)->format('Y. m. d.') }}
                             </span>
+                        @elseif($megrendeles->FuggobenFizetes)
+                            <span style="font-size:11px;color:#b45309;">
+                                <i class="fas fa-info-circle"></i>
+                                Az átutalásod rögzítve — admin jóváhagyásra vár.
+                            </span>
                         @endif
                     </div>
-                    @if(!$megrendeles->Fizetve)
+                    @if(!$megrendeles->Fizetve && !$megrendeles->FuggobenFizetes)
                     <a href="{{ route('payment.checkout', $mId) }}" class="m-fizet-btn">
                         <i class="fas fa-credit-card"></i> Fizetek
                     </a>
@@ -792,32 +807,32 @@
                                 <div class="m-munka-header">
                                     <div class="m-munka-icon"><i class="fas fa-check"></i></div>
                                     <div class="m-munka-title">
-                                        {{ $munka->szolgaltatas->Tipus ?? 'Elvégzett munka' }}
+                                        {{ $munka->szolgaltatas->tipus ?? 'Elvégzett munka' }}
                                         @if($megrendeles->munkak->count() > 1)
                                             <span class="m-munka-sorszam">{{ $loop->iteration }}. munka</span>
                                         @endif
                                     </div>
-                                    @if($munka->Munkabefejezes_Idopontja)
+                                    @if($munka->munkabefejezes_idopontja)
                                         <span class="m-munka-status befejezett"><i class="fas fa-check"></i> Befejezett</span>
                                     @endif
                                 </div>
                                 <div class="m-munka-body">
-                                    @if($munka->Munkakezdes_Idopontja)
+                                    @if($munka->munkakezdes_idopontja)
                                     <div class="m-detail-item">
                                         <div class="m-detail-label"><i class="fas fa-calendar-alt"></i> Munkakezdés</div>
-                                        <div class="m-detail-val">{{ \Carbon\Carbon::parse($munka->Munkakezdes_Idopontja)->format('Y. m. d.') }}</div>
+                                        <div class="m-detail-val">{{ \Carbon\Carbon::parse($munka->munkakezdes_idopontja)->format('Y. m. d.') }}</div>
                                     </div>
                                     @endif
-                                    @if($munka->Munkabefejezes_Idopontja)
+                                    @if($munka->munkabefejezes_idopontja)
                                     <div class="m-detail-item">
                                         <div class="m-detail-label"><i class="fas fa-calendar-check"></i> Befejezés</div>
-                                        <div class="m-detail-val">{{ \Carbon\Carbon::parse($munka->Munkabefejezes_Idopontja)->format('Y. m. d.') }}</div>
+                                        <div class="m-detail-val">{{ \Carbon\Carbon::parse($munka->munkabefejezes_idopontja)->format('Y. m. d.') }}</div>
                                     </div>
                                     @endif
                                     @if($munka->szerelo)
                                     <div class="m-detail-item">
                                         <div class="m-detail-label"><i class="fas fa-hard-hat"></i> Szerelő</div>
-                                        <div class="m-detail-val">{{ $munka->szerelo->Nev }}</div>
+                                        <div class="m-detail-val">{{ $munka->szerelo->nev }}</div>
                                     </div>
                                     @endif
                                     @if($munka->felhasznalt_anyagok->count())
@@ -825,15 +840,15 @@
                                         <div class="m-detail-label"><i class="fas fa-boxes"></i> Felhasznált anyagok</div>
                                         <div class="m-detail-val">
                                             @foreach($munka->felhasznalt_anyagok as $fa)
-                                                {{ $fa->anyag->Nev ?? '?' }} ({{ $fa->Mennyiseg }} {{ $fa->anyag->Mertekegyseg ?? '' }})@if(!$loop->last), @endif
+                                                {{ $fa->anyag->nev ?? '?' }} ({{ $fa->mennyiseg }} {{ $fa->anyag->mertekegyseg ?? '' }})@if(!$loop->last), @endif
                                             @endforeach
                                         </div>
                                     </div>
                                     @endif
-                                    @if($munka->Leiras)
+                                    @if($munka->leiras)
                                     <div class="m-detail-item wide">
                                         <div class="m-detail-label"><i class="fas fa-align-left"></i> Leírás</div>
-                                        <div class="m-detail-val">{{ $munka->Leiras }}</div>
+                                        <div class="m-detail-val">{{ $munka->leiras }}</div>
                                     </div>
                                     @endif
                                 </div>

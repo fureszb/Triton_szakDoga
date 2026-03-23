@@ -208,10 +208,10 @@
 @if ($megrendeles)
 
 @php
-    $ugyfelId  = $megrendeles->ugyfel->Ugyfel_ID ?? 0;
-    $ugyfelNev = rawurlencode($megrendeles->ugyfel->Nev ?? '');
-    $szoId     = $munkak->first()?->szolgaltatas?->Szolgaltatas_ID ?? 0;
-    $mId       = $megrendeles->Megrendeles_ID;
+    $ugyfelId  = $megrendeles->ugyfel->id ?? 0;
+    $ugyfelNev = rawurlencode($megrendeles->ugyfel->nev ?? '');
+    $szoId     = $munkak->first()?->szolgaltatas?->id ?? 0;
+    $mId       = $megrendeles->id;
     $viewUrl   = url('/view-pdf/'     . $ugyfelId . '_' . $ugyfelNev . '_' . $szoId . '_' . $mId);
     $dlUrl     = url('/download-pdf/' . $ugyfelId . '_' . $ugyfelNev . '_' . $szoId . '_' . $mId);
 @endphp
@@ -221,7 +221,7 @@
     <div class="show-header-left">
         <h1>
             <i class="fas fa-clipboard-list"></i>
-            {{ $megrendeles->Megrendeles_Nev }}
+            {{ $megrendeles->megrendeles_nev }}
         </h1>
         <span class="show-order-num">#{{ str_pad($mId, 5, '0', STR_PAD_LEFT) }}</span>
     </div>
@@ -264,16 +264,16 @@
         <div class="info-rows">
             <div class="info-row">
                 <div class="info-row-label"><i class="fas fa-user"></i> Ügyfél</div>
-                <div class="info-row-val">{{ $megrendeles->ugyfel->Nev ?? '—' }}</div>
+                <div class="info-row-val">{{ $megrendeles->ugyfel->nev ?? '—' }}</div>
             </div>
             <div class="info-row">
                 <div class="info-row-label"><i class="fas fa-file-signature"></i> Megrendelő</div>
-                <div class="info-row-val">{{ $megrendeles->Megrendeles_Nev }}</div>
+                <div class="info-row-val">{{ $megrendeles->megrendeles_nev }}</div>
             </div>
             <div class="info-row">
                 <div class="info-row-label"><i class="fas fa-toggle-on"></i> Státusz</div>
                 <div class="info-row-val">
-                    @if($megrendeles->Statusz)
+                    @if($megrendeles->statusz)
                         <span class="badge-folyamatban"><i class="fas fa-spinner"></i> Folyamatban</span>
                     @else
                         <span class="badge-befejezve"><i class="fas fa-check"></i> Befejezve</span>
@@ -294,18 +294,18 @@
                 <div class="info-row-label"><i class="fas fa-city"></i> Város</div>
                 <div class="info-row-val">
                     {{ $megrendeles->varos->Irny_szam ?? '' }}
-                    {{ $megrendeles->varos->Nev ?? '—' }}
+                    {{ $megrendeles->varos->nev ?? '—' }}
                 </div>
             </div>
             <div class="info-row">
                 <div class="info-row-label"><i class="fas fa-road"></i> Utca, hsz.</div>
-                <div class="info-row-val">{{ $megrendeles->Utca_Hazszam }}</div>
+                <div class="info-row-val">{{ $megrendeles->utca_hazszam }}</div>
             </div>
-            @if($megrendeles->Pdf_EleresiUt)
+            @if($megrendeles->pdf_eleresi_ut)
             <div class="info-row">
                 <div class="info-row-label"><i class="fas fa-file-pdf"></i> PDF útvonal</div>
                 <div class="info-row-val" style="font-size:12px;color:#94a3b8;word-break:break-all;">
-                    {{ $megrendeles->Pdf_EleresiUt }}
+                    {{ $megrendeles->pdf_eleresi_ut }}
                 </div>
             </div>
             @endif
@@ -321,9 +321,9 @@
 
         @foreach ($munkak as $munka)
             @php
-                if (!is_null($munka->Munkabefejezes_Idopontja)) {
+                if (!is_null($munka->munkabefejezes_idopontja)) {
                     $mStatus = 'done'; $mLabel = 'Befejezett'; $mIcon = 'fa-check';
-                } elseif (!is_null($munka->Munkakezdes_Idopontja)) {
+                } elseif (!is_null($munka->munkakezdes_idopontja)) {
                     $mStatus = 'in';   $mLabel = 'Folyamatban'; $mIcon = 'fa-hard-hat';
                 } else {
                     $mStatus = 'wait'; $mLabel = 'Várakozik';   $mIcon = 'fa-clock';
@@ -332,7 +332,7 @@
             <div class="munka-subcard" style="{{ $loop->first ? 'margin-top:14px;' : 'margin-top:10px;' }}">
                 <div class="munka-sub-header">
                     <div class="munka-sub-icon"><i class="fas fa-wrench"></i></div>
-                    <div class="munka-sub-title">{{ $munka->szolgaltatas->Tipus ?? 'Elvégzett munka' }}</div>
+                    <div class="munka-sub-title">{{ $munka->szolgaltatas->tipus ?? 'Elvégzett munka' }}</div>
                     @if($munkak->count() > 1)
                         <span class="munka-num">{{ $loop->iteration }}. munka</span>
                     @endif
@@ -343,34 +343,34 @@
                 <div class="info-rows">
                     <div class="info-row">
                         <div class="info-row-label"><i class="fas fa-hard-hat"></i> Szerelő</div>
-                        <div class="info-row-val">{{ $munka->szerelo->Nev ?? '—' }}</div>
+                        <div class="info-row-val">{{ $munka->szerelo->nev ?? '—' }}</div>
                     </div>
-                    @if($munka->szerelo?->Telefonszam)
+                    @if($munka->szerelo?->telefonszam)
                     <div class="info-row">
                         <div class="info-row-label"><i class="fas fa-phone"></i> Telefon</div>
-                        <div class="info-row-val">{{ $munka->szerelo->Telefonszam }}</div>
+                        <div class="info-row-val">{{ $munka->szerelo->telefonszam }}</div>
                     </div>
                     @endif
-                    @if($munka->Munkakezdes_Idopontja)
+                    @if($munka->munkakezdes_idopontja)
                     <div class="info-row">
                         <div class="info-row-label"><i class="fas fa-calendar-alt"></i> Kezdés</div>
                         <div class="info-row-val">
-                            {{ \Carbon\Carbon::parse($munka->Munkakezdes_Idopontja)->format('Y. m. d. H:i') }}
+                            {{ \Carbon\Carbon::parse($munka->munkakezdes_idopontja)->format('Y. m. d. H:i') }}
                         </div>
                     </div>
                     @endif
-                    @if($munka->Munkabefejezes_Idopontja)
+                    @if($munka->munkabefejezes_idopontja)
                     <div class="info-row">
                         <div class="info-row-label"><i class="fas fa-calendar-check"></i> Befejezés</div>
                         <div class="info-row-val">
-                            {{ \Carbon\Carbon::parse($munka->Munkabefejezes_Idopontja)->format('Y. m. d. H:i') }}
+                            {{ \Carbon\Carbon::parse($munka->munkabefejezes_idopontja)->format('Y. m. d. H:i') }}
                         </div>
                     </div>
                     @endif
-                    @if($munka->Leiras)
+                    @if($munka->leiras)
                     <div class="info-row">
                         <div class="info-row-label"><i class="fas fa-align-left"></i> Leírás</div>
-                        <div class="info-row-val">{{ $munka->Leiras }}</div>
+                        <div class="info-row-val">{{ $munka->leiras }}</div>
                     </div>
                     @endif
                 </div>
@@ -420,7 +420,7 @@
                 {{-- Admin / Uzletkoto gombok --}}
                 @if($user->role !== 'Ugyfel')
                     @if($szamla && !$fizetve)
-                        <form method="POST" action="{{ route('payment.manual', $megrendeles->Megrendeles_ID) }}" style="display:inline;">
+                        <form method="POST" action="{{ route('payment.manual', $megrendeles->id) }}" style="display:inline;">
                             @csrf
                             <button type="submit" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:7px;background:#f0fdf4;border:1.5px solid rgba(34,197,94,0.3);color:#16a34a;font-size:12px;font-weight:600;cursor:pointer;">
                                 <i class="fas fa-check"></i> Megjelölés fizetve
@@ -439,7 +439,7 @@
                             </a>
                         @endif
                     @else
-                        <a href="{{ route('szamlak.create', ['megrendeles_id' => $megrendeles->Megrendeles_ID]) }}"
+                        <a href="{{ route('szamlak.create', ['megrendeles_id' => $megrendeles->id]) }}"
                            style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:7px;background:rgba(201,169,122,0.1);border:1.5px solid rgba(201,169,122,0.35);color:#a07848;font-size:12px;font-weight:600;text-decoration:none;">
                             <i class="fas fa-plus"></i> Számla kiállítása
                         </a>
@@ -503,12 +503,12 @@
                     <div class="anyag-row">
                         <i class="fas fa-cube" style="color:#c9a97a;font-size:12px;flex-shrink:0;"></i>
                         <div class="anyag-row-name">
-                            {{ $fa->anyag->Nev ?? '—' }}
+                            {{ $fa->anyag->nev ?? '—' }}
                             <span style="color:#94a3b8;font-weight:400;font-size:11px;">
-                                ({{ $fa->anyag->Mertekegyseg ?? '' }})
+                                ({{ $fa->anyag->mertekegyseg ?? '' }})
                             </span>
                         </div>
-                        <div class="anyag-row-qty">{{ $fa->Mennyiseg }} db</div>
+                        <div class="anyag-row-qty">{{ $fa->mennyiseg }} db</div>
                     </div>
                 @endforeach
             </div>

@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Varos extends Model
 {
     use HasFactory;
-    protected $table = 'varos';
-    protected $primaryKey = 'Varos_ID';
-    protected $fillable = ['Nev', 'Irny_szam'];
 
+    protected $table = 'varos';
+
+    // $primaryKey alapértelmezetten 'id'
+    protected $fillable = ['nev', 'Irny_szam'];
 }

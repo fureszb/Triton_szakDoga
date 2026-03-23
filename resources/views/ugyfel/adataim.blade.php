@@ -42,29 +42,29 @@
             <div id="szemelyes-view">
                 <div class="adat-netfone-row">
                     <i class="fas fa-hashtag adat-netfone-icon"></i>
-                    <span>Ügyfélszám: <strong>{{ $ugyfel->Ugyfel_ID }}</strong></span>
+                    <span>Ügyfélszám: <strong>{{ $ugyfel->id }}</strong></span>
                 </div>
                 <div class="adat-netfone-row">
                     <i class="fas fa-id-card adat-netfone-icon"></i>
-                    <span>Teljes név: <strong>{{ $ugyfel->Nev }}</strong></span>
+                    <span>Teljes név: <strong>{{ $ugyfel->nev }}</strong></span>
                 </div>
                 <div class="adat-netfone-row">
                     <i class="fas fa-map-marker-alt adat-netfone-icon"></i>
-                    <span>Város: <strong>{{ $ugyfel->varos->Nev ?? '—' }}</strong></span>
+                    <span>Város: <strong>{{ $ugyfel->varos->nev ?? '—' }}</strong></span>
                 </div>
                 <div class="adat-netfone-divider"></div>
                 <div class="adat-netfone-row">
                     <i class="fas fa-file-invoice adat-netfone-icon"></i>
-                    <span>Számlázási név: <strong>{{ $ugyfel->Szamlazasi_Nev ?? '—' }}</strong></span>
+                    <span>Számlázási név: <strong>{{ $ugyfel->szamlazasi_nev ?? '—' }}</strong></span>
                 </div>
                 <div class="adat-netfone-row">
                     <i class="fas fa-home adat-netfone-icon"></i>
-                    <span>Számlázási cím: <strong>{{ $ugyfel->Szamlazasi_Cim ?? '—' }}</strong></span>
+                    <span>Számlázási cím: <strong>{{ $ugyfel->szamlazasi_cim ?? '—' }}</strong></span>
                 </div>
-                @if($ugyfel->Adoszam)
+                @if($ugyfel->adoszam)
                 <div class="adat-netfone-row">
                     <i class="fas fa-receipt adat-netfone-icon"></i>
-                    <span>Adószám: <strong>{{ $ugyfel->Adoszam }}</strong></span>
+                    <span>Adószám: <strong>{{ $ugyfel->adoszam }}</strong></span>
                 </div>
                 @endif
 
@@ -84,37 +84,47 @@
 
                     <div class="adat-edit-group">
                         <label class="adat-edit-label">Teljes név</label>
-                        <input type="text" name="Nev" class="adat-edit-input"
-                               value="{{ old('Nev', $ugyfel->Nev) }}" required>
+                        <input type="text" name="nev" class="adat-edit-input"
+                               value="{{ old('nev', $ugyfel->nev) }}" required>
                     </div>
                     <div class="adat-edit-group">
                         <label class="adat-edit-label">Város</label>
-                        <select name="Varos_ID" class="adat-edit-input">
+                        <select name="varos_id" id="varos-select-adataim" class="adat-edit-input varos-select">
+                            <option value="">— Keressen irányítószámra vagy városra —</option>
                             @foreach($varosok as $v)
-                                <option value="{{ $v->Varos_ID }}"
-                                    {{ old('Varos_ID', $ugyfel->Varos_ID) == $v->Varos_ID ? 'selected' : '' }}>
-                                    {{ $v->Irny_szam }} {{ $v->Nev }}
+                                <option value="{{ $v->id }}"
+                                    {{ old('varos_id', $ugyfel->varos_id) == $v->id ? 'selected' : '' }}>
+                                    {{ $v->Irny_szam }} {{ $v->nev }}
                                 </option>
                             @endforeach
                         </select>
+                        <div class="varos-ujvaros-panel" data-for="varos-select-adataim" style="display:none;">
+                            <div class="varos-ujvaros-row">
+                                <input type="text" class="varos-uj-irsz adat-edit-input" placeholder="Irányítószám" maxlength="4" style="width:120px;">
+                                <input type="text" class="varos-uj-nev adat-edit-input" placeholder="Város neve" style="flex:1;">
+                                <button type="button" class="varos-uj-mentes btn btn-sm btn-primary">Mentés</button>
+                                <button type="button" class="varos-uj-megsem btn btn-sm btn-secondary">Mégse</button>
+                            </div>
+                            <div class="varos-uj-hiba" style="display:none; color:#c0392b; font-size:.85em; margin-top:4px;"></div>
+                        </div>
                     </div>
                     <div class="adat-edit-group">
                         <label class="adat-edit-label">Számlázási név</label>
-                        <input type="text" name="Szamlazasi_Nev" class="adat-edit-input"
-                               value="{{ old('Szamlazasi_Nev', $ugyfel->Szamlazasi_Nev) }}" required>
+                        <input type="text" name="szamlazasi_nev" class="adat-edit-input"
+                               value="{{ old('szamlazasi_nev', $ugyfel->szamlazasi_nev) }}" required>
                     </div>
                     <div class="adat-edit-group">
                         <label class="adat-edit-label">Számlázási cím</label>
-                        <input type="text" name="Szamlazasi_Cim" class="adat-edit-input"
-                               value="{{ old('Szamlazasi_Cim', $ugyfel->Szamlazasi_Cim) }}" required>
+                        <input type="text" name="szamlazasi_cim" class="adat-edit-input"
+                               value="{{ old('szamlazasi_cim', $ugyfel->szamlazasi_cim) }}" required>
                     </div>
                     <div class="adat-edit-group">
                         <label class="adat-edit-label">
                             Adószám
                             <span style="font-weight:400;color:#8b949e;font-size:12px;">(opcionális)</span>
                         </label>
-                        <input type="text" name="Adoszam" class="adat-edit-input"
-                               value="{{ old('Adoszam', $ugyfel->Adoszam) }}"
+                        <input type="text" name="adoszam" class="adat-edit-input"
+                               value="{{ old('adoszam', $ugyfel->adoszam) }}"
                                placeholder="pl. 12345678-1-01">
                     </div>
 
@@ -149,11 +159,11 @@
             <div id="kapcsolat-view">
                 <div class="adat-netfone-row">
                     <i class="fas fa-envelope adat-netfone-icon"></i>
-                    <span>Email cím: <strong>{{ $ugyfel->Email }}</strong></span>
+                    <span>Email cím: <strong>{{ $ugyfel->email }}</strong></span>
                 </div>
                 <div class="adat-netfone-row">
                     <i class="fas fa-phone adat-netfone-icon"></i>
-                    <span>Telefonszám: <strong>{{ $ugyfel->Telefonszam ?? '—' }}</strong></span>
+                    <span>Telefonszám: <strong>{{ $ugyfel->telefonszam ?? '—' }}</strong></span>
                 </div>
 
                 <div class="adat-netfone-actions">
@@ -173,7 +183,7 @@
                     <div class="adat-edit-group">
                         <label class="adat-edit-label">Email cím</label>
                         <input type="email" class="adat-edit-input adat-edit-disabled"
-                               value="{{ $ugyfel->Email }}" disabled>
+                               value="{{ $ugyfel->email }}" disabled>
                         <span class="adat-edit-hint">
                             <i class="fas fa-info-circle"></i>
                             Az email cím módosításához keresd fel ügyfélszolgálatunkat.
@@ -181,8 +191,8 @@
                     </div>
                     <div class="adat-edit-group">
                         <label class="adat-edit-label">Telefonszám</label>
-                        <input type="text" name="Telefonszam" class="adat-edit-input"
-                               value="{{ old('Telefonszam', $ugyfel->Telefonszam) }}"
+                        <input type="text" name="telefonszam" class="adat-edit-input"
+                               value="{{ old('telefonszam', $ugyfel->telefonszam) }}"
                                placeholder="+36301234567" required>
                     </div>
 

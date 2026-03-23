@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Fizetes extends Model
 {
     use HasFactory;
 
-    protected $table      = 'fizetesek';
+    protected $table = 'fizetesek';
+
     protected $primaryKey = 'fizetes_id';
 
     protected $fillable = [
@@ -28,14 +29,17 @@ class Fizetes extends Model
     ];
 
     protected $casts = [
-        'osszeg'             => 'decimal:2',
-        'fizetes_idopontja'  => 'datetime',
+        'osszeg' => 'decimal:2',
+        'fizetes_idopontja' => 'datetime',
     ];
 
     // ─── Státusz konstansok ────────────────────────────────────────────────────
-    const STATUSZ_FUGGOBEN     = 'fuggoben';
-    const STATUSZ_FIZETVE      = 'fizetve';
-    const STATUSZ_SIKERTELEN   = 'sikertelen';
+    const STATUSZ_FUGGOBEN = 'fuggoben';
+
+    const STATUSZ_FIZETVE = 'fizetve';
+
+    const STATUSZ_SIKERTELEN = 'sikertelen';
+
     const STATUSZ_VISSZATERITVE = 'visszateritve';
 
     // ─── Kapcsolatok ──────────────────────────────────────────────────────────
@@ -47,18 +51,18 @@ class Fizetes extends Model
 
     public function megrendeles()
     {
-        return $this->belongsTo(Megrendeles::class, 'megrendeles_id', 'Megrendeles_ID');
+        return $this->belongsTo(Megrendeles::class, 'megrendeles_id', 'id');
     }
 
     public function ugyfel()
     {
-        return $this->belongsTo(Ugyfel::class, 'ugyfel_id', 'Ugyfel_ID');
+        return $this->belongsTo(Ugyfel::class, 'ugyfel_id', 'id');
     }
 
     public function auditLog()
     {
         return $this->hasMany(FizetesAuditLog::class, 'fizetes_id', 'fizetes_id')
-                    ->latest('created_at');
+            ->latest('created_at');
     }
 
     // ─── Accessors ────────────────────────────────────────────────────────────
@@ -70,7 +74,10 @@ class Fizetes extends Model
 
     public function getStripeAllapotAttribute(): ?string
     {
-        if ($this->fizetes_mod !== 'stripe') return null;
+        if ($this->fizetes_mod !== 'stripe') {
+            return null;
+        }
+
         return $this->statusz;
     }
 

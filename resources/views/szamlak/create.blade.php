@@ -91,10 +91,10 @@
                         <select name="megrendeles_id" class="sc-select" required id="megrendelesSelect">
                             <option value="">— Válassz megrendelést —</option>
                             @foreach($megrendelesek as $mr)
-                                <option value="{{ $mr->Megrendeles_ID }}"
-                                    {{ (old('megrendeles_id', $megrendeles?->Megrendeles_ID) == $mr->Megrendeles_ID) ? 'selected' : '' }}>
-                                    #{{ $mr->Megrendeles_ID }} – {{ $mr->Megrendeles_Nev }}
-                                    @if($mr->ugyfel) ({{ $mr->ugyfel->Nev }}) @endif
+                                <option value="{{ $mr->id }}"
+                                    {{ (old('megrendeles_id', $megrendeles?->id) == $mr->id) ? 'selected' : '' }}>
+                                    #{{ $mr->id }} – {{ $mr->megrendeles_nev }}
+                                    @if($mr->ugyfel) ({{ $mr->ugyfel->nev }}) @endif
                                 </option>
                             @endforeach
                         </select>
@@ -330,6 +330,18 @@ document.getElementById('addTetelBtn').addEventListener('click', () => addTetel(
             mertekegyseg: "{{ $t['mertekegyseg'] ?? 'db' }}",
             egyseg_netto_ar: {{ $t['egyseg_netto_ar'] ?? 0 }},
             afa_kulcs: {{ $t['afa_kulcs'] ?? 27 }},
+        });
+    @endforeach
+@elseif($megrendeles && $megrendeles->felhasznaltAnyagok->count() > 0)
+    // Felhasznált anyagok automatikus betöltése
+    @foreach($megrendeles->felhasznaltAnyagok as $fa)
+        addTetel({
+            tetel_tipus: 'anyag',
+            nev: "{{ addslashes($fa->anyag->nev ?? '') }}",
+            mennyiseg: {{ $fa->mennyiseg ?? 1 }},
+            mertekegyseg: "{{ addslashes($fa->anyag->mertekegyseg ?? 'db') }}",
+            egyseg_netto_ar: 0,
+            afa_kulcs: 27,
         });
     @endforeach
 @else

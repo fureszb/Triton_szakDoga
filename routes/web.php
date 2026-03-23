@@ -1,26 +1,23 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UgyfelController;
-use App\Http\Controllers\SzolgaltatasController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MailController;
-use App\Http\Controllers\SignaturePadController;
-use App\Http\Controllers\PDFController;
-use App\Http\Controllers\MegrendelesController;
 use App\Http\Controllers\AnyagController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\SzereloController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CegadatController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\SzamlaController;
-use App\Http\Controllers\FizetesController;
-use App\Http\Controllers\EmlekeztetoController;
 use App\Http\Controllers\BeallitasokController;
+use App\Http\Controllers\CegadatController;
+use App\Http\Controllers\EmlekeztetoController;
+use App\Http\Controllers\FizetesController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\MegrendelesController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SignaturePadController;
+use App\Http\Controllers\SzamlaController;
+use App\Http\Controllers\SzereloController;
+use App\Http\Controllers\UgyfelController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VarosController;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,8 +48,6 @@ Route::get('/dashboard', function () {
     }
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
-
 Route::middleware('auth')->group(function () {
 
     Route::middleware('can:access-ugyfel')->group(function () {
@@ -79,6 +74,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/save-image', [SignaturePadController::class, 'saveImage']);
         Route::get('/signaturepad', [SignaturePadController::class, 'index'])->name('signaturepad');
 
+        Route::post('/varos', [VarosController::class, 'store'])->name('varos.store');
+
         Route::post('/ugyfel', [UgyfelController::class, 'store'])->name('ugyfel.store');
         Route::put('/ugyfel/{ugyfel}', [UgyfelController::class, 'update'])->name('ugyfel.update');
         Route::get('/ugyfel/create', [UgyfelController::class, 'create'])->name('ugyfel.create');
@@ -103,35 +100,44 @@ Route::middleware('auth')->group(function () {
     Route::middleware('can:access-uzletkoto')->group(function () {
     });
 
-    Route::get('/megrendeles/{id}', [MegrendelesController::class, 'show'])->name('megrendeles.show');
-
     // ── Fizetés (minden bejelentkezett felhasználó) ──────────────────────────
-    Route::get('/megrendeles/{megrendeles}/fizet',        [PaymentController::class, 'checkout'])->name('payment.checkout');
-    Route::get('/megrendeles/{megrendeles}/fizet/siker',  [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/megrendeles/{megrendeles}/fizet', [PaymentController::class, 'checkout'])->name('payment.checkout');
+    Route::post('/megrendeles/{megrendeles}/fizet/stripe', [PaymentController::class, 'stripeCheckout'])->name('payment.stripe');
+    Route::post('/megrendeles/{megrendeles}/fizet/atutalas', [PaymentController::class, 'bankTransfer'])->name('payment.bank_transfer');
+    Route::get('/megrendeles/{megrendeles}/fizet/siker', [PaymentController::class, 'success'])->name('payment.success');
     Route::get('/megrendeles/{megrendeles}/fizet/megsem', [PaymentController::class, 'cancel'])->name('payment.cancel');
-    Route::post('/megrendeles/{megrendeles}/fizetve',     [PaymentController::class, 'manualMarkPaid'])->name('payment.manual')->middleware('can:access-admin-or-uzletkoto');
+    Route::post('/megrendeles/{megrendeles}/fizetve', [PaymentController::class, 'manualMarkPaid'])->name('payment.manual')->middleware('can:access-admin-or-uzletkoto');
+    Route::post('/notifications/mark-read', function (\Illuminate\Http\Request $request) {
+        $id = $request->input('id');
+        if ($id) {
+            auth()->user()->notifications()->where('id', $id)->update(['read_at' => now()]);
+        } else {
+            auth()->user()->unreadNotifications->markAsRead();
+        }
+        return response()->json(['ok' => true]);
+    })->name('notifications.markRead');
 
     // ── Számlázás (legacy – megrendelés-alapú) ───────────────────────────────
-    Route::post('/megrendeles/{megrendeles}/szamla',         [SzamlaController::class, 'legacyBillingoCreate'])->name('szamla.create')->middleware('can:access-admin-or-uzletkoto');
+    Route::post('/megrendeles/{megrendeles}/szamla', [SzamlaController::class, 'legacyBillingoCreate'])->name('szamla.create')->middleware('can:access-admin-or-uzletkoto');
     Route::get('/megrendeles/{megrendeles}/szamla/letoltes', [SzamlaController::class, 'legacyDownload'])->name('szamla.download');
 
     // ── Számlák CRUD ─────────────────────────────────────────────────────────
     Route::middleware('can:access-admin-or-uzletkoto')->group(function () {
-        Route::get('/szamlak',                          [SzamlaController::class, 'index'])->name('szamlak.index');
-        Route::get('/szamlak/create',                   [SzamlaController::class, 'createForm'])->name('szamlak.create');
-        Route::post('/szamlak',                         [SzamlaController::class, 'store'])->name('szamlak.store');
-        Route::get('/szamlak/{szamla}',                 [SzamlaController::class, 'show'])->name('szamlak.show');
-        Route::get('/szamlak/{szamla}/edit',            [SzamlaController::class, 'edit'])->name('szamlak.edit');
-        Route::put('/szamlak/{szamla}',                 [SzamlaController::class, 'update'])->name('szamlak.update');
-        Route::post('/szamlak/{szamla}/fizetve',        [SzamlaController::class, 'markAsPaid'])->name('szamlak.markAsPaid');
-        Route::post('/szamlak/{szamla}/storno',         [SzamlaController::class, 'storno'])->name('szamlak.storno');
-        Route::post('/szamlak/{szamla}/billingo',        [SzamlaController::class, 'billingoKiallitas'])->name('szamlak.billingo');
-        Route::post('/szamlak/{szamla}/sajat',           [SzamlaController::class, 'sajatKiallitas'])->name('szamlak.sajat');
-        Route::get('/szamlak/{szamla}/teszt',            [SzamlaController::class, 'tesztLetoltes'])->name('szamlak.teszt');
+        Route::get('/szamlak', [SzamlaController::class, 'index'])->name('szamlak.index');
+        Route::get('/szamlak/create', [SzamlaController::class, 'createForm'])->name('szamlak.create');
+        Route::post('/szamlak', [SzamlaController::class, 'store'])->name('szamlak.store');
+        Route::get('/szamlak/{szamla}', [SzamlaController::class, 'show'])->name('szamlak.show');
+        Route::get('/szamlak/{szamla}/edit', [SzamlaController::class, 'edit'])->name('szamlak.edit');
+        Route::put('/szamlak/{szamla}', [SzamlaController::class, 'update'])->name('szamlak.update');
+        Route::post('/szamlak/{szamla}/fizetve', [SzamlaController::class, 'markAsPaid'])->name('szamlak.markAsPaid');
+        Route::post('/szamlak/{szamla}/storno', [SzamlaController::class, 'storno'])->name('szamlak.storno');
+        Route::post('/szamlak/{szamla}/billingo', [SzamlaController::class, 'billingoKiallitas'])->name('szamlak.billingo');
+        Route::post('/szamlak/{szamla}/sajat', [SzamlaController::class, 'sajatKiallitas'])->name('szamlak.sajat');
+        Route::get('/szamlak/{szamla}/teszt', [SzamlaController::class, 'tesztLetoltes'])->name('szamlak.teszt');
     });
 
     // ── Számla letöltés (minden bejelentkezett felhasználó – ellenőrzés controllerben) ──
-    Route::get('/szamlak/{szamla}/letoltes',       [SzamlaController::class, 'download'])->name('szamlak.download');
+    Route::get('/szamlak/{szamla}/letoltes', [SzamlaController::class, 'download'])->name('szamlak.download');
     Route::get('/szamlak/{szamla}/sajat/letoltes', [SzamlaController::class, 'sajatLetoltes'])->name('szamlak.sajat.letoltes');
 
     // ── Fizetések áttekintés ─────────────────────────────────────────────────
@@ -150,8 +156,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/szolgaltatas-szerelok/{szolgaltatasId}', [MegrendelesController::class, 'getSzerelokBySzolgaltatas']);
-    Route::get('/download-pdf/{ugyfelId}_{ugyfelNev}_{szolgaltatasId}_{Megrendeles_ID}', [MegrendelesController::class, 'downloadPdf']);
-    Route::get('/view-pdf/{ugyfelId}_{ugyfelNev}_{szolgaltatasId}_{Megrendeles_ID}', [MegrendelesController::class, 'viewPdf']);
+    Route::get('/download-pdf/{ugyfelId}_{ugyfelNev}_{szolgaltatasId}_{megrendeles_id}', [MegrendelesController::class, 'downloadPdf']);
+    Route::get('/view-pdf/{ugyfelId}_{ugyfelNev}_{szolgaltatasId}_{megrendeles_id}', [MegrendelesController::class, 'viewPdf']);
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

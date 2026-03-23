@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Anyag;
 use App\Models\FelhasznaltAnyag;
 use App\Models\Megrendeles;
 use App\Models\Munka;
-use App\Models\Munkanaplo;
-use App\Models\Szerelo;
-use App\Models\Szolgaltatas;
 use App\Models\Szamla;
 use App\Models\Ugyfel;
 use App\Models\User;
@@ -19,70 +15,55 @@ use Illuminate\Support\Facades\Hash;
 
 class UgyfelController extends Controller
 {
-
     public function index()
     {
-        $sort_by = request()->query('sort_by', 'Ugyfel_ID');
+        $sort_by = request()->query('sort_by', 'id');
         $sort_dir = request()->query('sort_dir', 'asc');
         $keyword = request()->input('search');
 
         $query = Ugyfel::orderBy($sort_by, $sort_dir);
 
         if ($keyword) {
-            $query->where('Nev', 'like', "%$keyword%")
-                ->orWhere('Ugyfel_ID', 'like', "%$keyword%");
+            $query->where('nev', 'like', "%$keyword%")
+                ->orWhere('id', 'like', "%$keyword%");
         }
+
         $ugyfel = $query->paginate(9);
 
         return view('ugyfel.index', compact('ugyfel'));
     }
 
-
-
-
-
-
-
     public function create()
     {
-        $varosok = Varos::all();
+        $varosok = Varos::orderBy('Irny_szam')->get();
+
         return view('ugyfel.create', compact('varosok'));
     }
 
-
     public function store(Request $request)
     {
-
         $request->validate([
-            'Ugyfel_ID' => ['required'],
             'nev' => ['required', 'regex:/^[\p{L} -]+$/u', 'min:3'],
             'email' => ['required', 'regex:/^\S+@\S+\.\S+$/', 'min:3', 'email', 'unique:users'],
             'telefon' => ['required', 'regex:/^(\+36|06)?[0-9]{9}$/'],
             'szamnev' => ['required', 'regex:/^[A-Za-záéíóöőúüűÁÉÍÓÖŐÚÜŰ\s]{3,}$/'],
             'szamcim' => ['required', 'min:3'],
             'adoszam' => ['nullable', 'between:8,11'],
-            'Varos_ID' => ['required', 'exists:varos,Varos_ID']
+            'varos_id' => ['required', 'exists:varos,id'],
         ], [
             'nev.required' => 'A név megadása kötelező.',
-            'nev.regex' => 'A név csak betűket és szóközöket tartalmazhat, magyar betűket is elfogadva.',
+            'nev.regex' => 'A név csak betűket és szóközöket tartalmazhat.',
             'nev.min' => 'A név legalább 3 karakter hosszú legyen.',
             'email.required' => 'Az email megadása kötelező.',
-            'email.regex' => 'Érvénytelen email cím.',
-            'email.min' => 'A email legalább 3 karakter hosszú legyen.',
+            'email.email' => 'Az email legyen email formátumú.',
+            'email.unique' => 'Az email cím már létezik a rendszerünkben.',
             'telefon.required' => 'A telefonszám megadása kötelező.',
             'telefon.regex' => 'A telefonszám formátuma érvénytelen.',
             'szamnev.required' => 'A számlázási név megadása kötelező.',
-            'szamnev.regex' => 'A számlázási név csak betűket és szóközöket tartalmazhat, magyar betűket is elfogadva.',
-            'szamnev.min' => 'A számlázási név legalább 3 karakter hosszú legyen.',
             'szamcim.required' => 'A számlázási cím megadása kötelező.',
-            'szamcim.regex' => 'A számlázási cím érvénytelen karaktereket tartalmaz.',
-            'szamcim.min' => 'A számlázási cím legalább 3 karakter hosszúnak kell lennie.',
-            'Ugyfel_ID.required' => 'Az Ugyfel_ID kitöltése kötelező',
-            'Varos_ID.required' => 'A város kiválasztása kötelező.',
-            'Varos_ID.exists' => 'A kiválasztott város nem létezik.',
-            'email.email' => 'AZ email legyen email formátumú.',
-            'email.unique' => 'Az Email cím már létezik a rendszerünkben',
-
+            'szamcim.min' => 'A számlázási cím legalább 3 karakter.',
+            'varos_id.required' => 'A város kiválasztása kötelező.',
+            'varos_id.exists' => 'A kiválasztott város nem létezik.',
         ]);
 
         $user = User::create([
@@ -92,20 +73,15 @@ class UgyfelController extends Controller
         ]);
 
         $ugyfel = new Ugyfel();
-        $ugyfel->Ugyfel_ID = $request->Ugyfel_ID;
-        $ugyfel->User_ID = $user->User_ID;
-        $ugyfel->Nev = $request->nev;
-        $ugyfel->Email = $request->email;
-        $ugyfel->Telefonszam = $request->telefon;
-        $ugyfel->Szamlazasi_Nev = $request->szamnev;
-        $ugyfel->Varos_ID = $request->Varos_ID;
-        $ugyfel->Szamlazasi_Cim = $request->szamcim;
-        $ugyfel->Adoszam = $request->adoszam;
-
+        $ugyfel->user_id = $user->id;
+        $ugyfel->nev = $request->nev;
+        $ugyfel->email = $request->email;
+        $ugyfel->telefonszam = $request->telefon;
+        $ugyfel->szamlazasi_nev = $request->szamnev;
+        $ugyfel->varos_id = $request->varos_id;
+        $ugyfel->szamlazasi_cim = $request->szamcim;
+        $ugyfel->adoszam = $request->adoszam;
         $ugyfel->save();
-
-
-
 
         return redirect()->route('ugyfel.index')->with('success', 'Ügyfél sikeresen létrehozva!');
     }
@@ -113,71 +89,44 @@ class UgyfelController extends Controller
     public function show($id)
     {
         $ugyfel = Ugyfel::find($id);
-        $varos = Varos::where('Varos_ID', $ugyfel->Varos_ID)->first();
+        $varos = Varos::where('id', $ugyfel->varos_id)->first();
+
         return view('ugyfel.show', compact('ugyfel', 'varos'));
     }
-
-
 
     public function edit($id)
     {
         $ugyfel = Ugyfel::find($id);
-        $varosok = Varos::all();
+        $varosok = Varos::orderBy('Irny_szam')->get();
+
         return view('ugyfel.edit', compact('ugyfel', 'varosok'));
     }
 
-
-
     public function update(Request $request, string $id)
     {
-
         $request->validate([
-            'Ugyfel_ID' => ['required'],
+            'ugyfel_id' => ['required'],
             'nev' => ['required', 'regex:/^[\p{L} -]+$/u', 'min:3'],
-            'email' => ['required', 'regex:/^\S+@\S+\.\S+$/', 'min:3', 'email', 'unique:users'],
+            'email' => ['required', 'regex:/^\S+@\S+\.\S+$/', 'min:3', 'email'],
             'telefon' => ['required', 'regex:/^(\+36|06)?[0-9]{9}$/'],
             'szamnev' => ['required', 'regex:/^[A-Za-záéíóöőúüűÁÉÍÓÖŐÚÜŰ\s]{3,}$/'],
             'szamcim' => ['required', 'min:3'],
             'adoszam' => ['nullable', 'between:8,11'],
-            'Varos_ID' => ['required', 'exists:varos,Varos_ID']
-        ], [
-            'nev.required' => 'A név megadása kötelező.',
-            'nev.regex' => 'A név csak betűket és szóközöket tartalmazhat, magyar betűket is elfogadva.',
-            'nev.min' => 'A név legalább 3 karakter hosszú legyen.',
-            'email.email' => 'AZ email legyen email formátumú.',
-            'email.unique' => 'Az Email cím már létezik a rendszerünkben',
-            'email.required' => 'Az email megadása kötelező.',
-            'email.regex' => 'Érvénytelen email cím.',
-            'email.min' => 'A email legalább 3 karakter hosszú legyen.',
-            'telefon.required' => 'A telefonszám megadása kötelező.',
-            'telefon.regex' => 'A telefonszám formátuma érvénytelen.',
-            'szamnev.required' => 'A számlázási név megadása kötelező.',
-            'szamnev.regex' => 'A számlázási név csak betűket és szóközöket tartalmazhat, magyar betűket is elfogadva.',
-            'szamnev.min' => 'A számlázási név legalább 3 karakter hosszú legyen.',
-            'szamcim.required' => 'A számlázási cím megadása kötelező.',
-            'szamcim.regex' => 'A számlázási cím érvénytelen karaktereket tartalmaz.',
-            'szamcim.min' => 'A számlázási cím legalább 3 karakter hosszúnak kell lennie.',
-            'adoszam.between' => 'Az adószám hossza 8 és 11 karakter között lehet.',
-            'Ugyfel_ID' => 'Az Ugyfel_ID kitöltése kötelező',
-            'Varos_ID.required' => 'A város kiválasztása kötelező.',
-            'Varos_ID.exists' => 'A kiválasztott város nem létezik.'
+            'varos_id' => ['required', 'exists:varos,id'],
         ]);
 
-
-
-
         $ugyfel = Ugyfel::find($id);
-        $ugyfel->Ugyfel_ID = $request->Ugyfel_ID;
-        $ugyfel->Nev = $request->nev;
-        $ugyfel->Email = $request->email;
-        $ugyfel->Telefonszam = $request->telefon;
-        $ugyfel->Szamlazasi_Nev = $request->szamnev;
-        $ugyfel->Szamlazasi_Cim = $request->szamcim;
-        $ugyfel->Adoszam = $request->adoszam;
-        $ugyfel->Varos_ID = $request->Varos_ID;
+        $ugyfel->id = $request->ugyfel_id;
+        $ugyfel->nev = $request->nev;
+        $ugyfel->email = $request->email;
+        $ugyfel->telefonszam = $request->telefon;
+        $ugyfel->szamlazasi_nev = $request->szamnev;
+        $ugyfel->szamlazasi_cim = $request->szamcim;
+        $ugyfel->adoszam = $request->adoszam;
+        $ugyfel->varos_id = $request->varos_id;
         $ugyfel->save();
 
-        $user = User::findOrFail($ugyfel->User_ID);
+        $user = User::findOrFail($ugyfel->user_id);
         $user->update([
             'nev' => $request->nev,
             'email' => $request->email,
@@ -190,19 +139,17 @@ class UgyfelController extends Controller
     {
         $ugyfel = Ugyfel::findOrFail($id);
 
-        $megrendelesIDs = $ugyfel->megrendelesek()->pluck('Megrendeles_ID');
+        $megrendelesIDs = $ugyfel->megrendelesek()->pluck('id');
 
         foreach ($megrendelesIDs as $megrendelesID) {
-            $munkaIDs = Munka::where('Megrendeles_ID', $megrendelesID)->pluck('Munka_ID');
-
+            $munkaIDs = Munka::where('megrendeles_id', $megrendelesID)->pluck('id');
 
             foreach ($munkaIDs as $munkaID) {
-                FelhasznaltAnyag::where('Munka_ID', $munkaID)->delete();
+                FelhasznaltAnyag::where('munka_id', $munkaID)->delete();
             }
 
-            Munka::where('Megrendeles_ID', $megrendelesID)->delete();
-
-            Megrendeles::where('Megrendeles_ID', $megrendelesID)->delete();
+            Munka::where('megrendeles_id', $megrendelesID)->delete();
+            Megrendeles::where('id', $megrendelesID)->delete();
         }
 
         $ugyfel->delete();
@@ -214,32 +161,37 @@ class UgyfelController extends Controller
     {
         $keyword = $request->input('keyword');
 
-        $ugyfelek = Ugyfel::where('Nev', 'like', "%$keyword%")
-            ->orWhere('Ugyfel_ID', $keyword)
+        $ugyfelek = Ugyfel::where('nev', 'like', "%$keyword%")
+            ->orWhere('id', $keyword)
             ->paginate(9);
 
-        return view('ugyfel.index', compact('ugyfel'));
+        return view('ugyfel.index', compact('ugyfelek'));
     }
+
     public function megrendelesek()
     {
-        $ugyfelId = Auth::user()->ugyfel->Ugyfel_ID;
-        $megrendelesek = Megrendeles::where('Ugyfel_ID', $ugyfelId)
+        $ugyfelId = Auth::user()->ugyfel->id;
+        $megrendelesek = Megrendeles::where('ugyfel_id', $ugyfelId)
             ->with([
                 'munkak.szolgaltatas',
                 'munkak.szerelo',
                 'munkak.felhasznalt_anyagok.anyag',
                 'varos',
                 'ugyfel',
+                // osszesSzamla.fizetesek KÖTELEZŐ: a getFizetveAttribute() és
+                // getFuggobenFizetesAttribute() accessorok ezt a hasMany relation-t
+                // használják – nélküle N+1 query keletkezik kártyánként
+                'osszesSzamla.fizetesek',
             ])
             ->get();
+
         return view('ugyfel.megrendelesek', compact('megrendelesek'));
     }
 
     public function szamlak()
     {
-        $ugyfelId = Auth::user()->ugyfel->Ugyfel_ID;
+        $ugyfelId = Auth::user()->ugyfel->id;
 
-        // Stornózott kivételével mindent mutatunk: számlák ÉS díjbekérők
         $szamlak = Szamla::where('ugyfel_id', $ugyfelId)
             ->whereIn('szamla_tipus', ['szamla', 'dijbekero'])
             ->whereIn('statusz', ['fizetve', 'fuggoben', 'kesedelmes'])
@@ -253,48 +205,48 @@ class UgyfelController extends Controller
     public function adataim()
     {
         $ugyfel = Auth::user()->ugyfel()->with('varos')->first();
-        $varosok = Varos::all();
+        $varosok = Varos::orderBy('Irny_szam')->get();
+
         return view('ugyfel.adataim', compact('ugyfel', 'varosok'));
     }
 
     public function updateAdataim(Request $request)
     {
         $section = $request->input('section');
-        $ugyfel  = Auth::user()->ugyfel;
+        $ugyfel = Auth::user()->ugyfel;
 
         if ($section === 'szemelyes') {
             $request->validate([
-                'Nev'            => ['required', 'regex:/^[\p{L} \-]+$/u', 'min:3'],
-                'Szamlazasi_Nev' => ['required', 'min:3'],
-                'Szamlazasi_Cim' => ['required', 'min:3'],
-                'Adoszam'        => ['nullable', 'min:8', 'max:11'],
-                'Varos_ID'       => ['required', 'exists:varos,Varos_ID'],
+                'nev' => ['required', 'regex:/^[\p{L} \-]+$/u', 'min:3'],
+                'szamlazasi_nev' => ['required', 'min:3'],
+                'szamlazasi_cim' => ['required', 'min:3'],
+                'adoszam' => ['nullable', 'min:8', 'max:11'],
+                'varos_id' => ['required', 'exists:varos,id'],
             ], [
-                'Nev.required'            => 'A név megadása kötelező.',
-                'Nev.min'                 => 'A név legalább 3 karakter.',
-                'Szamlazasi_Nev.required' => 'A számlázási név megadása kötelező.',
-                'Szamlazasi_Cim.required' => 'A számlázási cím megadása kötelező.',
-                'Varos_ID.required'       => 'A város kiválasztása kötelező.',
+                'nev.required' => 'A név megadása kötelező.',
+                'szamlazasi_nev.required' => 'A számlázási név megadása kötelező.',
+                'szamlazasi_cim.required' => 'A számlázási cím megadása kötelező.',
+                'varos_id.required' => 'A város kiválasztása kötelező.',
             ]);
 
-            $ugyfel->Nev            = $request->Nev;
-            $ugyfel->Szamlazasi_Nev = $request->Szamlazasi_Nev;
-            $ugyfel->Szamlazasi_Cim = $request->Szamlazasi_Cim;
-            $ugyfel->Adoszam        = $request->Adoszam;
-            $ugyfel->Varos_ID       = $request->Varos_ID;
+            $ugyfel->nev = $request->nev;
+            $ugyfel->szamlazasi_nev = $request->szamlazasi_nev;
+            $ugyfel->szamlazasi_cim = $request->szamlazasi_cim;
+            $ugyfel->adoszam = $request->adoszam;
+            $ugyfel->varos_id = $request->varos_id;
             $ugyfel->save();
 
-            $ugyfel->user->update(['nev' => $request->Nev]);
+            $ugyfel->user->update(['nev' => $request->nev]);
 
         } elseif ($section === 'kapcsolat') {
             $request->validate([
-                'Telefonszam' => ['required', 'regex:/^(\+36|06)?[0-9]{9}$/'],
+                'telefonszam' => ['required', 'regex:/^(\+36|06)?[0-9]{9}$/'],
             ], [
-                'Telefonszam.required' => 'A telefonszám megadása kötelező.',
-                'Telefonszam.regex'    => 'A telefonszám formátuma érvénytelen (pl. +36301234567).',
+                'telefonszam.required' => 'A telefonszám megadása kötelező.',
+                'telefonszam.regex' => 'A telefonszám formátuma érvénytelen.',
             ]);
 
-            $ugyfel->Telefonszam = $request->Telefonszam;
+            $ugyfel->telefonszam = $request->telefonszam;
             $ugyfel->save();
         }
 

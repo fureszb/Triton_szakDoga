@@ -16,12 +16,13 @@ class FizetesiEmlekeztetoMail extends Mailable
     public function __construct(
         public Megrendeles $megrendeles,
         public int $napokHatra,  // hány nap van még a határidőig
-    ) {}
+    ) {
+    }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Fizetési emlékeztető – ' . $this->napokHatra . ' nap múlva lejár',
+            subject: 'Fizetési emlékeztető – '.$this->napokHatra.' nap múlva lejár',
         );
     }
 

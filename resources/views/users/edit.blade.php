@@ -5,7 +5,7 @@
 
 <div class="page-header">
     <h1><i class="fas fa-user-edit"></i> Felhasználó szerkesztése</h1>
-    <a href="{{ route('users.show', $user->User_ID) }}" class="btn-back">
+    <a href="{{ route('users.show', $user->id) }}" class="btn-back">
         <i class="fas fa-arrow-left"></i> Vissza
     </a>
 </div>
@@ -22,13 +22,13 @@
 
 <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.2);border-radius:10px;font-size:12px;color:#64748b;margin-bottom:20px;">
     <i class="fas fa-hashtag" style="color:#c9a97a;"></i>
-    Felhasználó ID: <strong style="color:#a07848;">#{{ $user->User_ID }}</strong>
+    Felhasználó ID: <strong style="color:#a07848;">#{{ $user->id }}</strong>
     &nbsp;|&nbsp;
     <i class="fas fa-user" style="color:#c9a97a;"></i>
     <strong style="color:#a07848;">{{ $user->nev }}</strong>
 </div>
 
-<form action="{{ route('users.update', $user->User_ID) }}" method="POST">
+<form action="{{ route('users.update', $user->id) }}" method="POST">
 @csrf
 @method('PUT')
 
@@ -68,12 +68,12 @@
             </div>
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-user-tie"></i> Hozzárendelt ügyfél</div>
-                <select name="Ugyfel_ID" class="f-select">
+                <select name="ugyfel_id" class="f-select">
                     <option value="">— Nincs hozzárendelve —</option>
                     @foreach ($ugyfelek as $ugyfel)
-                        <option value="{{ $ugyfel->Ugyfel_ID }}"
-                            {{ old('Ugyfel_ID', optional($user->ugyfel)->Ugyfel_ID) == $ugyfel->Ugyfel_ID ? 'selected' : '' }}>
-                            {{ $ugyfel->Ugyfel_ID }} – {{ $ugyfel->Nev }}
+                        <option value="{{ $ugyfel->id }}"
+                            {{ old('ugyfel_id', optional($user->ugyfel)->id) == $ugyfel->id ? 'selected' : '' }}>
+                            {{ $ugyfel->id }} – {{ $ugyfel->nev }}
                         </option>
                     @endforeach
                 </select>
@@ -87,7 +87,7 @@
     <button type="submit" class="btn-save" style="margin-top:0;">
         <i class="fas fa-save"></i> Mentés
     </button>
-    <a href="{{ route('users.show', $user->User_ID) }}" class="btn-back">
+    <a href="{{ route('users.show', $user->id) }}" class="btn-back">
         <i class="fas fa-times"></i> Mégsem
     </a>
 </div>

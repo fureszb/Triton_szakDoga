@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Anyag extends Model
 {
     protected $table = 'anyag';
-    protected $primaryKey = 'Anyag_ID';
-    protected $fillable = ['Nev', 'Mertekegyseg'];
+
+    // $primaryKey alapértelmezetten 'id'
+    protected $fillable = ['nev', 'mertekegyseg'];
+
     use HasFactory;
 }

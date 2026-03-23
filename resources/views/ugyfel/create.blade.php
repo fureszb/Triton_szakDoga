@@ -32,11 +32,7 @@
             <div class="fc-htitle">Személyes adatok</div>
         </div>
         <div class="fc-body">
-            <div class="f-group">
-                <div class="f-label"><i class="fas fa-hashtag"></i> Ügyfél ID <span class="req">*</span></div>
-                <input type="text" name="Ugyfel_ID" class="f-input" value="{{ old('Ugyfel_ID') }}" placeholder="pl. U001">
-                <div class="f-hint">Egyedi azonosító (pl. U001, K123).</div>
-            </div>
+
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-user"></i> Teljes név <span class="req">*</span></div>
                 <input type="text" name="nev" class="f-input" value="{{ old('nev') }}" placeholder="Kovács János">
@@ -65,14 +61,23 @@
             </div>
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-city"></i> Város <span class="req">*</span></div>
-                <select name="Varos_ID" class="f-select">
-                    <option value="">— Válassz várost —</option>
+                <select name="varos_id" id="varos-select-ugyfel-create" class="f-select varos-select">
+                    <option value="">— Keressen irányítószámra vagy városra —</option>
                     @foreach ($varosok as $varos)
-                        <option value="{{ $varos->Varos_ID }}" {{ old('Varos_ID') == $varos->Varos_ID ? 'selected' : '' }}>
-                            {{ $varos->Irny_szam }} {{ $varos->Nev }}
+                        <option value="{{ $varos->id }}" {{ old('varos_id') == $varos->id ? 'selected' : '' }}>
+                            {{ $varos->Irny_szam }} {{ $varos->nev }}
                         </option>
                     @endforeach
                 </select>
+                <div class="varos-ujvaros-panel" data-for="varos-select-ugyfel-create" style="display:none;">
+                    <div class="varos-ujvaros-row">
+                        <input type="text" class="varos-uj-irsz f-input" placeholder="Irányítószám (pl. 6000)" maxlength="4" style="width:130px;">
+                        <input type="text" class="varos-uj-nev f-input" placeholder="Város neve (pl. Kecskemét)" style="flex:1;">
+                        <button type="button" class="varos-uj-mentes btn btn-sm btn-primary">Mentés</button>
+                        <button type="button" class="varos-uj-megsem btn btn-sm btn-secondary">Mégse</button>
+                    </div>
+                    <div class="varos-uj-hiba" style="display:none; color:#c0392b; font-size:.85em; margin-top:4px;"></div>
+                </div>
             </div>
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-road"></i> Utca, házszám <span class="req">*</span></div>

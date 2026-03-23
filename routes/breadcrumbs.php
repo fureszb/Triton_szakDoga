@@ -1,4 +1,5 @@
 <?php
+
 // routes/breadcrumbs.php
 
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -47,7 +48,6 @@ Breadcrumbs::for('users.show', function (BreadcrumbTrail $trail, $user) {
     $trail->push('Megtekintés', route('users.show', $user));
 });
 
-
 Breadcrumbs::for('ugyfel.index', function (BreadcrumbTrail $trail) {
     $trail->parent('home.index');
     $trail->push('Ügyfelek', route('ugyfel.index'));
@@ -67,8 +67,6 @@ Breadcrumbs::for('ugyfel.show', function (BreadcrumbTrail $trail, $user) {
     $trail->parent('ugyfel.index');
     $trail->push('Megtekintés', route('ugyfel.show', $user));
 });
-
-
 
 Breadcrumbs::for('megrendeles.index', function (BreadcrumbTrail $trail) {
     $trail->parent('home.index');
@@ -90,7 +88,6 @@ Breadcrumbs::for('megrendeles.show', function (BreadcrumbTrail $trail, $user) {
     $trail->push('Megtekintés', route('megrendeles.show', $user));
 });
 
-
 Breadcrumbs::for('szerelok.index', function (BreadcrumbTrail $trail) {
     $trail->parent('home.index');
     $trail->push('Szerelők', route('szerelok.index'));
@@ -110,7 +107,6 @@ Breadcrumbs::for('szerelok.show', function (BreadcrumbTrail $trail, $user) {
     $trail->parent('szerelok.index');
     $trail->push('Megtekintés', route('szerelok.show', $user));
 });
-
 
 Breadcrumbs::for('anyagok.index', function (BreadcrumbTrail $trail) {
     $trail->parent('home.index');
@@ -159,7 +155,7 @@ Breadcrumbs::for('szamlak.create', function (BreadcrumbTrail $trail) {
 // Home > Számlák > Megtekintés
 Breadcrumbs::for('szamlak.show', function (BreadcrumbTrail $trail, $szamla) {
     $trail->parent('szamlak.index');
-    $trail->push('Számla #' . str_pad($szamla->szamla_id, 5, '0', STR_PAD_LEFT), route('szamlak.show', $szamla));
+    $trail->push('Számla #'.str_pad($szamla->szamla_id, 5, '0', STR_PAD_LEFT), route('szamlak.show', $szamla));
 });
 
 // Home > Számlák > Szerkesztés
@@ -173,4 +169,3 @@ Breadcrumbs::for('beallitasok.index', function (BreadcrumbTrail $trail) {
     $trail->parent('home.index');
     $trail->push('Beállítások', route('beallitasok.index'));
 });
-

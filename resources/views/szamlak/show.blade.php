@@ -83,7 +83,7 @@
     <div>
         <div class="sz-show-title">
             <i class="fas fa-file-invoice"></i>
-            {{ $szamla->megrendeles->Megrendeles_Nev ?? 'Számla' }}
+            {{ $szamla->megrendeles->megrendeles_nev ?? 'Számla' }}
         </div>
         <span class="sz-show-id">#{{ str_pad($szamla->szamla_id, 5, '0', STR_PAD_LEFT) }}</span>
         &nbsp;
@@ -341,28 +341,28 @@
                 <div class="sz-info-lbl"><i class="fas fa-file-signature"></i> Megrendelés</div>
                 <div class="sz-info-val">
                     <a href="{{ route('megrendeles.show', $szamla->megrendeles_id) }}" style="color:#a07848;font-weight:600;text-decoration:none;">
-                        {{ $szamla->megrendeles->Megrendeles_Nev ?? '–' }}
+                        {{ $szamla->megrendeles->megrendeles_nev ?? '–' }}
                     </a>
                 </div>
             </div>
             <div class="sz-info-row">
                 <div class="sz-info-lbl"><i class="fas fa-user"></i> Ügyfél neve</div>
-                <div class="sz-info-val">{{ $szamla->megrendeles->ugyfel->Nev ?? '–' }}</div>
+                <div class="sz-info-val">{{ $szamla->megrendeles->ugyfel->nev ?? '–' }}</div>
             </div>
             <div class="sz-info-row">
                 <div class="sz-info-lbl"><i class="fas fa-envelope"></i> Email</div>
-                <div class="sz-info-val">{{ $szamla->megrendeles->ugyfel->Email ?? '–' }}</div>
+                <div class="sz-info-val">{{ $szamla->megrendeles->ugyfel->email ?? '–' }}</div>
             </div>
             <div class="sz-info-row">
                 <div class="sz-info-lbl"><i class="fas fa-phone"></i> Telefon</div>
-                <div class="sz-info-val">{{ $szamla->megrendeles->ugyfel->Telefonszam ?? '–' }}</div>
+                <div class="sz-info-val">{{ $szamla->megrendeles->ugyfel->telefonszam ?? '–' }}</div>
             </div>
             <div class="sz-info-row">
                 <div class="sz-info-lbl"><i class="fas fa-map-marker-alt"></i> Helyszín</div>
                 <div class="sz-info-val">
                     {{ $szamla->megrendeles->varos->Irny_szam ?? '' }}
-                    {{ $szamla->megrendeles->varos->Nev ?? '' }}
-                    {{ $szamla->megrendeles->Utca_Hazszam ?? '' }}
+                    {{ $szamla->megrendeles->varos->nev ?? '' }}
+                    {{ $szamla->megrendeles->utca_hazszam ?? '' }}
                 </div>
             </div>
         </div>

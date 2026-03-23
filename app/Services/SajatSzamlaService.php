@@ -9,17 +9,29 @@ use Illuminate\Support\Facades\Storage;
 class SajatSzamlaService
 {
     /**
+     * Az összes nem-ASCII karaktert numerikus HTML entitássá alakítja.
+     * A HTML5 parser (html5-php) ezeket megbízhatóan dekódolja, míg a raw
+     * UTF-8 byteokat néha félreértelmezi a dompdf encoding-lánca.
+     */
+    private function encodeForDompdf(string $html): string
+    {
+        return mb_encode_numericentity($html, [0x80, 0xFFFF, 0, 0xFFFF], 'UTF-8');
+    }
+
+    /**
      * PDF generálása a Szamla adataiból, fájlba mentés.
+     *
      * @return string  Storage path (storage/app relatív)
      */
     public function generate(Szamla $szamla): string
     {
         $szamla->load(['tetelek', 'megrendeles.ugyfel', 'megrendeles.varos']);
 
-        $pdf = Pdf::loadView('szamlak.pdf', ['szamla' => $szamla])
-                  ->setPaper('a4', 'portrait');
+        $html = view('szamlak.pdf', ['szamla' => $szamla])->render();
+        $pdf = Pdf::loadHtml($this->encodeForDompdf($html))
+            ->setPaper('a4', 'portrait');
 
-        $dir  = 'szamlak';
+        $dir = 'szamlak';
         $file = "szamla-{$szamla->szamla_id}.pdf";
         $path = "{$dir}/{$file}";
 
@@ -29,7 +41,7 @@ class SajatSzamlaService
     }
 
     /**
-     * PDF stream visszaadása letöltéshez (mentés nélkül – teszt célra).
+     * PDF stream visszaadása letöltéshez (mentés nélkül).
      */
     public function stream(Szamla $szamla, string $filename = null): \Illuminate\Http\Response
     {
@@ -37,8 +49,9 @@ class SajatSzamlaService
 
         $filename ??= "szamla-{$szamla->szamla_id}.pdf";
 
-        $pdf = Pdf::loadView('szamlak.pdf', ['szamla' => $szamla, 'teszt' => true])
-                  ->setPaper('a4', 'portrait');
+        $html = view('szamlak.pdf', ['szamla' => $szamla])->render();
+        $pdf = Pdf::loadHtml($this->encodeForDompdf($html))
+            ->setPaper('a4', 'portrait');
 
         return $pdf->stream($filename);
     }
@@ -50,8 +63,9 @@ class SajatSzamlaService
     {
         $szamla->load(['tetelek', 'megrendeles.ugyfel', 'megrendeles.varos']);
 
-        $pdf = Pdf::loadView('szamlak.pdf', ['szamla' => $szamla, 'teszt' => true])
-                  ->setPaper('a4', 'portrait');
+        $html = view('szamlak.pdf', ['szamla' => $szamla, 'teszt' => true])->render();
+        $pdf = Pdf::loadHtml($this->encodeForDompdf($html))
+            ->setPaper('a4', 'portrait');
 
         return $pdf->stream("TESZT-szamla-{$szamla->szamla_id}.pdf");
     }

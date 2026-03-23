@@ -44,19 +44,19 @@
         <tbody>
             @forelse ($ugyfel as $u)
                 <tr>
-                    <td><span class="table-id">#{{ $u->Ugyfel_ID }}</span></td>
-                    <td><strong>{{ $u->Nev }}</strong></td>
-                    <td>{{ $u->Email ?? '-' }}</td>
-                    <td>{{ $u->Telefonszam ?? '-' }}</td>
+                    <td><span class="table-id">#{{ $u->id }}</span></td>
+                    <td><strong>{{ $u->nev }}</strong></td>
+                    <td>{{ $u->email ?? '-' }}</td>
+                    <td>{{ $u->telefonszam ?? '-' }}</td>
                     <td>
                         <div class="table-actions">
-                            <a href="{{ route('ugyfel.show', ['id' => $u->Ugyfel_ID]) }}" class="btn-view">
+                            <a href="{{ route('ugyfel.show', ['id' => $u->id]) }}" class="btn-view">
                                 <i class="fas fa-eye"></i> Megtekint
                             </a>
-                            <a href="{{ route('ugyfel.edit', ['ugyfel' => $u->Ugyfel_ID]) }}" class="btn-edit">
+                            <a href="{{ route('ugyfel.edit', ['ugyfel' => $u->id]) }}" class="btn-edit">
                                 <i class="fas fa-edit"></i> Szerkeszt
                             </a>
-                            <form class="form-delete" action="{{ route('ugyfel.destroy', ['ugyfel' => $u->Ugyfel_ID]) }}" method="POST">
+                            <form class="form-delete" action="{{ route('ugyfel.destroy', ['ugyfel' => $u->id]) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn-delete" type="submit"

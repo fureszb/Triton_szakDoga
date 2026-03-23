@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class FizetesAuditLog extends Model
 {
-    protected $table      = 'fizetes_audit_log';
+    protected $table = 'fizetes_audit_log';
+
     protected $primaryKey = 'log_id';
 
     // Audit log soha nem módosítható – csak insert
@@ -27,7 +28,7 @@ class FizetesAuditLog extends Model
 
     protected $casts = [
         'regi_ertek' => 'array',
-        'uj_ertek'   => 'array',
+        'uj_ertek' => 'array',
         'created_at' => 'datetime',
     ];
 
@@ -54,12 +55,12 @@ class FizetesAuditLog extends Model
 
     public function megrendeles()
     {
-        return $this->belongsTo(Megrendeles::class, 'megrendeles_id', 'Megrendeles_ID');
+        return $this->belongsTo(Megrendeles::class, 'megrendeles_id', 'id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'User_ID');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     // ─── Factory metódus – logolás egyszerűsítése ──────────────────────────────
@@ -81,15 +82,15 @@ class FizetesAuditLog extends Model
         ?int $megrendelesId = null
     ): self {
         return static::create([
-            'szamla_id'       => $szamlaId,
-            'fizetes_id'      => $fizetesId,
-            'megrendeles_id'  => $megrendelesId,
-            'user_id'         => auth()->id(),
-            'esemeny'         => $esemeny,
-            'regi_ertek'      => $adatok['regi'] ?? null,
-            'uj_ertek'        => $adatok['uj'] ?? null,
-            'megjegyzes'      => $adatok['megjegyzes'] ?? null,
-            'ip_cim'          => request()->ip(),
+            'szamla_id' => $szamlaId,
+            'fizetes_id' => $fizetesId,
+            'megrendeles_id' => $megrendelesId,
+            'user_id' => auth()->id(),
+            'esemeny' => $esemeny,
+            'regi_ertek' => $adatok['regi'] ?? null,
+            'uj_ertek' => $adatok['uj'] ?? null,
+            'megjegyzes' => $adatok['megjegyzes'] ?? null,
+            'ip_cim' => request()->ip(),
         ]);
     }
 

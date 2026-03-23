@@ -77,7 +77,7 @@
         <tr>
           <td style="padding:11px 18px;font-size:12px;color:#94a3b8;font-weight:600;text-transform:uppercase;border-bottom:1px solid #f8fafc;">Megrendelés</td>
           <td style="padding:11px 18px;font-size:13px;color:#334155;font-weight:600;border-bottom:1px solid #f8fafc;">
-            #{{ str_pad($szamla->megrendeles->Megrendeles_ID, 5, '0', STR_PAD_LEFT) }} – {{ $szamla->megrendeles->Megrendeles_Nev }}
+            #{{ str_pad($szamla->megrendeles->id, 5, '0', STR_PAD_LEFT) }} – {{ $szamla->megrendeles->megrendeles_nev }}
           </td>
         </tr>
         @endif

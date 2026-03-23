@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('megrendeles', function (Blueprint $table){
+        Schema::create('megrendeles', function (Blueprint $table) {
             $table->bigIncrements('Megrendeles_ID');
             $table->unsignedBigInteger('Ugyfel_ID');
             $table->unsignedBigInteger('Varos_ID');

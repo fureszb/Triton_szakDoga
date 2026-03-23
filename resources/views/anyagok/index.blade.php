@@ -43,18 +43,18 @@
         <tbody>
             @forelse ($anyagok as $anyag)
                 <tr>
-                    <td><span class="table-id">#{{ $anyag->Anyag_ID }}</span></td>
-                    <td><strong>{{ $anyag->Nev }}</strong></td>
-                    <td>{{ $anyag->Mertekegyseg }}</td>
+                    <td><span class="table-id">#{{ $anyag->id }}</span></td>
+                    <td><strong>{{ $anyag->nev }}</strong></td>
+                    <td>{{ $anyag->mertekegyseg }}</td>
                     <td>
                         <div class="table-actions">
-                            <a href="{{ route('anyagok.show', $anyag->Anyag_ID) }}" class="btn-view">
+                            <a href="{{ route('anyagok.show', $anyag->id) }}" class="btn-view">
                                 <i class="fas fa-eye"></i> Megtekint
                             </a>
-                            <a href="{{ route('anyagok.edit', $anyag->Anyag_ID) }}" class="btn-edit">
+                            <a href="{{ route('anyagok.edit', $anyag->id) }}" class="btn-edit">
                                 <i class="fas fa-edit"></i> Szerkeszt
                             </a>
-                            <form class="form-delete" action="{{ route('anyagok.destroy', $anyag->Anyag_ID) }}" method="POST">
+                            <form class="form-delete" action="{{ route('anyagok.destroy', $anyag->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn-delete" type="submit"

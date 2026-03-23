@@ -7,14 +7,14 @@
 
 <div class="sc-page-header">
     <div class="sc-page-header-left">
-        <h1><i class="fas fa-hard-hat"></i> {{ $szerelo->Nev }}</h1>
-        <span class="sc-id-badge">#{{ $szerelo->Szerelo_ID }}</span>
+        <h1><i class="fas fa-hard-hat"></i> {{ $szerelo->nev }}</h1>
+        <span class="sc-id-badge">#{{ $szerelo->id }}</span>
     </div>
     <div class="sc-page-header-actions">
         <a href="{{ route('szerelok.index') }}" class="btn-back">
             <i class="fas fa-arrow-left"></i> Vissza
         </a>
-        <a href="{{ route('szerelok.edit', $szerelo->Szerelo_ID) }}" class="btn-edit">
+        <a href="{{ route('szerelok.edit', $szerelo->id) }}" class="btn-edit">
             <i class="fas fa-edit"></i> Szerkesztés
         </a>
     </div>
@@ -30,11 +30,11 @@
         <div class="sc-rows">
             <div class="sc-row">
                 <div class="sc-lbl"><i class="fas fa-user"></i> Név</div>
-                <div class="sc-val">{{ $szerelo->Nev }}</div>
+                <div class="sc-val">{{ $szerelo->nev }}</div>
             </div>
             <div class="sc-row">
                 <div class="sc-lbl"><i class="fas fa-phone"></i> Telefon</div>
-                <div class="sc-val">{{ $szerelo->Telefonszam }}</div>
+                <div class="sc-val">{{ $szerelo->telefonszam }}</div>
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@
                 @foreach ($szerelo->szolgaltatasok as $szo)
                     <div class="sc-tag">
                         <i class="fas fa-wifi"></i>
-                        {{ $szo->Tipus }}
+                        {{ $szo->tipus }}
                     </div>
                 @endforeach
             </div>

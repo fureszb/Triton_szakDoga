@@ -37,6 +37,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
         });
     }
+
     public static function redirectTo()
     {
         if (auth()->user()->role == 'Ugyfel') {

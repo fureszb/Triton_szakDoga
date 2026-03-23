@@ -9,7 +9,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('szerelo', function (Blueprint $table){
+        Schema::create('szerelo', function (Blueprint $table) {
             $table->id('Szerelo_ID');
             $table->string('Nev');
             $table->string('Telefonszam');
@@ -21,17 +21,16 @@ return new class extends Migration
                 'Nev' => 'Ádám',
                 'Telefonszam' => '06302984409',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Nev' => 'Béla',
                 'Telefonszam' => '06302994409',
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
+                'updated_at' => now(),
+            ],
         ]);
     }
-
 
     public function down(): void
     {

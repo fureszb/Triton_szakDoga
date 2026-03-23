@@ -37,16 +37,16 @@ return new class extends Migration
 
             // ─── Foreign keys ──────────────────────────────────────────────────
             $table->foreign('szamla_id')
-                  ->references('szamla_id')->on('szamlak')
-                  ->onDelete('cascade');
+                ->references('szamla_id')->on('szamlak')
+                ->onDelete('cascade');
 
             $table->foreign('megrendeles_id')
-                  ->references('Megrendeles_ID')->on('megrendeles')
-                  ->onDelete('cascade');
+                ->references('Megrendeles_ID')->on('megrendeles')
+                ->onDelete('cascade');
 
             $table->foreign('ugyfel_id')
-                  ->references('Ugyfel_ID')->on('ugyfel')
-                  ->onDelete('cascade');
+                ->references('Ugyfel_ID')->on('ugyfel')
+                ->onDelete('cascade');
 
             // ─── Indexek ───────────────────────────────────────────────────────
             $table->index(['szamla_id', 'tipus']);

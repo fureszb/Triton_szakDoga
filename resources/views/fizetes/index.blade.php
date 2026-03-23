@@ -246,11 +246,11 @@
                 @endif
             </td>
             <td style="font-weight:500;">
-                {{ $szamla->megrendeles->Megrendeles_Nev ?? '—' }}
+                {{ $szamla->megrendeles->megrendeles_nev ?? '—' }}
                 <br><span style="font-size:10px;color:#94a3b8;">MR#{{ str_pad($szamla->megrendeles_id, 5, '0', STR_PAD_LEFT) }}</span>
             </td>
             <td class="pay-hide-sm" style="color:#64748b;">
-                {{ $szamla->megrendeles->ugyfel->Nev ?? '—' }}
+                {{ $szamla->megrendeles->ugyfel->nev ?? '—' }}
             </td>
             <td>
                 <span class="pay-amount">{{ number_format($szamla->brutto_osszeg, 0, ',', ' ') }} Ft</span>

@@ -144,13 +144,13 @@
                     <div class="sc-info-readonly">
                         <a href="{{ route('megrendeles.show', $szamla->megrendeles_id) }}" style="color:#c9a97a;text-decoration:none;">
                             #{{ str_pad($szamla->megrendeles_id, 5, '0', STR_PAD_LEFT) }}
-                            {{ $szamla->megrendeles->Megrendeles_Nev ?? '' }}
+                            {{ $szamla->megrendeles->megrendeles_nev ?? '' }}
                         </a>
                     </div>
                 </div>
                 <div class="sc-field">
                     <label>Ügyfél</label>
-                    <div class="sc-info-readonly">{{ $szamla->megrendeles->ugyfel->Nev ?? '—' }}</div>
+                    <div class="sc-info-readonly">{{ $szamla->megrendeles->ugyfel->nev ?? '—' }}</div>
                 </div>
                 <div class="sc-field">
                     <label>Kiállítás dátuma</label>

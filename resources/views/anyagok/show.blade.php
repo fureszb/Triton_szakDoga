@@ -7,14 +7,14 @@
 
 <div class="sc-page-header">
     <div class="sc-page-header-left">
-        <h1><i class="fas fa-boxes"></i> {{ $anyag->Nev }}</h1>
-        <span class="sc-id-badge">#{{ $anyag->Anyag_ID }}</span>
+        <h1><i class="fas fa-boxes"></i> {{ $anyag->nev }}</h1>
+        <span class="sc-id-badge">#{{ $anyag->id }}</span>
     </div>
     <div class="sc-page-header-actions">
         <a href="{{ route('anyagok.index') }}" class="btn-back">
             <i class="fas fa-arrow-left"></i> Vissza
         </a>
-        <a href="{{ route('anyagok.edit', $anyag->Anyag_ID) }}" class="btn-edit">
+        <a href="{{ route('anyagok.edit', $anyag->id) }}" class="btn-edit">
             <i class="fas fa-edit"></i> Szerkesztés
         </a>
     </div>
@@ -29,11 +29,11 @@
         <div class="sc-rows">
             <div class="sc-row">
                 <div class="sc-lbl"><i class="fas fa-tag"></i> Megnevezés</div>
-                <div class="sc-val">{{ $anyag->Nev }}</div>
+                <div class="sc-val">{{ $anyag->nev }}</div>
             </div>
             <div class="sc-row">
                 <div class="sc-lbl"><i class="fas fa-ruler"></i> Mértékegység</div>
-                <div class="sc-val">{{ $anyag->Mertekegyseg }}</div>
+                <div class="sc-val">{{ $anyag->mertekegyseg }}</div>
             </div>
         </div>
     </div>

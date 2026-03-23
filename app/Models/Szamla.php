@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Szamla extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table      = 'szamlak';
+    protected $table = 'szamlak';
+
     protected $primaryKey = 'szamla_id';
 
     protected $fillable = [
@@ -35,42 +36,83 @@ class Szamla extends Model
     ];
 
     protected $casts = [
-        'kiallitas_datum'   => 'date',
-        'teljesites_datum'  => 'date',
+        'kiallitas_datum' => 'date',
+        'teljesites_datum' => 'date',
         'fizetesi_hatarido' => 'date',
-        'netto_osszeg'      => 'decimal:2',
-        'afa_osszeg'        => 'decimal:2',
-        'brutto_osszeg'     => 'decimal:2',
-        'billingo_id'       => 'integer',
+        'netto_osszeg' => 'decimal:2',
+        'afa_osszeg' => 'decimal:2',
+        'brutto_osszeg' => 'decimal:2',
+        'billingo_id' => 'integer',
     ];
 
     // ─── Státusz konstansok ────────────────────────────────────────────────────
-    const STATUSZ_FUGGOBEN   = 'fuggoben';
-    const STATUSZ_FIZETVE    = 'fizetve';
+    const STATUSZ_FUGGOBEN = 'fuggoben';
+
+    const STATUSZ_FIZETVE = 'fizetve';
+
     const STATUSZ_KESEDELMES = 'kesedelmes';
-    const STATUSZ_STORNOZVA  = 'stornozva';
+
+    const STATUSZ_STORNOZVA = 'stornozva';
 
     const TIPUS_DIJBEKERO = 'dijbekero';
-    const TIPUS_SZAMLA    = 'szamla';
-    const TIPUS_STORNO    = 'storno';
+
+    const TIPUS_SZAMLA = 'szamla';
+
+    const TIPUS_STORNO = 'storno';
+
+    // ─── Boot – automatikus audit log státuszváltozáskor ──────────────────────
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        // Ha a statusz mező megváltozik, automatikusan naplózzuk
+        // Ez biztosítja hogy minden státuszváltozás nyomon követhető legyen,
+        // függetlenül attól melyik controller/service változtatja meg
+        static::updating(function (self $szamla) {
+            if ($szamla->isDirty('statusz')) {
+                // Késleltetett napló: az updating hook ELŐTT fut, így a régi érték még elérhető
+                $regi = $szamla->getOriginal('statusz');
+                $uj   = $szamla->statusz;
+
+                // Boot hook-on belül nem hívhatunk DB-t közvetlenül (körkörös hívás kockázata),
+                // ezért a Laravel after-commit callback-jét használjuk
+                \Illuminate\Support\Facades\DB::afterCommit(function () use ($szamla, $regi, $uj) {
+                    try {
+                        FizetesAuditLog::naplo(
+                            $szamla->szamla_id,
+                            'statusz_valtozas',
+                            [
+                                'regi' => ['statusz' => $regi],
+                                'uj'   => ['statusz' => $uj],
+                            ],
+                            null,
+                            $szamla->megrendeles_id
+                        );
+                    } catch (\Throwable $e) {
+                        \Illuminate\Support\Facades\Log::warning('Audit log hiba (statusz_valtozas): ' . $e->getMessage());
+                    }
+                });
+            }
+        });
+    }
 
     // ─── Kapcsolatok ──────────────────────────────────────────────────────────
 
     public function megrendeles()
     {
-        return $this->belongsTo(Megrendeles::class, 'megrendeles_id', 'Megrendeles_ID');
+        return $this->belongsTo(Megrendeles::class, 'megrendeles_id', 'id');
     }
 
     public function ugyfel()
     {
-        return $this->belongsTo(Ugyfel::class, 'ugyfel_id', 'Ugyfel_ID');
+        return $this->belongsTo(Ugyfel::class, 'ugyfel_id', 'id');
     }
 
     /** Tételek (anyagok, munkaóra, egyéb díjak) */
     public function tetelek()
     {
         return $this->hasMany(SzamlaTetel::class, 'szamla_id', 'szamla_id')
-                    ->orderBy('sorrend');
+            ->orderBy('sorrend');
     }
 
     /** Fizetési tranzakciók ehhez a számlához */
@@ -83,22 +125,22 @@ class Szamla extends Model
     public function sikeresFlzetes()
     {
         return $this->hasOne(Fizetes::class, 'szamla_id', 'szamla_id')
-                    ->where('statusz', 'fizetve')
-                    ->latest('fizetes_idopontja');
+            ->where('statusz', 'fizetve')
+            ->latest('fizetes_idopontja');
     }
 
     /** Audit log bejegyzések */
     public function auditLog()
     {
         return $this->hasMany(FizetesAuditLog::class, 'szamla_id', 'szamla_id')
-                    ->latest('created_at');
+            ->latest('created_at');
     }
 
     /** Emlékeztetők */
     public function emlekeztetok()
     {
         return $this->hasMany(FizetesEmlekeztetok::class, 'szamla_id', 'szamla_id')
-                    ->latest('kuldes_idopontja');
+            ->latest('kuldes_idopontja');
     }
 
     /** Az a számla, amelyet ez a stornó érvénytelenít */
@@ -172,8 +214,8 @@ class Szamla extends Model
 
     public function osszegekUjraszamit(): void
     {
-        $this->netto_osszeg  = $this->tetelek->sum('netto_osszeg');
-        $this->afa_osszeg    = $this->tetelek->sum('afa_osszeg');
+        $this->netto_osszeg = $this->tetelek->sum('netto_osszeg');
+        $this->afa_osszeg = $this->tetelek->sum('afa_osszeg');
         $this->brutto_osszeg = $this->tetelek->sum('brutto_osszeg');
         $this->save();
     }

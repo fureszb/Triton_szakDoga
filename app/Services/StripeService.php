@@ -3,10 +3,9 @@
 namespace App\Services;
 
 use App\Models\Megrendeles;
-use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
+use Stripe\Stripe;
 use Stripe\Webhook;
-use Stripe\Exception\SignatureVerificationException;
 
 class StripeService
 {
@@ -19,15 +18,14 @@ class StripeService
     public function isConfigured(): bool
     {
         $key = config('services.stripe.secret', '');
+
         return ! empty($key) && ! str_starts_with($key, 'REPLACE_');
     }
 
     /**
      * Stripe Checkout Session létrehozása.
-     * @param Megrendeles $megrendeles
-     * @param float $bruttoOsszeg  A Szamla.brutto_osszeg értéke (HUF)
-     * @param string $successUrl
-     * @param string $cancelUrl
+     *
+     * @param  float  $bruttoOsszeg  A Szamla.brutto_osszeg értéke (HUF)
      * @return string  Stripe checkout URL
      */
     public function createCheckoutSession(
@@ -42,23 +40,23 @@ class StripeService
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
-                    'currency'     => 'huf',
-                    'unit_amount'  => $osszegFiller,
+                    'currency' => 'huf',
+                    'unit_amount' => $osszegFiller,
                     'product_data' => [
-                        'name' => 'Megrendelés #' . str_pad($megrendeles->Megrendeles_ID, 5, '0', STR_PAD_LEFT)
-                                  . ' – ' . $megrendeles->Megrendeles_Nev,
+                        'name' => 'Megrendelés #'.str_pad($megrendeles->id, 5, '0', STR_PAD_LEFT)
+                                  .' – '.$megrendeles->megrendeles_nev,
                         'description' => 'TRITON SECURITY – Számlázási összeg',
                     ],
                 ],
                 'quantity' => 1,
             ]],
-            'mode'         => 'payment',
-            'success_url'  => $successUrl . '?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url'   => $cancelUrl,
-            'metadata'     => [
-                'megrendeles_id' => $megrendeles->Megrendeles_ID,
+            'mode' => 'payment',
+            'success_url' => $successUrl.'?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => $cancelUrl,
+            'metadata' => [
+                'megrendeles_id' => $megrendeles->id,
             ],
-            'customer_email' => $megrendeles->ugyfel?->Email ?? null,
+            'customer_email' => $megrendeles->ugyfel?->email ?? null,
         ]);
 
         return $session->url;

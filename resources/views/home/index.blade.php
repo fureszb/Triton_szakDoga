@@ -644,7 +644,7 @@ function drawCharts() {
     var barData = [
         ['Város', 'Megrendelések száma'],
         @foreach ($statistics as $stat)
-            ['{{ $stat->Nev }}', {{ $stat->MegrendelesekSzama }}],
+            ['{{ $stat->nev }}', {{ $stat->MegrendelesekSzama }}],
         @endforeach
     ];
     if (barData.length > 1) {
@@ -666,7 +666,7 @@ function drawCharts() {
     var pieData = [
         ['Típus', 'Mennyiség'],
         @foreach ($szolgaltatasokKereslete as $sz)
-            ['{{ $sz->Tipus }}', {{ $sz->Kereslet }}],
+            ['{{ $sz->tipus }}', {{ $sz->Kereslet }}],
         @endforeach
     ];
     if (pieData.length > 1) {

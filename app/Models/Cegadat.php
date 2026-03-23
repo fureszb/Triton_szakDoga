@@ -27,12 +27,12 @@ class Cegadat extends Model
         return self::firstOrCreate(
             ['id' => 1],
             [
-                'nev'            => 'TRITON SECURITY KFT.',
-                'szekhelycim'    => '1234 Budapest, Minta utca 1.',
-                'adoszam'        => '12345678-2-42',
+                'nev' => 'TRITON SECURITY KFT.',
+                'szekhelycim' => '1234 Budapest, Minta utca 1.',
+                'adoszam' => '12345678-2-42',
                 'cegjegyzekszam' => '01-09-123456',
-                'telefon'        => '+36 1 234 5678',
-                'email'          => 'info@tritonsecurity.hu',
+                'telefon' => '+36 1 234 5678',
+                'email' => 'info@tritonsecurity.hu',
             ]
         );
     }

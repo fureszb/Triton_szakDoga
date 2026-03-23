@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SzamlaKiallitasMail;
-use App\Models\FizetesAuditLog;
 use App\Models\Fizetes;
+use App\Models\FizetesAuditLog;
 use App\Models\Megrendeles;
 use App\Models\Szamla;
 use App\Models\SzamlaTetel;
@@ -13,27 +13,28 @@ use App\Services\SajatSzamlaService;
 use App\Services\SzamlaService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class SzamlaController extends Controller
 {
     public function __construct(
-        protected BillingoService    $billingo,
+        protected BillingoService $billingo,
         protected SajatSzamlaService $sajatPdf,
-        protected SzamlaService      $szamlaService,
-    ) {}
+        protected SzamlaService $szamlaService,
+    ) {
+    }
 
     // ─── Index ────────────────────────────────────────────────────────────────
 
     public function index(Request $request)
     {
         $filter = $request->get('filter', 'osszes');
-        $tipus  = $request->get('tipus', 'szamla');
-        $ma     = Carbon::today();
+        $tipus = $request->get('tipus', 'szamla');
+        $ma = Carbon::today();
 
         $query = Szamla::with(['megrendeles.ugyfel', 'megrendeles.varos'])
             ->where('szamla_tipus', $tipus);
@@ -44,15 +45,15 @@ class SzamlaController extends Controller
                 break;
             case 'varakozik':
                 $query->where('statusz', 'fuggoben')
-                      ->whereDate('fizetesi_hatarido', '>=', $ma);
+                    ->whereDate('fizetesi_hatarido', '>=', $ma);
                 break;
             case 'kesedelmes':
                 $query->where(function ($q) use ($ma) {
                     $q->where('statusz', 'kesedelmes')
-                      ->orWhere(function ($q2) use ($ma) {
-                          $q2->where('statusz', 'fuggoben')
-                             ->whereDate('fizetesi_hatarido', '<', $ma);
-                      });
+                        ->orWhere(function ($q2) use ($ma) {
+                            $q2->where('statusz', 'fuggoben')
+                                ->whereDate('fizetesi_hatarido', '<', $ma);
+                        });
                 });
                 break;
             case 'stornozva':
@@ -63,17 +64,16 @@ class SzamlaController extends Controller
         $szamlak = $query->orderBy('kiallitas_datum', 'desc')->get();
 
         // KPI – mindig az összes 'szamla' típusú
-        $osszes        = Szamla::where('szamla_tipus', 'szamla')->get();
-        $kpiFizetve    = $osszes->where('statusz', 'fizetve')->count();
-        $kpiFuggoben   = $osszes->where('statusz', 'fuggoben')->count();
-        $kpiKesedelmes = $osszes->filter(fn ($s) =>
-            $s->statusz === 'kesedelmes' ||
+        $osszes = Szamla::where('szamla_tipus', 'szamla')->get();
+        $kpiFizetve = $osszes->where('statusz', 'fizetve')->count();
+        $kpiFuggoben = $osszes->where('statusz', 'fuggoben')->count();
+        $kpiKesedelmes = $osszes->filter(fn ($s) => $s->statusz === 'kesedelmes' ||
             ($s->statusz === 'fuggoben' && $s->fizetesi_hatarido && $s->fizetesi_hatarido->lt($ma))
         )->count();
-        $kpiBevertel   = $osszes->where('statusz', 'fizetve')->sum('brutto_osszeg');
-        $kpiVaro       = $osszes->whereIn('statusz', ['fuggoben', 'kesedelmes'])->sum('brutto_osszeg');
-        $dijbekeroDB   = Szamla::where('szamla_tipus', 'dijbekero')->count();
-        $stornoDB      = Szamla::where('szamla_tipus', 'storno')->count();
+        $kpiBevertel = $osszes->where('statusz', 'fizetve')->sum('brutto_osszeg');
+        $kpiVaro = $osszes->whereIn('statusz', ['fuggoben', 'kesedelmes'])->sum('brutto_osszeg');
+        $dijbekeroDB = Szamla::where('szamla_tipus', 'dijbekero')->count();
+        $stornoDB = Szamla::where('szamla_tipus', 'storno')->count();
 
         return view('szamlak.index', compact(
             'szamlak', 'filter', 'tipus', 'ma',
@@ -106,12 +106,13 @@ class SzamlaController extends Controller
     {
         $megrendeles = null;
         if ($request->has('megrendeles_id')) {
-            $megrendeles = Megrendeles::with('ugyfel')->find($request->megrendeles_id);
+            $megrendeles = Megrendeles::with(['ugyfel', 'felhasznaltAnyagok.anyag'])
+                ->find($request->megrendeles_id);
         }
 
         $megrendelesek = Megrendeles::with('ugyfel')
             ->whereDoesntHave('osszesSzamla', fn ($q) => $q->where('szamla_tipus', 'szamla'))
-            ->orderBy('Megrendeles_ID', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
 
         return view('szamlak.create', compact('megrendelesek', 'megrendeles'));
@@ -122,42 +123,42 @@ class SzamlaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'megrendeles_id'            => 'required|exists:megrendeles,Megrendeles_ID',
-            'szamla_tipus'              => 'required|in:dijbekero,szamla',
-            'kiallitas_datum'           => 'required|date',
-            'teljesites_datum'          => 'required|date',
-            'fizetesi_hatarido'         => 'required|date|after_or_equal:kiallitas_datum',
-            'fizetesi_mod'              => 'required|in:stripe,banki_atutalas,keszpenz',
-            'megjegyzes'                => 'nullable|string|max:1000',
-            'tetelek'                   => 'required|array|min:1',
-            'tetelek.*.tetel_tipus'     => 'required|in:anyag,munkaora,egyeb',
-            'tetelek.*.nev'             => 'required|string|max:255',
-            'tetelek.*.mennyiseg'       => 'required|numeric|min:0.001',
-            'tetelek.*.mertekegyseg'    => 'required|string|max:20',
+            'megrendeles_id' => 'required|exists:megrendeles,id',
+            'szamla_tipus' => 'required|in:dijbekero,szamla',
+            'kiallitas_datum' => 'required|date',
+            'teljesites_datum' => 'required|date',
+            'fizetesi_hatarido' => 'required|date|after_or_equal:kiallitas_datum',
+            'fizetesi_mod' => 'required|in:stripe,banki_atutalas,keszpenz',
+            'megjegyzes' => 'nullable|string|max:1000',
+            'tetelek' => 'required|array|min:1',
+            'tetelek.*.tetel_tipus' => 'required|in:anyag,munkaora,egyeb',
+            'tetelek.*.nev' => 'required|string|max:255',
+            'tetelek.*.mennyiseg' => 'required|numeric|min:0.001',
+            'tetelek.*.mertekegyseg' => 'required|string|max:20',
             'tetelek.*.egyseg_netto_ar' => 'required|numeric|min:0',
-            'tetelek.*.afa_kulcs'       => 'required|in:0,5,27',
+            'tetelek.*.afa_kulcs' => 'required|in:0,5,27',
         ], [
-            'megrendeles_id.required'            => 'A megrendelés kiválasztása kötelező.',
-            'tetelek.required'                   => 'Legalább egy tételt meg kell adni.',
-            'tetelek.*.nev.required'             => 'Minden tétel neve kötelező.',
-            'tetelek.*.mennyiseg.required'       => 'Minden tétel mennyisége kötelező.',
+            'megrendeles_id.required' => 'A megrendelés kiválasztása kötelező.',
+            'tetelek.required' => 'Legalább egy tételt meg kell adni.',
+            'tetelek.*.nev.required' => 'Minden tétel neve kötelező.',
+            'tetelek.*.mennyiseg.required' => 'Minden tétel mennyisége kötelező.',
             'tetelek.*.egyseg_netto_ar.required' => 'Minden egységár megadása kötelező.',
-            'fizetesi_hatarido.after_or_equal'   => 'A fizetési határidő nem lehet korábbi a kiállítás dátumánál.',
+            'fizetesi_hatarido.after_or_equal' => 'A fizetési határidő nem lehet korábbi a kiállítás dátumánál.',
         ]);
 
         $megrendeles = Megrendeles::findOrFail($request->megrendeles_id);
 
         $szamla = DB::transaction(function () use ($request, $megrendeles) {
             $szamla = Szamla::create([
-                'megrendeles_id'    => $megrendeles->Megrendeles_ID,
-                'ugyfel_id'         => $megrendeles->Ugyfel_ID,
-                'szamla_tipus'      => $request->szamla_tipus,
-                'kiallitas_datum'   => $request->kiallitas_datum,
-                'teljesites_datum'  => $request->teljesites_datum,
+                'megrendeles_id' => $megrendeles->id,
+                'ugyfel_id' => $megrendeles->ugyfel_id,
+                'szamla_tipus' => $request->szamla_tipus,
+                'kiallitas_datum' => $request->kiallitas_datum,
+                'teljesites_datum' => $request->teljesites_datum,
                 'fizetesi_hatarido' => $request->fizetesi_hatarido,
-                'fizetesi_mod'      => $request->fizetesi_mod,
-                'megjegyzes'        => $request->megjegyzes,
-                'statusz'           => 'fuggoben',
+                'fizetesi_mod' => $request->fizetesi_mod,
+                'megjegyzes' => $request->megjegyzes,
+                'statusz' => 'fuggoben',
             ]);
 
             foreach ($request->tetelek as $i => $tetel) {
@@ -173,7 +174,7 @@ class SzamlaController extends Controller
                 $szamla->szamla_id,
                 $request->szamla_tipus === 'dijbekero' ? 'dijbekero_kiallitva' : 'szamla_kiallitva',
                 ['uj' => ['statusz' => 'fuggoben', 'brutto' => $szamla->brutto_osszeg]],
-                megrendelesId: $megrendeles->Megrendeles_ID
+                megrendelesId: $megrendeles->id
             );
 
             return $szamla;
@@ -191,6 +192,7 @@ class SzamlaController extends Controller
             return back()->with('error', 'Lezárt számla nem módosítható.');
         }
         $szamla->load('tetelek');
+
         return view('szamlak.edit', compact('szamla'));
     }
 
@@ -203,14 +205,14 @@ class SzamlaController extends Controller
         }
 
         $request->validate([
-            'teljesites_datum'  => 'nullable|date',
+            'teljesites_datum' => 'nullable|date',
             'fizetesi_hatarido' => 'nullable|date',
-            'fizetesi_mod'      => 'nullable|in:stripe,banki_atutalas,keszpenz',
-            'megjegyzes'        => 'nullable|string|max:1000',
+            'fizetesi_mod' => 'nullable|in:stripe,banki_atutalas,keszpenz',
+            'megjegyzes' => 'nullable|string|max:1000',
         ]);
 
         $fields = ['teljesites_datum', 'fizetesi_hatarido', 'fizetesi_mod', 'megjegyzes'];
-        $regi   = $szamla->only($fields);
+        $regi = $szamla->only($fields);
         $szamla->update($request->only($fields));
 
         FizetesAuditLog::naplo(
@@ -232,25 +234,40 @@ class SzamlaController extends Controller
             return back()->with('info', 'A számla már fizetve van.');
         }
 
-        $fizetesiMod  = $request->get('mod', 'banki_atutalas');
+        $fizetesiMod = $request->get('mod', 'banki_atutalas');
         $veglegSzamla = null;
 
         DB::transaction(function () use ($request, $szamla, $fizetesiMod, &$veglegSzamla) {
             $regi = $szamla->statusz;
             $szamla->update(['statusz' => 'fizetve']);
 
-            Fizetes::create([
-                'szamla_id'         => $szamla->szamla_id,
-                'megrendeles_id'    => $szamla->megrendeles_id,
-                'ugyfel_id'         => $szamla->ugyfel_id,
-                'fizetes_mod'       => $fizetesiMod,
-                'osszeg'            => $szamla->brutto_osszeg,
-                'deviza'            => 'HUF',
-                'statusz'           => 'fizetve',
-                'fizetes_idopontja' => now(),
-                'banki_hivatkozas'  => $request->get('hivatkozas'),
-                'megjegyzes'        => 'Manuálisan rögzítve',
-            ]);
+            // Ha az ügyfél korábban bejelentett átutalást (fuggoben rekord),
+            // azt frissítjük fizettévé – nincs árva rekord az adatbázisban
+            $meglevoFuggoben = Fizetes::where('szamla_id', $szamla->szamla_id)
+                ->where('statusz', Fizetes::STATUSZ_FUGGOBEN)
+                ->where('fizetes_mod', 'banki_atutalas')
+                ->first();
+
+            if ($meglevoFuggoben) {
+                $meglevoFuggoben->update([
+                    'statusz'           => Fizetes::STATUSZ_FIZETVE,
+                    'fizetes_idopontja' => now(),
+                    'megjegyzes'        => trim($meglevoFuggoben->megjegyzes . ' – Admin által jóváhagyva.'),
+                ]);
+            } else {
+                Fizetes::create([
+                    'szamla_id'        => $szamla->szamla_id,
+                    'megrendeles_id'   => $szamla->megrendeles_id,
+                    'ugyfel_id'        => $szamla->ugyfel_id,
+                    'fizetes_mod'      => $fizetesiMod,
+                    'osszeg'           => $szamla->brutto_osszeg,
+                    'deviza'           => 'HUF',
+                    'statusz'          => Fizetes::STATUSZ_FIZETVE,
+                    'fizetes_idopontja'=> now(),
+                    'banki_hivatkozas' => $request->get('hivatkozas'),
+                    'megjegyzes'       => 'Manuálisan rögzítve',
+                ]);
+            }
 
             FizetesAuditLog::naplo(
                 $szamla->szamla_id,
@@ -265,7 +282,7 @@ class SzamlaController extends Controller
                     $szamla->load('tetelek');
                     $veglegSzamla = $this->szamlaService->dijbekerobolVeglesSzamla($szamla, $fizetesiMod);
                 } catch (\Throwable $e) {
-                    Log::error('Végleges számla generálás hiba (markAsPaid): ' . $e->getMessage());
+                    Log::error('Végleges számla generálás hiba (markAsPaid): '.$e->getMessage());
                 }
             } else {
                 $veglegSzamla = $szamla;
@@ -276,23 +293,23 @@ class SzamlaController extends Controller
                 try {
                     $adatok = $this->billingo->createInvoiceFromSzamla($veglegSzamla->fresh());
                     $veglegSzamla->update([
-                        'billingo_id'      => $adatok['id'],
-                        'billingo_szam'    => $adatok['invoice_number'],
+                        'billingo_id' => $adatok['id'],
+                        'billingo_szam' => $adatok['invoice_number'],
                         'billingo_pdf_url' => $adatok['pdf_url'],
                     ]);
                 } catch (\Throwable $e) {
-                    Log::error('Billingo markAsPaid hiba: ' . $e->getMessage());
+                    Log::error('Billingo markAsPaid hiba: '.$e->getMessage());
                 }
             }
         });
 
         // Email az ügyfélnek a végleges számlával
-        $email = $szamla->ugyfel?->Email ?? $szamla->megrendeles?->ugyfel?->Email;
+        $email = $szamla->ugyfel?->email ?? $szamla->megrendeles?->ugyfel?->email;
         if ($email && $veglegSzamla) {
             try {
                 Mail::to($email)->send(new SzamlaKiallitasMail($veglegSzamla->fresh()));
             } catch (\Throwable $e) {
-                Log::error('Email hiba (markAsPaid): ' . $e->getMessage());
+                Log::error('Email hiba (markAsPaid): '.$e->getMessage());
             }
         }
 
@@ -316,34 +333,34 @@ class SzamlaController extends Controller
             $szamla->update(['statusz' => 'stornozva']);
 
             $storno = Szamla::create([
-                'megrendeles_id'    => $szamla->megrendeles_id,
-                'ugyfel_id'         => $szamla->ugyfel_id,
-                'szamla_tipus'      => 'storno',
+                'megrendeles_id' => $szamla->megrendeles_id,
+                'ugyfel_id' => $szamla->ugyfel_id,
+                'szamla_tipus' => 'storno',
                 'storno_eredeti_id' => $szamla->szamla_id,
-                'kiallitas_datum'   => now()->toDateString(),
-                'teljesites_datum'  => now()->toDateString(),
+                'kiallitas_datum' => now()->toDateString(),
+                'teljesites_datum' => now()->toDateString(),
                 'fizetesi_hatarido' => now()->toDateString(),
-                'fizetesi_mod'      => $szamla->fizetesi_mod,
-                'netto_osszeg'      => -abs($szamla->netto_osszeg),
-                'afa_osszeg'        => -abs($szamla->afa_osszeg),
-                'brutto_osszeg'     => -abs($szamla->brutto_osszeg),
-                'statusz'           => 'stornozva',
-                'megjegyzes'        => 'Stornó – eredeti számla #' . $szamla->szamla_id,
+                'fizetesi_mod' => $szamla->fizetesi_mod,
+                'netto_osszeg' => -abs($szamla->netto_osszeg),
+                'afa_osszeg' => -abs($szamla->afa_osszeg),
+                'brutto_osszeg' => -abs($szamla->brutto_osszeg),
+                'statusz' => 'stornozva',
+                'megjegyzes' => 'Stornó – eredeti számla #'.$szamla->szamla_id,
             ]);
 
             foreach ($szamla->tetelek as $t) {
                 SzamlaTetel::create([
-                    'szamla_id'       => $storno->szamla_id,
-                    'tetel_tipus'     => $t->tetel_tipus,
-                    'nev'             => $t->nev . ' (stornó)',
-                    'mennyiseg'       => -abs($t->mennyiseg),
-                    'mertekegyseg'    => $t->mertekegyseg,
+                    'szamla_id' => $storno->szamla_id,
+                    'tetel_tipus' => $t->tetel_tipus,
+                    'nev' => $t->nev.' (stornó)',
+                    'mennyiseg' => -abs($t->mennyiseg),
+                    'mertekegyseg' => $t->mertekegyseg,
                     'egyseg_netto_ar' => $t->egyseg_netto_ar,
-                    'afa_kulcs'       => $t->afa_kulcs,
-                    'netto_osszeg'    => -abs($t->netto_osszeg),
-                    'afa_osszeg'      => -abs($t->afa_osszeg),
-                    'brutto_osszeg'   => -abs($t->brutto_osszeg),
-                    'sorrend'         => $t->sorrend,
+                    'afa_kulcs' => $t->afa_kulcs,
+                    'netto_osszeg' => -abs($t->netto_osszeg),
+                    'afa_osszeg' => -abs($t->afa_osszeg),
+                    'brutto_osszeg' => -abs($t->brutto_osszeg),
+                    'sorrend' => $t->sorrend,
                 ]);
             }
 
@@ -362,12 +379,12 @@ class SzamlaController extends Controller
 
     public function billingoKiallitas(Szamla $szamla)
     {
-        if (!$this->billingo->isConfigured()) {
+        if (! $this->billingo->isConfigured()) {
             return back()->with('error', 'Billingo API nincs konfigurálva.');
         }
 
         if ($szamla->billingo_id) {
-            return back()->with('info', 'Már ki van állítva Billingo számla (' . $szamla->billingo_szam . ').');
+            return back()->with('info', 'Már ki van állítva Billingo számla ('.$szamla->billingo_szam.').');
         }
 
         try {
@@ -375,8 +392,8 @@ class SzamlaController extends Controller
             $adatok = $this->billingo->createInvoice($megrendeles);
 
             $szamla->update([
-                'billingo_id'      => $adatok['id'],
-                'billingo_szam'    => $adatok['invoice_number'],
+                'billingo_id' => $adatok['id'],
+                'billingo_szam' => $adatok['invoice_number'],
                 'billingo_pdf_url' => $adatok['pdf_url'],
             ]);
 
@@ -387,19 +404,20 @@ class SzamlaController extends Controller
                 megrendelesId: $szamla->megrendeles_id
             );
 
-            $email = $megrendeles->ugyfel?->Email;
+            $email = $megrendeles->ugyfel?->email;
             if ($email) {
                 try {
                     Mail::to($email)->send(new SzamlaKiallitasMail($szamla->fresh()));
                 } catch (\Throwable $e) {
-                    Log::error('Számla email hiba: ' . $e->getMessage());
+                    Log::error('Számla email hiba: '.$e->getMessage());
                 }
             }
 
-            return back()->with('success', 'Billingo számla kiállítva: ' . ($adatok['invoice_number'] ?? ''));
+            return back()->with('success', 'Billingo számla kiállítva: '.($adatok['invoice_number'] ?? ''));
         } catch (\Throwable $e) {
-            Log::error('Billingo hiba: ' . $e->getMessage());
-            return back()->with('error', 'Billingo kiállítás sikertelen: ' . $e->getMessage());
+            Log::error('Billingo hiba: '.$e->getMessage());
+
+            return back()->with('error', 'Billingo kiállítás sikertelen: '.$e->getMessage());
         }
     }
 
@@ -410,10 +428,11 @@ class SzamlaController extends Controller
         // Ügyfél csak a saját számláját töltheti le
         $this->authorizeUgyfelDownload($szamla);
 
-        if (!$szamla->billingo_pdf_url && $szamla->billingo_id) {
+        if (! $szamla->billingo_pdf_url && $szamla->billingo_id) {
             $url = $this->billingo->getInvoicePdfUrl($szamla->billingo_id);
             if ($url) {
                 $szamla->update(['billingo_pdf_url' => $url]);
+
                 return redirect($url);
             }
         }
@@ -447,8 +466,9 @@ class SzamlaController extends Controller
 
             return back()->with('success', 'Saját számla sikeresen legenerálva. Letöltheted az alábbi gombbal.');
         } catch (\Throwable $e) {
-            Log::error('Saját PDF hiba: ' . $e->getMessage());
-            return back()->with('error', 'PDF generálás sikertelen: ' . $e->getMessage());
+            Log::error('Saját PDF hiba: '.$e->getMessage());
+
+            return back()->with('error', 'PDF generálás sikertelen: '.$e->getMessage());
         }
     }
 
@@ -462,7 +482,7 @@ class SzamlaController extends Controller
         if ($szamla->sajat_pdf_path && Storage::exists($szamla->sajat_pdf_path)) {
             return Storage::download(
                 $szamla->sajat_pdf_path,
-                'szamla-' . str_pad($szamla->szamla_id, 5, '0', STR_PAD_LEFT) . '.pdf',
+                'szamla-'.str_pad($szamla->szamla_id, 5, '0', STR_PAD_LEFT).'.pdf',
                 ['Content-Type' => 'application/pdf']
             );
         }
@@ -480,8 +500,8 @@ class SzamlaController extends Controller
             return; // Admin és Uzletkoto bármit letölthet
         }
         // Ügyfél csak a saját számláját töltheti le
-        $ugyfelId = $user->ugyfel?->Ugyfel_ID;
-        if (!$ugyfelId || $szamla->ugyfel_id !== $ugyfelId) {
+        $ugyfelId = $user->ugyfel?->id;
+        if (! $ugyfelId || $szamla->ugyfel_id !== $ugyfelId) {
             abort(403, 'Nincs jogosultságod ehhez a számlához.');
         }
     }
@@ -493,8 +513,9 @@ class SzamlaController extends Controller
         try {
             return $this->sajatPdf->tesztStream($szamla);
         } catch (\Throwable $e) {
-            Log::error('Teszt PDF hiba: ' . $e->getMessage());
-            return back()->with('error', 'Teszt PDF generálás sikertelen: ' . $e->getMessage());
+            Log::error('Teszt PDF hiba: '.$e->getMessage());
+
+            return back()->with('error', 'Teszt PDF generálás sikertelen: '.$e->getMessage());
         }
     }
 

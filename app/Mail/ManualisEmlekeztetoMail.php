@@ -16,12 +16,13 @@ class ManualisEmlekeztetoMail extends Mailable
     public function __construct(
         public Szamla $szamla,
         public string $egyediUzenet = '',
-    ) {}
+    ) {
+    }
 
     public function envelope(): Envelope
     {
         $szamlaNum = $this->szamla->billingo_szam
-            ?? 'TRITON-' . str_pad($this->szamla->szamla_id, 6, '0', STR_PAD_LEFT);
+            ?? 'TRITON-'.str_pad($this->szamla->szamla_id, 6, '0', STR_PAD_LEFT);
 
         $tipus = $this->szamla->szamla_tipus === 'dijbekero' ? 'Díjbekérő' : 'Számla';
 

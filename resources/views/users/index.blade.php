@@ -38,7 +38,7 @@
         <tbody>
             @forelse ($users as $user)
                 <tr>
-                    <td><span class="table-id">#{{ $user->User_ID }}</span></td>
+                    <td><span class="table-id">#{{ $user->id }}</span></td>
                     <td><strong>{{ $user->nev }}</strong></td>
                     <td>{{ $user->email }}</td>
                     <td>
@@ -52,13 +52,13 @@
                     </td>
                     <td>
                         <div class="table-actions">
-                            <a href="{{ route('users.show', ['user' => $user->User_ID]) }}" class="btn-view">
+                            <a href="{{ route('users.show', ['user' => $user->id]) }}" class="btn-view">
                                 <i class="fas fa-eye"></i> Megtekint
                             </a>
-                            <a href="{{ route('users.edit', ['user' => $user->User_ID]) }}" class="btn-edit">
+                            <a href="{{ route('users.edit', ['user' => $user->id]) }}" class="btn-edit">
                                 <i class="fas fa-edit"></i> Szerkeszt
                             </a>
-                            <form class="form-delete" action="{{ route('users.destroy', ['user' => $user->User_ID]) }}" method="POST">
+                            <form class="form-delete" action="{{ route('users.destroy', ['user' => $user->id]) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn-delete" type="submit"

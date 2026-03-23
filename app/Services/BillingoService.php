@@ -10,12 +10,14 @@ use Illuminate\Support\Facades\Log;
 class BillingoService
 {
     protected string $apiKey;
+
     protected int|string $blockId;
+
     protected string $baseUrl = 'https://api.billingo.hu/v3';
 
     public function __construct()
     {
-        $this->apiKey  = config('services.billingo.api_key', '');
+        $this->apiKey = config('services.billingo.api_key', '');
         $this->blockId = config('services.billingo.block_id', '');
     }
 
@@ -32,9 +34,9 @@ class BillingoService
      */
     public function createInvoice(Megrendeles $megrendeles): array
     {
-        $ugyfel  = $megrendeles->ugyfel;
-        $varos   = $megrendeles->varos;
-        $osszeg  = (float) $megrendeles->Vegosszeg;
+        $ugyfel = $megrendeles->ugyfel;
+        $varos = $megrendeles->varos;
+        $osszeg = (float) $megrendeles->Vegosszeg;
 
         // Fizetési határidő: ha be van állítva, különben ma + 8 nap
         $hatarido = $megrendeles->FizetesiHatarido
@@ -42,51 +44,51 @@ class BillingoService
             : now()->addDays(8)->format('Y-m-d');
 
         $payload = [
-            'vendor_id'      => (int) $this->blockId,
-            'partner'        => [
-                'name'        => $ugyfel?->Szamlazasi_Nev ?? $megrendeles->Megrendeles_Nev,
-                'address'     => [
+            'vendor_id' => (int) $this->blockId,
+            'partner' => [
+                'name' => $ugyfel?->szamlazasi_nev ?? $megrendeles->megrendeles_nev,
+                'address' => [
                     'country_code' => 'HU',
-                    'post_code'    => (string) ($varos?->Irny_szam ?? ''),
-                    'city'         => $varos?->Nev ?? '',
-                    'address'      => $ugyfel?->Szamlazasi_Cim ?? $megrendeles->Utca_Hazszam ?? '',
+                    'post_code' => (string) ($varos?->Irny_szam ?? ''),
+                    'city' => $varos?->nev ?? '',
+                    'address' => $ugyfel?->szamlazasi_cim ?? $megrendeles->utca_hazszam ?? '',
                 ],
-                'taxcode'     => $ugyfel?->Adoszam ?? null,
-                'emails'      => $ugyfel?->Email ? [$ugyfel->Email] : [],
+                'taxcode' => $ugyfel?->adoszam ?? null,
+                'emails' => $ugyfel?->email ? [$ugyfel->email] : [],
             ],
-            'block_id'       => (int) $this->blockId,
-            'type'           => 'invoice',
+            'block_id' => (int) $this->blockId,
+            'type' => 'invoice',
             'fulfillment_date' => now()->format('Y-m-d'),
-            'due_date'       => $hatarido,
+            'due_date' => $hatarido,
             'payment_method' => $megrendeles->FizetesiMod === 'stripe' ? 'online_bankcard' : 'transfer',
-            'language'       => 'hu',
-            'currency'       => 'HUF',
-            'items'          => [
+            'language' => 'hu',
+            'currency' => 'HUF',
+            'items' => [
                 [
-                    'name'          => 'Megrendelés #' . str_pad($megrendeles->Megrendeles_ID, 5, '0', STR_PAD_LEFT)
-                                       . ' – ' . $megrendeles->Megrendeles_Nev,
-                    'unit_price'    => $osszeg,
+                    'name' => 'Megrendelés #'.str_pad($megrendeles->id, 5, '0', STR_PAD_LEFT)
+                                       .' – '.$megrendeles->megrendeles_nev,
+                    'unit_price' => $osszeg,
                     'unit_price_type' => 'gross',
-                    'quantity'      => 1,
-                    'unit'          => 'db',
-                    'vat'           => '27%',
+                    'quantity' => 1,
+                    'unit' => 'db',
+                    'vat' => '27%',
                 ],
             ],
         ];
 
         $response = Http::withHeaders([
-            'X-API-KEY'    => $this->apiKey,
+            'X-API-KEY' => $this->apiKey,
             'Content-Type' => 'application/json',
-            'Accept'       => 'application/json',
+            'Accept' => 'application/json',
         ])->post("{$this->baseUrl}/documents", $payload);
 
         if (! $response->successful()) {
             Log::error('Billingo hiba', [
-                'status'   => $response->status(),
-                'body'     => $response->body(),
-                'payload'  => $payload,
+                'status' => $response->status(),
+                'body' => $response->body(),
+                'payload' => $payload,
             ]);
-            throw new \RuntimeException('Billingo számla kiállítás sikertelen: ' . $response->body());
+            throw new \RuntimeException('Billingo számla kiállítás sikertelen: '.$response->body());
         }
 
         $data = $response->json();
@@ -95,9 +97,9 @@ class BillingoService
         $pdfUrl = $this->getInvoicePdfUrl($data['id'] ?? null);
 
         return [
-            'id'             => $data['id'] ?? null,
+            'id' => $data['id'] ?? null,
             'invoice_number' => $data['invoice_number'] ?? null,
-            'pdf_url'        => $pdfUrl,
+            'pdf_url' => $pdfUrl,
         ];
     }
 
@@ -111,12 +113,12 @@ class BillingoService
     {
         $szamla->load(['megrendeles.ugyfel', 'megrendeles.varos', 'tetelek']);
         $megrendeles = $szamla->megrendeles;
-        $ugyfel      = $megrendeles?->ugyfel;
-        $varos       = $megrendeles?->varos;
+        $ugyfel = $megrendeles?->ugyfel;
+        $varos = $megrendeles?->varos;
 
         $fizetesiMod = match ($szamla->fizetesi_mod) {
             'stripe' => 'online_bankcard',
-            default  => 'transfer',
+            default => 'transfer',
         };
 
         // Tételek összeállítása: ha vannak részletes tételek, azok; egyébként egyetlen összesítő sor
@@ -124,71 +126,71 @@ class BillingoService
         if ($szamla->tetelek->isNotEmpty()) {
             foreach ($szamla->tetelek as $tetel) {
                 $items[] = [
-                    'name'            => $tetel->nev,
-                    'unit_price'      => (float) $tetel->brutto_osszeg,
+                    'name' => $tetel->nev,
+                    'unit_price' => (float) $tetel->brutto_osszeg,
                     'unit_price_type' => 'gross',
-                    'quantity'        => (float) $tetel->mennyiseg,
-                    'unit'            => $tetel->mertekegyseg,
-                    'vat'             => $tetel->afa_kulcs . '%',
+                    'quantity' => (float) $tetel->mennyiseg,
+                    'unit' => $tetel->mertekegyseg,
+                    'vat' => $tetel->afa_kulcs.'%',
                 ];
             }
         } else {
             $items[] = [
-                'name'            => 'Megrendelés #' . str_pad($megrendeles->Megrendeles_ID, 5, '0', STR_PAD_LEFT)
-                                     . ' – ' . $megrendeles->Megrendeles_Nev,
-                'unit_price'      => (float) $szamla->brutto_osszeg,
+                'name' => 'Megrendelés #'.str_pad($megrendeles->id, 5, '0', STR_PAD_LEFT)
+                                     .' – '.$megrendeles->megrendeles_nev,
+                'unit_price' => (float) $szamla->brutto_osszeg,
                 'unit_price_type' => 'gross',
-                'quantity'        => 1,
-                'unit'            => 'db',
-                'vat'             => '27%',
+                'quantity' => 1,
+                'unit' => 'db',
+                'vat' => '27%',
             ];
         }
 
         $payload = [
-            'vendor_id'        => (int) $this->blockId,
-            'partner'          => [
-                'name'    => $ugyfel?->Szamlazasi_Nev ?? $megrendeles->Megrendeles_Nev,
+            'vendor_id' => (int) $this->blockId,
+            'partner' => [
+                'name' => $ugyfel?->szamlazasi_nev ?? $megrendeles->megrendeles_nev,
                 'address' => [
                     'country_code' => 'HU',
-                    'post_code'    => (string) ($varos?->Irny_szam ?? ''),
-                    'city'         => $varos?->Nev ?? '',
-                    'address'      => $ugyfel?->Szamlazasi_Cim ?? $megrendeles->Utca_Hazszam ?? '',
+                    'post_code' => (string) ($varos?->Irny_szam ?? ''),
+                    'city' => $varos?->nev ?? '',
+                    'address' => $ugyfel?->szamlazasi_cim ?? $megrendeles->utca_hazszam ?? '',
                 ],
-                'taxcode' => $ugyfel?->Adoszam ?? null,
-                'emails'  => $ugyfel?->Email ? [$ugyfel->Email] : [],
+                'taxcode' => $ugyfel?->adoszam ?? null,
+                'emails' => $ugyfel?->email ? [$ugyfel->email] : [],
             ],
-            'block_id'         => (int) $this->blockId,
-            'type'             => 'invoice',
+            'block_id' => (int) $this->blockId,
+            'type' => 'invoice',
             'fulfillment_date' => ($szamla->teljesites_datum ?? now())->format('Y-m-d'),
-            'due_date'         => ($szamla->fizetesi_hatarido ?? now())->format('Y-m-d'),
-            'payment_method'   => $fizetesiMod,
-            'language'         => 'hu',
-            'currency'         => 'HUF',
-            'items'            => $items,
+            'due_date' => ($szamla->fizetesi_hatarido ?? now())->format('Y-m-d'),
+            'payment_method' => $fizetesiMod,
+            'language' => 'hu',
+            'currency' => 'HUF',
+            'items' => $items,
         ];
 
         $response = Http::withHeaders([
-            'X-API-KEY'    => $this->apiKey,
+            'X-API-KEY' => $this->apiKey,
             'Content-Type' => 'application/json',
-            'Accept'       => 'application/json',
+            'Accept' => 'application/json',
         ])->post("{$this->baseUrl}/documents", $payload);
 
         if (! $response->successful()) {
             Log::error('Billingo hiba (szamla alapú)', [
-                'status'  => $response->status(),
-                'body'    => $response->body(),
+                'status' => $response->status(),
+                'body' => $response->body(),
                 'payload' => $payload,
             ]);
-            throw new \RuntimeException('Billingo számla kiállítás sikertelen: ' . $response->body());
+            throw new \RuntimeException('Billingo számla kiállítás sikertelen: '.$response->body());
         }
 
-        $data   = $response->json();
+        $data = $response->json();
         $pdfUrl = $this->getInvoicePdfUrl($data['id'] ?? null);
 
         return [
-            'id'             => $data['id'] ?? null,
+            'id' => $data['id'] ?? null,
             'invoice_number' => $data['invoice_number'] ?? null,
-            'pdf_url'        => $pdfUrl,
+            'pdf_url' => $pdfUrl,
         ];
     }
 
@@ -201,7 +203,7 @@ class BillingoService
 
         $response = Http::withHeaders([
             'X-API-KEY' => $this->apiKey,
-            'Accept'    => 'application/json',
+            'Accept' => 'application/json',
         ])->get("{$this->baseUrl}/documents/{$invoiceId}/download");
 
         if ($response->successful()) {
@@ -217,7 +219,7 @@ class BillingoService
         try {
             $response = Http::withHeaders([
                 'X-API-KEY' => $this->apiKey,
-                'Accept'    => 'application/json',
+                'Accept' => 'application/json',
             ])->get("{$this->baseUrl}/utils/time");
 
             return $response->successful();

@@ -11,7 +11,9 @@ class SzereloSzolgaltatas extends Model
 
     protected $table = 'szerelo_szolgaltatas';
 
-    protected $primaryKey = ['Szerelo_ID', 'Szolgaltatas_ID'];
-    protected $fillable = ['Szerelo_ID', 'Szolgaltatas_ID'];
+    protected $primaryKey = ['szerelo_id', 'szolgaltatas_id'];
 
+    public $incrementing = false;
+
+    protected $fillable = ['szerelo_id', 'szolgaltatas_id'];
 }

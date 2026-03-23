@@ -130,6 +130,20 @@
 .sz-tipus-storno   { background: rgba(100,116,139,0.08); color: #64748b; border-color: rgba(100,116,139,0.2); }
 
 @media (max-width: 900px) { .sz-hide-sm { display: none; } }
+
+/* ── Nincs kiállítva jelölés ─────────────────────────────────────────────── */
+.sz-table tbody tr.nincs-kiallitva {
+    border-left: 3px solid #f59e0b;
+    background: rgba(245,158,11,0.03);
+}
+.sz-table tbody tr.nincs-kiallitva:hover { background: rgba(245,158,11,0.07); }
+.sz-nincs-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 700; border-radius: 5px; padding: 3px 8px;
+    background: rgba(245,158,11,0.12); color: #b45309;
+    border: 1px solid rgba(245,158,11,0.3);
+    white-space: nowrap;
+}
 </style>
 
 {{-- Fejléc --}}
@@ -281,20 +295,32 @@
                 'keszpenz'       => ['fa-money-bill',  'Készpénz'],
                 default          => ['fa-question',    '–'],
             };
+            $nincsKiallitva = empty($sz->billingo_szam) && empty($sz->sajat_pdf_path);
         @endphp
-        <tr>
+        <tr class="{{ $nincsKiallitva ? 'nincs-kiallitva' : '' }}">
             <td>
                 <span class="sz-id">#{{ str_pad($sz->szamla_id, 5, '0', STR_PAD_LEFT) }}</span>
             </td>
             <td style="font-weight:500;">
-                {{ $sz->megrendeles->Megrendeles_Nev ?? '–' }}
+                @if($sz->megrendeles)
+                    <a href="{{ route('megrendeles.show', ['id' => $sz->megrendeles->id]) }}"
+                       style="color:#1e293b;text-decoration:none;display:inline-flex;align-items:center;gap:5px;"
+                       title="Megrendelés megtekintése">
+                        <span style="font-size:10px;color:#a07848;font-weight:700;background:rgba(201,169,122,0.12);border-radius:4px;padding:1px 5px;">
+                            MR#{{ str_pad($sz->megrendeles->id, 5, '0', STR_PAD_LEFT) }}
+                        </span>
+                        {{ $sz->megrendeles->megrendeles_nev }}
+                    </a>
+                @else
+                    <span style="color:#94a3b8;">–</span>
+                @endif
                 <br>
                 <span class="sz-tipus-badge sz-tipus-{{ $sz->szamla_tipus }}" style="margin-top:3px;">
                     {{ match($sz->szamla_tipus) { 'szamla' => 'Számla', 'dijbekero' => 'Díjbekérő', 'storno' => 'Stornó', default => $sz->szamla_tipus } }}
                 </span>
             </td>
             <td class="sz-hide-sm" style="color:#64748b;">
-                {{ $sz->megrendeles->ugyfel->Nev ?? '–' }}
+                {{ $sz->megrendeles->ugyfel->nev ?? '–' }}
             </td>
             <td>
                 <span class="sz-amount">{{ number_format($sz->brutto_osszeg, 0, ',', ' ') }} Ft</span>
@@ -332,8 +358,14 @@
             <td class="sz-hide-sm">
                 @if($sz->billingo_szam)
                     <span style="font-size:11px;font-weight:600;color:#a07848;">{{ $sz->billingo_szam }}</span>
+                @elseif($sz->sajat_pdf_path)
+                    <span style="font-size:11px;font-weight:600;color:#16a34a;display:inline-flex;align-items:center;gap:4px;">
+                        <i class="fas fa-file-pdf"></i> Saját PDF
+                    </span>
                 @else
-                    <span style="font-size:11px;color:#cbd5e1;">–</span>
+                    <span class="sz-nincs-badge">
+                        <i class="fas fa-exclamation-triangle"></i> Nincs kiállítva
+                    </span>
                 @endif
             </td>
             <td>

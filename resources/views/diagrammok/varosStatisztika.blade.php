@@ -10,7 +10,7 @@
         var dataArray = [
             ['Város', 'Megrendelések száma'],
             @foreach ($statistics as $stat)
-                ['{{ $stat->Nev }}', {{ $stat->MegrendelesekSzama }}],
+                ['{{ $stat->nev }}', {{ $stat->MegrendelesekSzama }}],
             @endforeach
         ];
 

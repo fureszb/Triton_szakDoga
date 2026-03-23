@@ -27,27 +27,27 @@ return new class extends Migration
             [
                 'nev' => 'Admin Elek',
                 'role' => 'Admin',
-                'email' =>'admin@gmail.com',
+                'email' => 'admin@gmail.com',
                 'password' => bcrypt('1122'),
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'nev' => 'Üzletkőtő János',
                 'role' => 'Uzletkoto',
-                'email' =>'uzletkoto@gmail.com',
+                'email' => 'uzletkoto@gmail.com',
                 'password' => bcrypt('1122'),
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'nev' => 'Ügyfél Béla',
                 'role' => 'Ugyfel',
-                'email' =>'ugyfel@gmail.com',
+                'email' => 'ugyfel@gmail.com',
                 'password' => bcrypt('1122'),
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
+                'updated_at' => now(),
+            ],
         ]);
 
     }

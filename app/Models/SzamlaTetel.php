@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class SzamlaTetel extends Model
 {
     use HasFactory;
 
-    protected $table      = 'szamla_tetelek';
+    protected $table = 'szamla_tetelek';
+
     protected $primaryKey = 'tetel_id';
 
     protected $fillable = [
@@ -29,13 +30,13 @@ class SzamlaTetel extends Model
     ];
 
     protected $casts = [
-        'mennyiseg'       => 'decimal:3',
+        'mennyiseg' => 'decimal:3',
         'egyseg_netto_ar' => 'decimal:2',
-        'netto_osszeg'    => 'decimal:2',
-        'afa_osszeg'      => 'decimal:2',
-        'brutto_osszeg'   => 'decimal:2',
-        'afa_kulcs'       => 'integer',
-        'sorrend'         => 'integer',
+        'netto_osszeg' => 'decimal:2',
+        'afa_osszeg' => 'decimal:2',
+        'brutto_osszeg' => 'decimal:2',
+        'afa_kulcs' => 'integer',
+        'sorrend' => 'integer',
     ];
 
     // ─── Kapcsolatok ──────────────────────────────────────────────────────────
@@ -47,12 +48,12 @@ class SzamlaTetel extends Model
 
     public function anyag()
     {
-        return $this->belongsTo(Anyag::class, 'anyag_id', 'Anyag_ID');
+        return $this->belongsTo(Anyag::class, 'anyag_id', 'id');
     }
 
     public function munka()
     {
-        return $this->belongsTo(Munka::class, 'munka_id', 'Munka_ID');
+        return $this->belongsTo(Munka::class, 'munka_id', 'id');
     }
 
     // ─── Összeg számítás ──────────────────────────────────────────────────────
@@ -63,17 +64,17 @@ class SzamlaTetel extends Model
      */
     public static function szamitOsszegek(array $adatok): array
     {
-        $mennyiseg      = $adatok['mennyiseg'] ?? 1;
-        $egysegNettoAr  = $adatok['egyseg_netto_ar'] ?? 0;
-        $afaKulcs       = $adatok['afa_kulcs'] ?? 27;
+        $mennyiseg = $adatok['mennyiseg'] ?? 1;
+        $egysegNettoAr = $adatok['egyseg_netto_ar'] ?? 0;
+        $afaKulcs = $adatok['afa_kulcs'] ?? 27;
 
-        $netto   = round($mennyiseg * $egysegNettoAr, 2);
-        $afa     = round($netto * ($afaKulcs / 100), 2);
-        $brutto  = round($netto + $afa, 2);
+        $netto = round($mennyiseg * $egysegNettoAr, 2);
+        $afa = round($netto * ($afaKulcs / 100), 2);
+        $brutto = round($netto + $afa, 2);
 
         return array_merge($adatok, [
-            'netto_osszeg'  => $netto,
-            'afa_osszeg'    => $afa,
+            'netto_osszeg' => $netto,
+            'afa_osszeg' => $afa,
             'brutto_osszeg' => $brutto,
         ]);
     }

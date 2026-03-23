@@ -243,15 +243,15 @@
         <div class="form-card-body">
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-user"></i> Ügyfél <span class="req">*</span></div>
-                <select name="Ugyfel_ID" id="Ugyfel_ID" class="f-select">
+                <select name="ugyfel_id" id="ugyfel_id" class="f-select">
                     <option value="">— Válassz ügyfelet —</option>
                     @foreach ($ugyfelek as $ugyfel)
-                        <option value="{{ $ugyfel->Ugyfel_ID }}"
-                                data-nev="{{ $ugyfel->Nev }}"
-                                data-varos-id="{{ $ugyfel->Varos_ID }}"
-                                data-utca="{{ $ugyfel->Szamlazasi_Cim }}"
-                                {{ old('Ugyfel_ID') == $ugyfel->Ugyfel_ID ? 'selected' : '' }}>
-                            {{ $ugyfel->Ugyfel_ID }} – {{ $ugyfel->Nev }}
+                        <option value="{{ $ugyfel->id }}"
+                                data-nev="{{ $ugyfel->nev }}"
+                                data-varos-id="{{ $ugyfel->varos_id }}"
+                                data-utca="{{ $ugyfel->szamlazasi_cim }}"
+                                {{ old('ugyfel_id') == $ugyfel->id ? 'selected' : '' }}>
+                            {{ $ugyfel->id }} – {{ $ugyfel->nev }}
                         </option>
                     @endforeach
                 </select>
@@ -265,17 +265,17 @@
             <div class="f-row">
                 <div class="f-group">
                     <div class="f-label"><i class="fas fa-file-signature"></i> Megrendelő neve <span class="req">*</span></div>
-                    <input type="text" name="Megrendeles_Nev" id="Megrendeles_Nev"
-                           class="f-input" value="{{ old('Megrendeles_Nev') }}"
+                    <input type="text" name="megrendeles_nev" id="megrendeles_nev"
+                           class="f-input" value="{{ old('megrendeles_nev') }}"
                            placeholder="Megrendelő teljes neve">
                 </div>
                 <div class="f-group">
                     <div class="f-label"><i class="fas fa-toggle-on"></i> Státusz <span class="req">*</span></div>
-                    <select name="Statusz" id="Statusz" class="f-select">
-                        <option value="1" {{ old('Statusz', '1') == '1' ? 'selected' : '' }}>
+                    <select name="statusz" id="statusz" class="f-select">
+                        <option value="1" {{ old('statusz', '1') == '1' ? 'selected' : '' }}>
                             🔄 Folyamatban
                         </option>
-                        <option value="0" {{ old('Statusz') == '0' ? 'selected' : '' }}>
+                        <option value="0" {{ old('statusz') == '0' ? 'selected' : '' }}>
                             ✅ Befejezve
                         </option>
                     </select>
@@ -300,20 +300,29 @@
         <div class="form-card-body">
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-city"></i> Város <span class="req">*</span></div>
-                <select name="Varos_ID" id="Varos_ID" class="f-select">
-                    <option value="">— Válassz várost —</option>
+                <select name="varos_id" id="varos-select-megrendeles-create" class="f-select varos-select">
+                    <option value="">— Keressen irányítószámra vagy városra —</option>
                     @foreach ($varosok as $varos)
-                        <option value="{{ $varos->Varos_ID }}"
-                                {{ old('Varos_ID') == $varos->Varos_ID ? 'selected' : '' }}>
-                            {{ $varos->Irny_szam }} {{ $varos->Nev }}
+                        <option value="{{ $varos->id }}"
+                                {{ old('varos_id') == $varos->id ? 'selected' : '' }}>
+                            {{ $varos->Irny_szam }} {{ $varos->nev }}
                         </option>
                     @endforeach
                 </select>
+                <div class="varos-ujvaros-panel" data-for="varos-select-megrendeles-create" style="display:none;">
+                    <div class="varos-ujvaros-row">
+                        <input type="text" class="varos-uj-irsz f-input" placeholder="Irányítószám (pl. 6000)" maxlength="4" style="width:130px;">
+                        <input type="text" class="varos-uj-nev f-input" placeholder="Város neve (pl. Kecskemét)" style="flex:1;">
+                        <button type="button" class="varos-uj-mentes btn btn-sm btn-primary">Mentés</button>
+                        <button type="button" class="varos-uj-megsem btn btn-sm btn-secondary">Mégse</button>
+                    </div>
+                    <div class="varos-uj-hiba" style="display:none; color:#c0392b; font-size:.85em; margin-top:4px;"></div>
+                </div>
             </div>
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-road"></i> Utca, házszám <span class="req">*</span></div>
-                <input type="text" name="Utca_Hazszam" id="Utca_Hazszam"
-                       class="f-input" value="{{ old('Utca_Hazszam') }}"
+                <input type="text" name="utca_hazszam" id="utca_hazszam"
+                       class="f-input" value="{{ old('utca_hazszam') }}"
                        placeholder="pl. Kossuth utca 12.">
             </div>
         </div>
@@ -329,19 +338,19 @@
             <div class="f-row">
                 <div class="f-group">
                     <div class="f-label"><i class="fas fa-cogs"></i> Szolgáltatás <span class="req">*</span></div>
-                    <select name="Szolgaltatas_ID" id="Szolgaltatas_ID" class="f-select">
+                    <select name="szolgaltatas_id" id="szolgaltatas_id" class="f-select">
                         <option value="">— Válassz szolgáltatást —</option>
                         @foreach ($szolgaltatasok as $szo)
-                            <option value="{{ $szo->Szolgaltatas_ID }}"
-                                    {{ old('Szolgaltatas_ID') == $szo->Szolgaltatas_ID ? 'selected' : '' }}>
-                                {{ $szo->Tipus }}
+                            <option value="{{ $szo->id }}"
+                                    {{ old('szolgaltatas_id') == $szo->id ? 'selected' : '' }}>
+                                {{ $szo->tipus }}
                             </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="f-group">
                     <div class="f-label"><i class="fas fa-hard-hat"></i> Szerelő <span class="req">*</span></div>
-                    <select name="Szerelo_ID" id="Szerelo_ID" class="f-select">
+                    <select name="szerelo_id" id="szerelo_id" class="f-select">
                         <option value="">— Előbb válassz szolgáltatást —</option>
                     </select>
                     <div class="f-hint">A szerelő lista a szolgáltatás alapján töltődik be.</div>
@@ -351,20 +360,20 @@
             <div class="f-row">
                 <div class="f-group">
                     <div class="f-label"><i class="fas fa-calendar-alt"></i> Munkakezdés <span class="req">*</span></div>
-                    <input type="datetime-local" name="Munkakezdes_Idopontja" id="Munkakezdes_Idopontja"
-                           class="f-input" value="{{ old('Munkakezdes_Idopontja') }}">
+                    <input type="datetime-local" name="munkakezdes_idopontja" id="munkakezdes_idopontja"
+                           class="f-input" value="{{ old('munkakezdes_idopontja') }}">
                 </div>
                 <div class="f-group">
                     <div class="f-label"><i class="fas fa-calendar-check"></i> Befejezés <span class="req">*</span></div>
-                    <input type="datetime-local" name="Munkabefejezes_Idopontja" id="Munkabefejezes_Idopontja"
-                           class="f-input" value="{{ old('Munkabefejezes_Idopontja') }}">
+                    <input type="datetime-local" name="munkabefejezes_idopontja" id="munkabefejezes_idopontja"
+                           class="f-input" value="{{ old('munkabefejezes_idopontja') }}">
                 </div>
             </div>
 
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-align-left"></i> Munka leírása</div>
-                <textarea name="Leiras" id="Leiras" class="f-textarea"
-                          placeholder="Opcionális megjegyzés a munkáról...">{{ old('Leiras') }}</textarea>
+                <textarea name="leiras" id="leiras" class="f-textarea"
+                          placeholder="Opcionális megjegyzés a munkáról...">{{ old('leiras') }}</textarea>
             </div>
         </div>
     </div>
@@ -378,15 +387,15 @@
         <div class="form-card-body">
             <div id="anyagokContainer" style="display:flex;flex-direction:column;gap:8px;">
                 <div class="anyag-par">
-                    <select name="Anyag_ID[]" class="anyagSelect f-select">
+                    <select name="anyag_id[]" class="anyagSelect f-select">
                         <option value="">— Válassz anyagot —</option>
                         @foreach ($anyagok as $anyag)
-                            <option value="{{ $anyag->Anyag_ID }}">
-                                {{ $anyag->Nev }} ({{ $anyag->Mertekegyseg }})
+                            <option value="{{ $anyag->id }}">
+                                {{ $anyag->nev }} ({{ $anyag->mertekegyseg }})
                             </option>
                         @endforeach
                     </select>
-                    <input type="number" name="Mennyiseg[]" placeholder="db" min="1"
+                    <input type="number" name="mennyiseg[]" placeholder="db" min="1"
                            class="f-input" style="max-width:90px;">
                     <button type="button" class="removeAnyag btn-remove-anyag" title="Eltávolítás">
                         <i class="fas fa-times"></i>
@@ -430,30 +439,31 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     // ── Ügyfél adatok átvitele ──
-    const ugyfelSelect  = document.getElementById('Ugyfel_ID');
+    const ugyfelSelect  = document.getElementById('ugyfel_id');
     const matchCheckbox = document.getElementById('ugyfelAdatokMatch');
-    const nevInput      = document.getElementById('Megrendeles_Nev');
-    const varosSelect   = document.getElementById('Varos_ID');
-    const utcaInput     = document.getElementById('Utca_Hazszam');
+    const nevInput      = document.getElementById('megrendeles_nev');
+    const $varosSelect  = $('#varos-select-megrendeles-create'); // Select2 — jQuery kell
+    const utcaInput     = document.getElementById('utca_hazszam');
 
     function fillCustomerData() {
         const opt = ugyfelSelect.options[ugyfelSelect.selectedIndex];
         if (opt && matchCheckbox.checked) {
-            nevInput.value   = opt.getAttribute('data-nev');
-            utcaInput.value  = opt.getAttribute('data-utca');
-            varosSelect.value = opt.getAttribute('data-varos-id');
+            nevInput.value  = opt.getAttribute('data-nev') || '';
+            utcaInput.value = opt.getAttribute('data-utca') || '';
+            // Select2-nél .val() + trigger('change') kell, nem .value
+            $varosSelect.val(opt.getAttribute('data-varos-id')).trigger('change');
         } else {
-            nevInput.value   = '';
-            utcaInput.value  = '';
-            varosSelect.value = '';
+            nevInput.value  = '';
+            utcaInput.value = '';
+            $varosSelect.val(null).trigger('change');
         }
     }
     ugyfelSelect.addEventListener('change', fillCustomerData);
     matchCheckbox.addEventListener('change', fillCustomerData);
 
     // ── Szerelők betöltése ──
-    const szolgaltatasSelect = document.getElementById('Szolgaltatas_ID');
-    const szereloSelect      = document.getElementById('Szerelo_ID');
+    const szolgaltatasSelect = document.getElementById('szolgaltatas_id');
+    const szereloSelect      = document.getElementById('szerelo_id');
 
     szolgaltatasSelect.addEventListener('change', function () {
         const id = this.value;
@@ -463,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 szereloSelect.innerHTML = '<option value="">— Válassz szerelőt —</option>';
                 data.forEach(s => {
-                    szereloSelect.innerHTML += `<option value="${s.Szerelo_ID}">${s.Nev}</option>`;
+                    szereloSelect.innerHTML += `<option value="${s.id}">${s.nev}</option>`;
                 });
             })
             .catch(() => {

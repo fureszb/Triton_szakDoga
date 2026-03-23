@@ -42,16 +42,16 @@ return new class extends Migration
 
             // ─── Foreign keys ──────────────────────────────────────────────────
             $table->foreign('szamla_id')
-                  ->references('szamla_id')->on('szamlak')
-                  ->onDelete('restrict');
+                ->references('szamla_id')->on('szamlak')
+                ->onDelete('restrict');
 
             $table->foreign('megrendeles_id')
-                  ->references('Megrendeles_ID')->on('megrendeles')
-                  ->onDelete('restrict');
+                ->references('Megrendeles_ID')->on('megrendeles')
+                ->onDelete('restrict');
 
             $table->foreign('ugyfel_id')
-                  ->references('Ugyfel_ID')->on('ugyfel')
-                  ->onDelete('restrict');
+                ->references('Ugyfel_ID')->on('ugyfel')
+                ->onDelete('restrict');
 
             // ─── Indexek ───────────────────────────────────────────────────────
             $table->index('statusz');

@@ -17,28 +17,28 @@ return new class extends Migration
         });
 
         DB::table('varos')->insert([
-            [   'Irny_szam' => 2310,
+            ['Irny_szam' => 2310,
                 'Nev' => 'Szigeszentmiklós',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             ['Irny_szam' => 2314,
                 'Nev' => 'Halásztelek',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Irny_szam' => 2335,
                 'Nev' => 'Taksony',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Irny_szam' => 2330,
                 'Nev' => 'Dunaharaszti',
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
+                'updated_at' => now(),
+            ],
         ]);
     }
 

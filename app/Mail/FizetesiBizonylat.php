@@ -13,13 +13,15 @@ class FizetesiBizonylat extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Megrendeles $megrendeles) {}
+    public function __construct(public Megrendeles $megrendeles)
+    {
+    }
 
     public function envelope(): Envelope
     {
         return new Envelope(
             subject: 'Fizetési visszaigazolás – Megrendelés #'
-                . str_pad($this->megrendeles->Megrendeles_ID, 5, '0', STR_PAD_LEFT),
+                .str_pad($this->megrendeles->id, 5, '0', STR_PAD_LEFT),
         );
     }
 

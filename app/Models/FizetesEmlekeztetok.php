@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class FizetesEmlekeztetok extends Model
 {
-    protected $table      = 'fizetes_emlekeztetok';
+    protected $table = 'fizetes_emlekeztetok';
+
     protected $primaryKey = 'emlekeztetok_id';
 
     // Emlékeztető rekord immutable – nincs updated_at
@@ -26,7 +27,7 @@ class FizetesEmlekeztetok extends Model
 
     protected $casts = [
         'kuldes_idopontja' => 'datetime',
-        'created_at'       => 'datetime',
+        'created_at' => 'datetime',
     ];
 
     // ─── Boot – automatikus created_at ────────────────────────────────────────
@@ -34,10 +35,10 @@ class FizetesEmlekeztetok extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            if (!$model->created_at) {
+            if (! $model->created_at) {
                 $model->created_at = now();
             }
-            if (!$model->kuldes_idopontja) {
+            if (! $model->kuldes_idopontja) {
                 $model->kuldes_idopontja = now();
             }
         });
@@ -52,12 +53,12 @@ class FizetesEmlekeztetok extends Model
 
     public function megrendeles()
     {
-        return $this->belongsTo(Megrendeles::class, 'megrendeles_id', 'Megrendeles_ID');
+        return $this->belongsTo(Megrendeles::class, 'megrendeles_id', 'id');
     }
 
     public function ugyfel()
     {
-        return $this->belongsTo(Ugyfel::class, 'ugyfel_id', 'Ugyfel_ID');
+        return $this->belongsTo(Ugyfel::class, 'ugyfel_id', 'id');
     }
 
     // ─── Scopes ───────────────────────────────────────────────────────────────

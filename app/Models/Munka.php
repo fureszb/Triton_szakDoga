@@ -8,27 +8,29 @@ use Illuminate\Database\Eloquent\Model;
 class Munka extends Model
 {
     protected $table = 'munka';
-    protected $primaryKey = 'Munka_ID';
-    protected $fillable = ['Megrendeles_ID', 'Szerelo_ID','Szolgaltatas_ID','Leiras', 'Munkakezdes_Idopontja', 'Munkabefejezes_Idopontja'];
+
+    // $primaryKey alapértelmezetten 'id'
+    protected $fillable = ['megrendeles_id', 'szerelo_id', 'szolgaltatas_id', 'leiras', 'munkakezdes_idopontja', 'munkabefejezes_idopontja'];
+
     use HasFactory;
 
     public function szerelo()
     {
-        return $this->belongsTo(Szerelo::class, 'Szerelo_ID');
+        return $this->belongsTo(Szerelo::class, 'szerelo_id');
     }
 
     public function szolgaltatas()
     {
-        return $this->belongsTo(Szolgaltatas::class, 'Szolgaltatas_ID');
+        return $this->belongsTo(Szolgaltatas::class, 'szolgaltatas_id');
     }
 
     public function ugyfel()
     {
-        return $this->belongsTo(Ugyfel::class, 'Ugyfel_ID');
+        return $this->belongsTo(Ugyfel::class, 'ugyfel_id');
     }
 
     public function felhasznalt_anyagok()
     {
-        return $this->hasMany(FelhasznaltAnyag::class, 'Munka_ID');
+        return $this->hasMany(FelhasznaltAnyag::class, 'munka_id');
     }
 }

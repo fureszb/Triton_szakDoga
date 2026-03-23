@@ -9,7 +9,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('szolgaltatas', function (Blueprint $table){
+        Schema::create('szolgaltatas', function (Blueprint $table) {
             $table->id('Szolgaltatas_ID');
             $table->string('Tipus');
             $table->timestamps();
@@ -19,22 +19,22 @@ return new class extends Migration
             [
                 'Tipus' => 'Telepítés',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Tipus' => 'Karbantartás',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Tipus' => 'Bővítés',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'Tipus' => 'Egyéb',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
         ]);
 
@@ -45,4 +45,3 @@ return new class extends Migration
         Schema::dropIfExists('szolgaltatas');
     }
 };
-

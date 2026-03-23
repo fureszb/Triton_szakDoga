@@ -22,21 +22,21 @@ class EmlekeztetoController extends Controller
         // Alaplekérdezés: fizetve és stornózottak kizárva
         $query = Szamla::whereIn('szamla_tipus', ['szamla', 'dijbekero'])
             ->whereIn('statusz', ['fuggoben', 'kesedelmes'])
-            ->with(['ugyfel', 'megrendeles', 'emlekeztetok' => fn($q) => $q->orderBy('created_at', 'desc')])
+            ->with(['ugyfel', 'megrendeles', 'emlekeztetok' => fn ($q) => $q->orderBy('created_at', 'desc')])
             ->orderBy('fizetesi_hatarido', 'asc');
 
-        $szamlak = match($filter) {
-            'lejart'    => (clone $query)->where('fizetesi_hatarido', '<', now()->startOfDay())->get(),
-            'kozel'     => (clone $query)->whereBetween('fizetesi_hatarido', [now()->startOfDay(), now()->addDays(3)->endOfDay()])->get(),
-            default     => $query->get(),   // 'esedékes' = összes függőben/késedelmes
+        $szamlak = match ($filter) {
+            'lejart' => (clone $query)->where('fizetesi_hatarido', '<', now()->startOfDay())->get(),
+            'kozel' => (clone $query)->whereBetween('fizetesi_hatarido', [now()->startOfDay(), now()->addDays(3)->endOfDay()])->get(),
+            default => $query->get(),   // 'esedékes' = összes függőben/késedelmes
         };
 
         // KPI statisztikák
         $stats = [
-            'osszes'       => Szamla::whereIn('szamla_tipus', ['szamla', 'dijbekero'])->whereIn('statusz', ['fuggoben', 'kesedelmes'])->count(),
-            'lejart'       => Szamla::whereIn('szamla_tipus', ['szamla', 'dijbekero'])->whereIn('statusz', ['fuggoben', 'kesedelmes'])->where('fizetesi_hatarido', '<', now()->startOfDay())->count(),
-            'harom_napon'  => Szamla::whereIn('szamla_tipus', ['szamla', 'dijbekero'])->whereIn('statusz', ['fuggoben', 'kesedelmes'])->whereBetween('fizetesi_hatarido', [now()->startOfDay(), now()->addDays(3)->endOfDay()])->count(),
-            'kuldott_ma'   => FizetesEmlekeztetok::whereDate('created_at', today())->count(),
+            'osszes' => Szamla::whereIn('szamla_tipus', ['szamla', 'dijbekero'])->whereIn('statusz', ['fuggoben', 'kesedelmes'])->count(),
+            'lejart' => Szamla::whereIn('szamla_tipus', ['szamla', 'dijbekero'])->whereIn('statusz', ['fuggoben', 'kesedelmes'])->where('fizetesi_hatarido', '<', now()->startOfDay())->count(),
+            'harom_napon' => Szamla::whereIn('szamla_tipus', ['szamla', 'dijbekero'])->whereIn('statusz', ['fuggoben', 'kesedelmes'])->whereBetween('fizetesi_hatarido', [now()->startOfDay(), now()->addDays(3)->endOfDay()])->count(),
+            'kuldott_ma' => FizetesEmlekeztetok::whereDate('created_at', today())->count(),
         ];
 
         // Utolsó 20 kiküldött emlékeztető (előzmény panel)
@@ -59,43 +59,43 @@ class EmlekeztetoController extends Controller
 
         // Ügyfél email cím meghatározása
         $szamla->load(['ugyfel', 'megrendeles.ugyfel']);
-        $email  = $szamla->ugyfel?->Email
-               ?? $szamla->megrendeles?->ugyfel?->Email
+        $email = $szamla->ugyfel?->email
+               ?? $szamla->megrendeles?->ugyfel?->email
                ?? null;
 
-        if (!$email) {
+        if (! $email) {
             return back()->with('error', 'Az ügyfélhez nem tartozik email cím. Emlékeztető nem küldhető.');
         }
 
         $egyediUzenet = trim($request->input('egyedi_uzenet', ''));
 
-        $statusz    = 'sikeres';
+        $statusz = 'sikeres';
         $hibaUzenet = null;
 
         try {
             Mail::to($email)->send(new ManualisEmlekeztetoMail($szamla, $egyediUzenet));
         } catch (\Exception $e) {
-            $statusz    = 'sikertelen';
+            $statusz = 'sikertelen';
             $hibaUzenet = $e->getMessage();
         }
 
         // Naplózás a fizetes_emlekeztetok táblába
         FizetesEmlekeztetok::create([
-            'szamla_id'       => $szamla->szamla_id,
-            'megrendeles_id'  => $szamla->megrendeles_id,
-            'ugyfel_id'       => $szamla->ugyfel_id,
-            'email_cim'       => $email,
-            'tipus'           => 'manualis',
-            'statusz'         => $statusz,
-            'hiba_uzenet'     => $hibaUzenet,
+            'szamla_id' => $szamla->szamla_id,
+            'megrendeles_id' => $szamla->megrendeles_id,
+            'ugyfel_id' => $szamla->ugyfel_id,
+            'email_cim' => $email,
+            'tipus' => 'manualis',
+            'statusz' => $statusz,
+            'hiba_uzenet' => $hibaUzenet,
         ]);
 
         // Audit log
         FizetesAuditLog::naplo(
             szamlaId: $szamla->szamla_id,
-            esemeny:  'emlekeztetokuldve',
-            adatok:   [
-                'megjegyzes' => "Email: {$email} | Státusz: {$statusz}" . ($egyediUzenet ? " | Üzenet: {$egyediUzenet}" : ''),
+            esemeny: 'emlekeztetokuldve',
+            adatok: [
+                'megjegyzes' => "Email: {$email} | Státusz: {$statusz}".($egyediUzenet ? " | Üzenet: {$egyediUzenet}" : ''),
             ],
             megrendelesId: $szamla->megrendeles_id,
         );

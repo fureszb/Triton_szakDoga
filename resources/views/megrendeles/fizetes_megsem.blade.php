@@ -21,7 +21,7 @@
     </div>
 
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-        <a href="{{ route('payment.checkout', $megrendeles->Megrendeles_ID) }}" class="btn-save" style="text-decoration:none;">
+        <a href="{{ route('payment.checkout', $megrendeles->id) }}" class="btn-save" style="text-decoration:none;">
             <i class="fas fa-redo"></i> Próbálja újra
         </a>
         @if(auth()->user()->role === 'Ugyfel')
@@ -29,7 +29,7 @@
                 <i class="fas fa-arrow-left"></i> Vissza
             </a>
         @else
-            <a href="{{ route('megrendeles.show', $megrendeles->Megrendeles_ID) }}" class="btn-back">
+            <a href="{{ route('megrendeles.show', $megrendeles->id) }}" class="btn-back">
                 <i class="fas fa-arrow-left"></i> Megrendelés
             </a>
         @endif

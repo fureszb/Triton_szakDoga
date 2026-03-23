@@ -43,18 +43,18 @@
         <tbody>
             @forelse ($szerelok as $szerelo)
                 <tr>
-                    <td><span class="table-id">#{{ $szerelo->Szerelo_ID }}</span></td>
-                    <td><strong>{{ $szerelo->Nev }}</strong></td>
-                    <td>{{ $szerelo->Telefonszam }}</td>
+                    <td><span class="table-id">#{{ $szerelo->id }}</span></td>
+                    <td><strong>{{ $szerelo->nev }}</strong></td>
+                    <td>{{ $szerelo->telefonszam }}</td>
                     <td>
                         <div class="table-actions">
-                            <a href="{{ route('szerelok.show', $szerelo->Szerelo_ID) }}" class="btn-view">
+                            <a href="{{ route('szerelok.show', $szerelo->id) }}" class="btn-view">
                                 <i class="fas fa-eye"></i> Megtekint
                             </a>
-                            <a href="{{ route('szerelok.edit', $szerelo->Szerelo_ID) }}" class="btn-edit">
+                            <a href="{{ route('szerelok.edit', $szerelo->id) }}" class="btn-edit">
                                 <i class="fas fa-edit"></i> Szerkeszt
                             </a>
-                            <form class="form-delete" action="{{ route('szerelok.destroy', $szerelo->Szerelo_ID) }}" method="POST">
+                            <form class="form-delete" action="{{ route('szerelok.destroy', $szerelo->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn-delete" type="submit"

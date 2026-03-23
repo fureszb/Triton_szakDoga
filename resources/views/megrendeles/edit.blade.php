@@ -175,7 +175,7 @@
 
 <div class="page-header">
     <h1><i class="fas fa-clipboard-check"></i> Megrendelés szerkesztése</h1>
-    <a href="{{ route('megrendeles.show', ['id' => $megrendeles->Megrendeles_ID]) }}" class="btn-back">
+    <a href="{{ route('megrendeles.show', ['id' => $megrendeles->id]) }}" class="btn-back">
         <i class="fas fa-arrow-left"></i> Vissza
     </a>
 </div>
@@ -190,18 +190,18 @@
     </div>
 @endif
 
-<form id="editForm" action="{{ route('megrendeles.update', $megrendeles->Megrendeles_ID) }}" method="POST">
+<form id="editForm" action="{{ route('megrendeles.update', $megrendeles->id) }}" method="POST">
 @csrf
 @method('PUT')
-<input type="hidden" name="Munka_ID" value="{{ $munka->Munka_ID }}">
+<input type="hidden" name="munka_id" value="{{ $munka->id }}">
 
 {{-- Azonosító sáv --}}
 <div class="edit-status-bar" style="margin-bottom:20px;">
     <i class="fas fa-hashtag" style="color:#c9a97a;"></i>
-    Megrendelés azonosítója: <strong>#{{ str_pad($megrendeles->Megrendeles_ID, 5, '0', STR_PAD_LEFT) }}</strong>
+    Megrendelés azonosítója: <strong>#{{ str_pad($megrendeles->id, 5, '0', STR_PAD_LEFT) }}</strong>
     &nbsp;|&nbsp;
     <i class="fas fa-user" style="color:#c9a97a;"></i>
-    Ügyfél: <strong>{{ $megrendeles->ugyfel->Nev ?? '—' }}</strong>
+    Ügyfél: <strong>{{ $megrendeles->ugyfel->nev ?? '—' }}</strong>
 </div>
 
 <div class="form-grid">
@@ -215,29 +215,29 @@
         <div class="form-card-body">
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-user"></i> Ügyfél <span class="req">*</span></div>
-                <select name="Ugyfel_ID" id="Ugyfel_ID" class="f-select">
+                <select name="ugyfel_id" id="ugyfel_id" class="f-select">
                     <option value="">— Válassz ügyfelet —</option>
                     @foreach ($ugyfelek as $ugyfel)
-                        <option value="{{ $ugyfel->Ugyfel_ID }}"
-                                {{ $ugyfel->Ugyfel_ID == $megrendeles->Ugyfel_ID ? 'selected' : '' }}>
-                            {{ $ugyfel->Ugyfel_ID }} – {{ $ugyfel->Nev }}
+                        <option value="{{ $ugyfel->id }}"
+                                {{ $ugyfel->id == $megrendeles->ugyfel_id ? 'selected' : '' }}>
+                            {{ $ugyfel->id }} – {{ $ugyfel->nev }}
                         </option>
                     @endforeach
                 </select>
             </div>
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-file-signature"></i> Megrendelő neve <span class="req">*</span></div>
-                <input type="text" name="Megrendeles_Nev" id="Megrendeles_Nev"
+                <input type="text" name="megrendeles_nev" id="megrendeles_nev"
                        class="f-input"
-                       value="{{ old('Megrendeles_Nev', $megrendeles->Megrendeles_Nev) }}">
+                       value="{{ old('megrendeles_nev', $megrendeles->megrendeles_nev) }}">
             </div>
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-toggle-on"></i> Státusz <span class="req">*</span></div>
-                <select name="Statusz" id="Statusz" class="f-select">
-                    <option value="1" {{ old('Statusz', $megrendeles->Statusz) == 1 ? 'selected' : '' }}>
+                <select name="statusz" id="statusz" class="f-select">
+                    <option value="1" {{ old('statusz', $megrendeles->statusz) == 1 ? 'selected' : '' }}>
                         Folyamatban
                     </option>
-                    <option value="0" {{ old('Statusz', $megrendeles->Statusz) == 0 ? 'selected' : '' }}>
+                    <option value="0" {{ old('statusz', $megrendeles->statusz) == 0 ? 'selected' : '' }}>
                         Befejezve
                     </option>
                 </select>
@@ -261,27 +261,36 @@
         <div class="form-card-body">
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-city"></i> Város <span class="req">*</span></div>
-                <select name="Varos_ID" id="Varos_ID" class="f-select">
-                    <option value="">— Válassz várost —</option>
+                <select name="varos_id" id="varos-select-megrendeles-edit" class="f-select varos-select">
+                    <option value="">— Keressen irányítószámra vagy városra —</option>
                     @foreach ($varosok as $varos)
-                        <option value="{{ $varos->Varos_ID }}"
-                                {{ $varos->Varos_ID == $megrendeles->Varos_ID ? 'selected' : '' }}>
-                            {{ $varos->Irny_szam }} {{ $varos->Nev }}
+                        <option value="{{ $varos->id }}"
+                                {{ $varos->id == $megrendeles->varos_id ? 'selected' : '' }}>
+                            {{ $varos->Irny_szam }} {{ $varos->nev }}
                         </option>
                     @endforeach
                 </select>
+                <div class="varos-ujvaros-panel" data-for="varos-select-megrendeles-edit" style="display:none;">
+                    <div class="varos-ujvaros-row">
+                        <input type="text" class="varos-uj-irsz f-input" placeholder="Irányítószám (pl. 6000)" maxlength="4" style="width:130px;">
+                        <input type="text" class="varos-uj-nev f-input" placeholder="Város neve (pl. Kecskemét)" style="flex:1;">
+                        <button type="button" class="varos-uj-mentes btn btn-sm btn-primary">Mentés</button>
+                        <button type="button" class="varos-uj-megsem btn btn-sm btn-secondary">Mégse</button>
+                    </div>
+                    <div class="varos-uj-hiba" style="display:none; color:#c0392b; font-size:.85em; margin-top:4px;"></div>
+                </div>
             </div>
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-road"></i> Utca, házszám <span class="req">*</span></div>
-                <input type="text" name="Utca_Hazszam" id="Utca_Hazszam"
+                <input type="text" name="utca_hazszam" id="utca_hazszam"
                        class="f-input"
-                       value="{{ old('Utca_Hazszam', $megrendeles->Utca_Hazszam) }}">
+                       value="{{ old('utca_hazszam', $megrendeles->utca_hazszam) }}">
             </div>
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-file-pdf"></i> PDF elérési út</div>
-                <input type="text" name="Pdf_EleresiUt" id="Pdf_EleresiUt"
+                <input type="text" name="pdf_eleresi_ut" id="pdf_eleresi_ut"
                        class="f-input"
-                       value="{{ old('Pdf_EleresiUt', $megrendeles->Pdf_EleresiUt) }}"
+                       value="{{ old('pdf_eleresi_ut', $megrendeles->pdf_eleresi_ut) }}"
                        placeholder="pl. storage/app/public/doc.pdf">
                 <div class="f-hint">Opcionális — ha létezik már feltöltött PDF.</div>
             </div>
@@ -298,24 +307,24 @@
             <div class="f-row">
                 <div class="f-group">
                     <div class="f-label"><i class="fas fa-cogs"></i> Szolgáltatás <span class="req">*</span></div>
-                    <select name="Szolgaltatas_ID" id="Szolgaltatas_ID" class="f-select">
+                    <select name="szolgaltatas_id" id="szolgaltatas_id" class="f-select">
                         <option value="">— Válassz szolgáltatást —</option>
                         @foreach ($szolgaltatasok as $szo)
-                            <option value="{{ $szo->Szolgaltatas_ID }}"
-                                    {{ old('Szolgaltatas_ID', $munka->Szolgaltatas_ID) == $szo->Szolgaltatas_ID ? 'selected' : '' }}>
-                                {{ $szo->Tipus }}
+                            <option value="{{ $szo->id }}"
+                                    {{ old('szolgaltatas_id', $munka->szolgaltatas_id) == $szo->id ? 'selected' : '' }}>
+                                {{ $szo->tipus }}
                             </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="f-group">
                     <div class="f-label"><i class="fas fa-hard-hat"></i> Szerelő <span class="req">*</span></div>
-                    <select name="Szerelo_ID" id="Szerelo_ID" class="f-select">
+                    <select name="szerelo_id" id="szerelo_id" class="f-select">
                         <option value="">— Válassz szerelőt —</option>
                         @foreach ($szerelok as $szerelo)
-                            <option value="{{ $szerelo->Szerelo_ID }}"
-                                    {{ old('Szerelo_ID', $munka->Szerelo_ID) == $szerelo->Szerelo_ID ? 'selected' : '' }}>
-                                {{ $szerelo->Nev }}
+                            <option value="{{ $szerelo->id }}"
+                                    {{ old('szerelo_id', $munka->szerelo_id) == $szerelo->id ? 'selected' : '' }}>
+                                {{ $szerelo->nev }}
                             </option>
                         @endforeach
                     </select>
@@ -325,22 +334,18 @@
             <div class="f-row">
                 <div class="f-group">
                     <div class="f-label"><i class="fas fa-calendar-alt"></i> Munkakezdés <span class="req">*</span></div>
-                    <input type="datetime-local" name="Munkakezdes_Idopontja" id="Munkakezdes_Idopontja"
-                           class="f-input"
-                           value="{{ old('Munkakezdes_Idopontja', isset($munka) ? date('Y-m-d\TH:i', strtotime($munka->Munkakezdes_Idopontja)) : '') }}">
+                    <input type="datetime-local" name="munkakezdes_idopontja" id="munkakezdes_idopontja"\n                           class="f-input"\n                           value="{{ old('munkakezdes_idopontja', isset($munka) ? date('Y-m-d\\TH:i', strtotime($munka->munkakezdes_idopontja)) : '') }}">
                 </div>
                 <div class="f-group">
                     <div class="f-label"><i class="fas fa-calendar-check"></i> Befejezés <span class="req">*</span></div>
-                    <input type="datetime-local" name="Munkabefejezes_Idopontja" id="Munkabefejezes_Idopontja"
-                           class="f-input"
-                           value="{{ old('Munkabefejezes_Idopontja', isset($munka) ? date('Y-m-d\TH:i', strtotime($munka->Munkabefejezes_Idopontja)) : '') }}">
+                    <input type="datetime-local" name="munkabefejezes_idopontja" id="munkabefejezes_idopontja"\n                           class="f-input"\n                           value="{{ old('munkabefejezes_idopontja', isset($munka) ? date('Y-m-d\\TH:i', strtotime($munka->munkabefejezes_idopontja)) : '') }}">
                 </div>
             </div>
 
             <div class="f-group">
                 <div class="f-label"><i class="fas fa-align-left"></i> Munka leírása</div>
-                <textarea name="Leiras" id="Leiras" class="f-textarea"
-                          placeholder="Opcionális megjegyzés...">{{ old('Leiras', $munka->Leiras ?? '') }}</textarea>
+                <textarea name="leiras" id="leiras" class="f-textarea"
+                          placeholder="Opcionális megjegyzés...">{{ old('leiras', $munka->leiras ?? '') }}</textarea>
             </div>
         </div>
     </div>
@@ -355,18 +360,18 @@
             <div id="anyagokContainer" style="display:flex;flex-direction:column;gap:8px;">
                 @foreach ($megrendeles->felhasznaltAnyagok as $fa)
                     <div class="anyag-par">
-                        <select name="Anyag_ID[]" class="anyagSelect f-select">
+                        <select name="anyag_id[]" class="anyagSelect f-select">
                             <option value="">— Válassz anyagot —</option>
                             @foreach ($anyagok as $anyag)
-                                <option value="{{ $anyag->Anyag_ID }}"
-                                        {{ $anyag->Anyag_ID == $fa->Anyag_ID ? 'selected' : '' }}>
-                                    {{ $anyag->Nev }} ({{ $anyag->Mertekegyseg }})
+                                <option value="{{ $anyag->id }}"
+                                        {{ $anyag->id == $fa->anyag_id ? 'selected' : '' }}>
+                                    {{ $anyag->nev }} ({{ $anyag->mertekegyseg }})
                                 </option>
                             @endforeach
                         </select>
-                        <input type="number" name="Mennyiseg[]" placeholder="db" min="1"
+                        <input type="number" name="mennyiseg[]" placeholder="db" min="1"
                                class="f-input" style="max-width:90px;"
-                               value="{{ $fa->Mennyiseg }}">
+                               value="{{ $fa->mennyiseg }}">
                         <button type="button" class="removeAnyag btn-remove-anyag" title="Eltávolítás">
                             <i class="fas fa-times"></i>
                         </button>
@@ -377,15 +382,15 @@
             {{-- Üres sor template (rejtett) - klónozáshoz --}}
             <template id="anyagTemplate">
                 <div class="anyag-par">
-                    <select name="Anyag_ID[]" class="anyagSelect f-select">
+                    <select name="anyag_id[]" class="anyagSelect f-select">
                         <option value="">— Válassz anyagot —</option>
                         @foreach ($anyagok as $anyag)
-                            <option value="{{ $anyag->Anyag_ID }}">
-                                {{ $anyag->Nev }} ({{ $anyag->Mertekegyseg }})
+                            <option value="{{ $anyag->id }}">
+                                {{ $anyag->nev }} ({{ $anyag->mertekegyseg }})
                             </option>
                         @endforeach
                     </select>
-                    <input type="number" name="Mennyiseg[]" placeholder="db" min="1"
+                    <input type="number" name="mennyiseg[]" placeholder="db" min="1"
                            class="f-input" style="max-width:90px;">
                     <button type="button" class="removeAnyag btn-remove-anyag" title="Eltávolítás">
                         <i class="fas fa-times"></i>
@@ -406,7 +411,7 @@
     <button type="submit" class="btn-save">
         <i class="fas fa-save"></i> Mentés
     </button>
-    <a href="{{ route('megrendeles.show', ['id' => $megrendeles->Megrendeles_ID]) }}" class="btn-back">
+    <a href="{{ route('megrendeles.show', ['id' => $megrendeles->id]) }}" class="btn-back">
         <i class="fas fa-times"></i> Mégsem
     </a>
 </div>
